@@ -16,7 +16,7 @@ public @interface Between {
     boolean notNull() default true;
 
     /**
-     * 数据库字段真实列名，可以是驼峰类型，不填为标注的字段名
+     * 数据库字段真实列名，可以是驼峰类型
      */
     String column();
 

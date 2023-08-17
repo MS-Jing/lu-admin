@@ -1,6 +1,7 @@
 package com.lj.utils.query.condition;
 
 import com.lj.utils.query.annotation.*;
+import lombok.Getter;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -16,6 +17,9 @@ public class ConditionManager {
      * 条件注解和对应处理器的映射
      */
     private static final Map<Class<? extends Annotation>, AbstractConditionHandler<? extends Annotation>> CONDITION_ANNOTATION_HANDLER_MAPPING = new HashMap<>();
+
+    @Getter
+    private static final BetweenConditionHandler betweenConditionHandler = new BetweenConditionHandler();
 
     static {
         CONDITION_ANNOTATION_HANDLER_MAPPING.put(Eq.class, new EqConditionHandler());

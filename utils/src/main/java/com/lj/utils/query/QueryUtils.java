@@ -7,17 +7,17 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lj.utils.query.annotation.Between;
+import com.lj.utils.query.annotation.BetweenList;
 import com.lj.utils.query.annotation.CanOrder;
 import com.lj.utils.query.annotation.OrderBy;
 import com.lj.utils.query.condition.AbstractConditionHandler;
+import com.lj.utils.query.condition.BetweenConditionHandler;
 import com.lj.utils.query.condition.ConditionManager;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -42,16 +42,26 @@ public class QueryUtils {
     /**
      * 获取QueryWrapper对象
      * 如果查询参数字段有相关的条件注解会直接添加进QueryWrapper对象中
+     *
      * @param queryParams 查询参数
-     * @param <T> 实体类型
+     * @param <T>         实体类型
      * @return QueryWrapper对象
      */
     public static <T> QueryWrapper<T> getQueryWrapper(AbstractQueryParams queryParams) {
         Class<? extends AbstractQueryParams> paramsClass = queryParams.getClass();
         ParamsDetails paramsDetails = getParamsDetails(paramsClass);
         QueryWrapper<T> wrapper = new QueryWrapper<>();
+        // 字段上的条件注解
         for (ParamsFieldDetail fieldDetails : paramsDetails.getFieldDetailList()) {
             fieldDetails.getHandler().handleCondition(wrapper, fieldDetails, queryParams);
+        }
+        // 区间条件注解
+        List<BetweenDetails> betweenDetailsList = paramsDetails.getBetweenDetailsList();
+        if (CollUtil.isNotEmpty(betweenDetailsList)) {
+            BetweenConditionHandler handler = ConditionManager.getBetweenConditionHandler();
+            for (BetweenDetails betweenDetails : betweenDetailsList) {
+                handler.handleCondition(wrapper, betweenDetails,queryParams);
+            }
         }
         return wrapper;
     }
@@ -181,7 +191,16 @@ public class QueryUtils {
                             paramsDetails.addCanOrder(getOrderItem(canOrder.isAsc(), paramField.getName()));
                         }
                     }
-                    // 类上的条件注解
+                    // Between条件注解
+                    Between between = paramsClass.getAnnotation(Between.class);
+                    if (between != null) {
+                        paramsDetails.addBetweenDetails(new BetweenDetails(paramsClass, between));
+                    }
+                    BetweenList betweenList = paramsClass.getAnnotation(BetweenList.class);
+                    if (betweenList != null) {
+                        List<BetweenDetails> betweenDetailsList = Arrays.stream(betweenList.value()).map(b -> new BetweenDetails(paramsClass, b)).collect(Collectors.toList());
+                        paramsDetails.addBetweenDetails(betweenDetailsList);
+                    }
 
                     // 获取类上的@OrderBy注解
                     OrderBy orderBy = paramsClass.getAnnotation(OrderBy.class);
@@ -222,7 +241,8 @@ public class QueryUtils {
 
     /**
      * 构造排序项
-     * @param isAsc 是否是升序排序
+     *
+     * @param isAsc  是否是升序排序
      * @param column 数据库列
      * @return 排序项
      */
