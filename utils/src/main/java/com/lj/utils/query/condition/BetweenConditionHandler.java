@@ -1,51 +1,46 @@
 package com.lj.utils.query.condition;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.lj.utils.query.AbstractQueryParams;
-import com.lj.utils.query.BetweenDetails;
 import com.lj.utils.query.QueryWrapper;
 import com.lj.utils.query.annotation.Between;
+import com.lj.utils.query.details.AnnotationDetails;
+import com.lj.utils.query.details.BetweenDetails;
+import com.lj.utils.query.details.ConditionDetails;
 
-import java.util.Collection;
-import java.util.Map;
+import java.lang.reflect.Field;
 
 /**
  * @author luojing
  * @date 2023/8/17
  */
-public class BetweenConditionHandler {
+public class BetweenConditionHandler extends AbstractConditionHandler<Between> {
 
-    public <T> void handleCondition(QueryWrapper<T> queryWrapper, BetweenDetails betweenDetails, AbstractQueryParams queryParams) {
-        Between condition = betweenDetails.getCondition();
-        Object leftFieldValue = ReflectUtil.getFieldValue(queryParams, condition.leftField());
-        Object rightFieldValue = ReflectUtil.getFieldValue(queryParams, condition.rightField());
+    @Override
+    public ConditionDetails<Between> handlerConditionDetails(Class<? extends AbstractQueryParams> paramsClass, Field paramField, Between conditionAnnotation) {
+        AnnotationDetails<Between> annotationDetails = new AnnotationDetails<>(conditionAnnotation);
+        annotationDetails.setNotNull(conditionAnnotation.notNull());
+        annotationDetails.setColumn(conditionAnnotation.column());
+        return new BetweenDetails<>(annotationDetails, this, paramsClass);
+    }
+
+    @Override
+    public <T> void handleCondition(QueryWrapper<T> queryWrapper, ConditionDetails<Between> conditionDetails, AbstractQueryParams queryParams) {
+        BetweenDetails<Between> betweenDetails = (BetweenDetails<Between>) conditionDetails;
+        AnnotationDetails<Between> annotationDetails = betweenDetails.getAnnotationDetails();
+        Between between = annotationDetails.getConditionAnnotation();
+        Object leftFieldValue = ReflectUtil.getFieldValue(queryParams, between.leftField());
+        Object rightFieldValue = ReflectUtil.getFieldValue(queryParams, between.rightField());
         boolean isNotNull = true;
-        if (condition.notNull()) {
+
+        if (annotationDetails.isNotNull()) {
             isNotNull = isNotNull(leftFieldValue) && isNotNull(rightFieldValue);
         }
-        String column = StrUtil.toUnderlineCase(condition.column());
-        if (condition.not()) {
+        String column = transformColumn(annotationDetails.getColumn());
+        if (between.not()) {
             queryWrapper.notBetween(isNotNull, column, leftFieldValue, rightFieldValue);
         } else {
             queryWrapper.between(isNotNull, column, leftFieldValue, rightFieldValue);
         }
-    }
-
-    protected boolean isNotNull(Object fieldValue) {
-        if (fieldValue instanceof String) {
-            return StrUtil.isNotBlank((String) fieldValue);
-        }
-        if (fieldValue instanceof Collection) {
-            return CollUtil.isNotEmpty((Collection) fieldValue);
-        }
-
-        if (fieldValue instanceof Map) {
-            return CollUtil.isNotEmpty((Map) fieldValue);
-        }
-
-        return ObjectUtil.isNotNull(fieldValue);
     }
 }

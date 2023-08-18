@@ -11,9 +11,10 @@ import com.lj.utils.query.annotation.Between;
 import com.lj.utils.query.annotation.BetweenList;
 import com.lj.utils.query.annotation.CanOrder;
 import com.lj.utils.query.annotation.OrderBy;
-import com.lj.utils.query.condition.AbstractConditionHandler;
-import com.lj.utils.query.condition.BetweenConditionHandler;
+import com.lj.utils.query.condition.ConditionHandler;
 import com.lj.utils.query.condition.ConditionManager;
+import com.lj.utils.query.details.ConditionDetails;
+import com.lj.utils.query.details.ParamsDetails;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -51,17 +52,9 @@ public class QueryUtils {
         Class<? extends AbstractQueryParams> paramsClass = queryParams.getClass();
         ParamsDetails paramsDetails = getParamsDetails(paramsClass);
         QueryWrapper<T> wrapper = new QueryWrapper<>();
-        // 字段上的条件注解
-        for (ParamsFieldDetail fieldDetails : paramsDetails.getFieldDetailList()) {
-            fieldDetails.getHandler().handleCondition(wrapper, fieldDetails, queryParams);
-        }
-        // 区间条件注解
-        List<BetweenDetails> betweenDetailsList = paramsDetails.getBetweenDetailsList();
-        if (CollUtil.isNotEmpty(betweenDetailsList)) {
-            BetweenConditionHandler handler = ConditionManager.getBetweenConditionHandler();
-            for (BetweenDetails betweenDetails : betweenDetailsList) {
-                handler.handleCondition(wrapper, betweenDetails,queryParams);
-            }
+        // 条件注解
+        for (ConditionDetails conditionDetails : paramsDetails.getConditionDetailsList()) {
+            conditionDetails.getHandler().handleCondition(wrapper, conditionDetails, queryParams);
         }
         return wrapper;
     }
@@ -180,9 +173,9 @@ public class QueryUtils {
                         // 条件注解
                         Annotation[] annotations = paramField.getAnnotations();
                         for (Annotation annotation : annotations) {
-                            AbstractConditionHandler handler = ConditionManager.getHandler(annotation.annotationType());
+                            ConditionHandler<? extends Annotation> handler = ConditionManager.getHandler(annotation.annotationType());
                             if (handler != null) {
-                                paramsDetails.addFieldDetail(handler.handleParamsField(paramField, annotation));
+                                paramsDetails.addConditionDetails(handler.getConditionDetails(paramsClass, paramField, annotation));
                             }
                         }
                         // 排序字段
@@ -194,12 +187,15 @@ public class QueryUtils {
                     // Between条件注解
                     Between between = paramsClass.getAnnotation(Between.class);
                     if (between != null) {
-                        paramsDetails.addBetweenDetails(new BetweenDetails(paramsClass, between));
+                        ConditionDetails<? extends Annotation> conditionDetails = ConditionManager.getHandler(Between.class).getConditionDetails(paramsClass, null, between);
+                        paramsDetails.addConditionDetails(conditionDetails);
                     }
                     BetweenList betweenList = paramsClass.getAnnotation(BetweenList.class);
                     if (betweenList != null) {
-                        List<BetweenDetails> betweenDetailsList = Arrays.stream(betweenList.value()).map(b -> new BetweenDetails(paramsClass, b)).collect(Collectors.toList());
-                        paramsDetails.addBetweenDetails(betweenDetailsList);
+                        List<ConditionDetails> betweenDetailsList = Arrays.stream(betweenList.value())
+                                .map(b -> ConditionManager.getHandler(Between.class).getConditionDetails(paramsClass, null, b))
+                                .collect(Collectors.toList());
+                        paramsDetails.addConditionDetails(betweenDetailsList);
                     }
 
                     // 获取类上的@OrderBy注解

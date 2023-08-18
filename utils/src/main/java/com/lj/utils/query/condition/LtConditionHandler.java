@@ -1,9 +1,12 @@
 package com.lj.utils.query.condition;
 
-import com.lj.utils.query.ParamsFieldDetail;
+import cn.hutool.core.util.StrUtil;
+import com.lj.utils.query.AbstractQueryParams;
 import com.lj.utils.query.QueryWrapper;
 import com.lj.utils.query.WrapperFun;
 import com.lj.utils.query.annotation.Lt;
+import com.lj.utils.query.details.AnnotationDetails;
+import com.lj.utils.query.details.ParamsFieldDetail;
 
 import java.lang.reflect.Field;
 
@@ -11,23 +14,20 @@ import java.lang.reflect.Field;
  * @author luojing
  * @date 2023/8/17
  */
-public class LtConditionHandler extends AbstractConditionHandler<Lt> {
+public class LtConditionHandler extends FieldGeneralConditionHandler<Lt> {
 
     @Override
-    protected boolean valueNotNull(ParamsFieldDetail<Lt> fieldDetails) {
-        return fieldDetails.getCondition().notNull();
-    }
-
-    @Override
-    protected String getColumn(ParamsFieldDetail<Lt> fieldDetails) {
-        Lt condition = fieldDetails.getCondition();
-        Field paramField = fieldDetails.getParamField();
-        return this.getColumn(condition.column(), paramField.getName());
+    public AnnotationDetails<Lt> getAnnotationDetails(Class<? extends AbstractQueryParams> paramsClass, Field paramField, Lt conditionAnnotation) {
+        AnnotationDetails<Lt> annotationDetails = new AnnotationDetails<>(conditionAnnotation);
+        annotationDetails.setNotNull(conditionAnnotation.notNull());
+        String column = conditionAnnotation.column();
+        annotationDetails.setColumn(StrUtil.isNotBlank(column) ? column : paramField.getName());
+        return annotationDetails;
     }
 
     @Override
     protected <T> WrapperFun getFun(QueryWrapper<T> queryWrapper, ParamsFieldDetail<Lt> fieldDetails, Object fieldValue) {
-        Lt condition = fieldDetails.getCondition();
+        Lt condition = fieldDetails.getAnnotationDetails().getConditionAnnotation();
         if (condition.equal()) {
             return queryWrapper::le;
         }

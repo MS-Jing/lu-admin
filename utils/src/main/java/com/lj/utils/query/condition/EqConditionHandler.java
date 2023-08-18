@@ -1,9 +1,12 @@
 package com.lj.utils.query.condition;
 
-import com.lj.utils.query.ParamsFieldDetail;
+import cn.hutool.core.util.StrUtil;
+import com.lj.utils.query.AbstractQueryParams;
 import com.lj.utils.query.QueryWrapper;
 import com.lj.utils.query.WrapperFun;
 import com.lj.utils.query.annotation.Eq;
+import com.lj.utils.query.details.AnnotationDetails;
+import com.lj.utils.query.details.ParamsFieldDetail;
 
 import java.lang.reflect.Field;
 
@@ -11,24 +14,22 @@ import java.lang.reflect.Field;
  * @author luojing
  * @date 2023/8/11
  */
-public class EqConditionHandler extends AbstractConditionHandler<Eq> {
+public class EqConditionHandler extends FieldGeneralConditionHandler<Eq> {
 
     @Override
-    protected boolean valueNotNull(ParamsFieldDetail<Eq> fieldDetails) {
-        return fieldDetails.getCondition().notNull();
-    }
-
-    @Override
-    protected String getColumn(ParamsFieldDetail<Eq> fieldDetails) {
-        Eq condition = fieldDetails.getCondition();
-        Field paramField = fieldDetails.getParamField();
-        return this.getColumn(condition.column(), paramField.getName());
+    public AnnotationDetails<Eq> getAnnotationDetails(Class<? extends AbstractQueryParams> paramsClass, Field paramField, Eq conditionAnnotation) {
+        AnnotationDetails<Eq> annotationDetails = new AnnotationDetails<>(conditionAnnotation);
+        annotationDetails.setNotNull(conditionAnnotation.notNull());
+        String column = conditionAnnotation.column();
+        annotationDetails.setColumn(StrUtil.isNotBlank(column) ? column : paramField.getName());
+        annotationDetails.setNot(conditionAnnotation.not());
+        return annotationDetails;
     }
 
     @Override
     protected <T> WrapperFun getFun(QueryWrapper<T> queryWrapper, ParamsFieldDetail<Eq> fieldDetails, Object fieldValue) {
-        Eq condition = fieldDetails.getCondition();
-        if (condition.not()) {
+        AnnotationDetails<Eq> annotationDetails = fieldDetails.getAnnotationDetails();
+        if (annotationDetails.isNot()) {
             return queryWrapper::ne;
         } else {
             return queryWrapper::eq;
