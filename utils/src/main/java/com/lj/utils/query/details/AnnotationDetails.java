@@ -1,6 +1,8 @@
 package com.lj.utils.query.details;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 
 import java.lang.annotation.Annotation;
 
@@ -15,6 +17,7 @@ public class AnnotationDetails<A extends Annotation> {
     /**
      * 条件注解
      */
+    @Setter(AccessLevel.NONE)
     private A conditionAnnotation;
 
     /**
