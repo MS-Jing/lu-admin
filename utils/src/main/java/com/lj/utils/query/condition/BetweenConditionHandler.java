@@ -5,7 +5,7 @@ import com.lj.utils.query.AbstractQueryParams;
 import com.lj.utils.query.QueryWrapper;
 import com.lj.utils.query.annotation.Between;
 import com.lj.utils.query.details.AnnotationDetails;
-import com.lj.utils.query.details.BetweenDetails;
+import com.lj.utils.query.details.ParamsClassDetails;
 import com.lj.utils.query.details.ConditionDetails;
 
 import java.lang.reflect.Field;
@@ -23,12 +23,12 @@ public class BetweenConditionHandler extends AbstractConditionHandler<Between> {
         annotationDetails.setColumn(conditionAnnotation.column());
         annotationDetails.setNot(conditionAnnotation.not());
         annotationDetails.setOr(conditionAnnotation.or());
-        return new BetweenDetails<>(annotationDetails, this, paramsClass);
+        return new ParamsClassDetails<>(annotationDetails, this, paramsClass);
     }
 
     @Override
     public <T> void handleCondition(QueryWrapper<T> queryWrapper, ConditionDetails<Between> conditionDetails, AbstractQueryParams queryParams) {
-        BetweenDetails<Between> betweenDetails = (BetweenDetails<Between>) conditionDetails;
+        ParamsClassDetails<Between> betweenDetails = (ParamsClassDetails<Between>) conditionDetails;
         AnnotationDetails<Between> annotationDetails = betweenDetails.getAnnotationDetails();
         Between between = annotationDetails.getConditionAnnotation();
         Object leftFieldValue = ReflectUtil.getFieldValue(queryParams, between.leftField());

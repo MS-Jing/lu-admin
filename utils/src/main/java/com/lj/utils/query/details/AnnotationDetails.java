@@ -2,6 +2,7 @@ package com.lj.utils.query.details;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.lang.annotation.Annotation;
@@ -12,6 +13,7 @@ import java.lang.annotation.Annotation;
  * 注解的详情类
  */
 @Data
+@NoArgsConstructor(access = AccessLevel.NONE)
 public class AnnotationDetails<A extends Annotation> {
 
     /**

@@ -25,6 +25,7 @@ public class ConditionManager {
         CONDITION_ANNOTATION_HANDLER_MAPPING.put(Lt.class, new LtConditionHandler());
         CONDITION_ANNOTATION_HANDLER_MAPPING.put(Between.class, new BetweenConditionHandler());
         CONDITION_ANNOTATION_HANDLER_MAPPING.put(In.class, new InConditionHandler());
+        CONDITION_ANNOTATION_HANDLER_MAPPING.put(Select.class, new SelectConditionHandler());
     }
 
     public static ConditionHandler<? extends Annotation> getHandler(Class<? extends Annotation> annotationClass) {

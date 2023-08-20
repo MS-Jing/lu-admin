@@ -7,10 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lj.utils.query.annotation.Between;
-import com.lj.utils.query.annotation.BetweenList;
-import com.lj.utils.query.annotation.CanOrder;
-import com.lj.utils.query.annotation.OrderBy;
+import com.lj.utils.query.annotation.*;
 import com.lj.utils.query.condition.ConditionHandler;
 import com.lj.utils.query.condition.ConditionManager;
 import com.lj.utils.query.details.ConditionDetails;
@@ -196,6 +193,12 @@ public class QueryUtils {
                                 .map(b -> ConditionManager.getHandler(Between.class).getConditionDetails(paramsClass, null, b))
                                 .collect(Collectors.toList());
                         paramsDetails.addConditionDetails(betweenDetailsList);
+                    }
+                    // Select注解
+                    Select select = paramsClass.getAnnotation(Select.class);
+                    if (select != null) {
+                        ConditionDetails<? extends Annotation> conditionDetails = ConditionManager.getHandler(Select.class).getConditionDetails(paramsClass, null, between);
+                        paramsDetails.addConditionDetails(conditionDetails);
                     }
 
                     // 获取类上的@OrderBy注解
