@@ -32,4 +32,9 @@ public @interface Like {
      * 是否需要取反 例如：not like
      */
     boolean not() default false;
+
+    /**
+     * 是否 用or来拼接，默认是and
+     */
+    boolean or() default false;
 }

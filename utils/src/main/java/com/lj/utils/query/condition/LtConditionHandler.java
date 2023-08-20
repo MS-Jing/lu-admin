@@ -22,6 +22,7 @@ public class LtConditionHandler extends FieldGeneralConditionHandler<Lt> {
         annotationDetails.setNotNull(conditionAnnotation.notNull());
         String column = conditionAnnotation.column();
         annotationDetails.setColumn(StrUtil.isNotBlank(column) ? column : paramField.getName());
+        annotationDetails.setOr(conditionAnnotation.or());
         return annotationDetails;
     }
 

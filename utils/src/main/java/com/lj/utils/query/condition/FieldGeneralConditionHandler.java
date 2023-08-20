@@ -35,6 +35,12 @@ public abstract class FieldGeneralConditionHandler<A extends Annotation> extends
         if (wrapperFun != null) {
             // 这是在判断queryWrapper的查询条件是否需要对字段值进行判空
             boolean isNotNull = !annotationDetails.isNotNull() || this.isNotNull(fieldValue);
+
+            if (annotationDetails.isOr()) {
+                // 如果判空后不加入最后的条件那么也不用or拼接
+                queryWrapper.or(isNotNull);
+            }
+
             String column = transformColumn(annotationDetails.getColumn());
             wrapperFun.condition(isNotNull, column, fieldValue);
         } else {

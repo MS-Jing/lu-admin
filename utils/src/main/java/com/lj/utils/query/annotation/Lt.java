@@ -24,4 +24,9 @@ public @interface Lt {
      * 是否是小于等于：<=
      */
     boolean equal() default false;
+
+    /**
+     * 是否 用or来拼接，默认是and
+     */
+    boolean or() default false;
 }

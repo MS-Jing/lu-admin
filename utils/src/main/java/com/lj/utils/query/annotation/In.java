@@ -24,4 +24,9 @@ public @interface In {
      * 是否需要取反 false 为不取反，true就是 not in
      */
     boolean not() default false;
+
+    /**
+     * 是否 用or来拼接，默认是and
+     */
+    boolean or() default false;
 }

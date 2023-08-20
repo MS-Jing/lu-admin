@@ -21,6 +21,8 @@ public class BetweenConditionHandler extends AbstractConditionHandler<Between> {
         AnnotationDetails<Between> annotationDetails = new AnnotationDetails<>(conditionAnnotation);
         annotationDetails.setNotNull(conditionAnnotation.notNull());
         annotationDetails.setColumn(conditionAnnotation.column());
+        annotationDetails.setNot(conditionAnnotation.not());
+        annotationDetails.setOr(conditionAnnotation.or());
         return new BetweenDetails<>(annotationDetails, this, paramsClass);
     }
 
@@ -35,6 +37,9 @@ public class BetweenConditionHandler extends AbstractConditionHandler<Between> {
 
         if (annotationDetails.isNotNull()) {
             isNotNull = isNotNull(leftFieldValue) && isNotNull(rightFieldValue);
+        }
+        if (annotationDetails.isOr()) {
+            queryWrapper.or(isNotNull);
         }
         String column = transformColumn(annotationDetails.getColumn());
         if (between.not()) {

@@ -25,4 +25,9 @@ public @interface Gt {
      * 是否是大于等于：>=
      */
     boolean equal() default false;
+
+    /**
+     * 是否 用or来拼接，默认是and
+     */
+    boolean or() default false;
 }

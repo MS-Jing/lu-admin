@@ -34,4 +34,9 @@ public @interface Between {
      * 是否需要取反 false 为等于，true 为不等于，默认是等于 就是eq
      */
     boolean not() default false;
+
+    /**
+     * 是否 用or来拼接，默认是and
+     */
+    boolean or() default false;
 }

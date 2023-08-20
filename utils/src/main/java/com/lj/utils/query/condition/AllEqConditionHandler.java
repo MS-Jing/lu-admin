@@ -45,6 +45,9 @@ public class AllEqConditionHandler extends FieldGeneralConditionHandler<AllEq> {
         if (CollUtil.isNotEmpty(params)) {
             params.forEach((k, v) -> map.put(transformColumn(k), v));
         }
+        if (annotation.or()) {
+            queryWrapper.or(isNotNull);
+        }
         queryWrapper.allEq(isNotNull, map, annotation.null2IsNull());
     }
 }

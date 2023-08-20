@@ -34,6 +34,7 @@ public class InConditionHandler extends FieldGeneralConditionHandler<In> {
         annotationDetails.setNot(conditionAnnotation.not());
         String column = conditionAnnotation.column();
         annotationDetails.setColumn(StrUtil.isNotBlank(column) ? column : paramField.getName());
+        annotationDetails.setOr(conditionAnnotation.or());
         return annotationDetails;
     }
 

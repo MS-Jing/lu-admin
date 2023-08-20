@@ -23,6 +23,7 @@ public class LikeConditionHandler extends FieldGeneralConditionHandler<Like> {
         String column = conditionAnnotation.column();
         annotationDetails.setColumn(StrUtil.isNotBlank(column) ? column : paramField.getName());
         annotationDetails.setNot(conditionAnnotation.not());
+        annotationDetails.setOr(conditionAnnotation.or());
         return annotationDetails;
     }
 

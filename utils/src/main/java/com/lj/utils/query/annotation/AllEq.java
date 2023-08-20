@@ -22,4 +22,9 @@ public @interface AllEq {
      * 是否参数为 null 自动执行 isNull 方法, false 则忽略这个字段
      */
     boolean null2IsNull() default true;
+
+    /**
+     * 是否 用or来拼接，默认是and
+     */
+    boolean or() default false;
 }

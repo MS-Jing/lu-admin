@@ -35,6 +35,11 @@ public class AnnotationDetails<A extends Annotation> {
      */
     private boolean not;
 
+    /**
+     * 是否 用or来拼接，默认是and
+     */
+    private boolean or;
+
     public AnnotationDetails(A conditionAnnotation) {
         this.conditionAnnotation = conditionAnnotation;
     }
