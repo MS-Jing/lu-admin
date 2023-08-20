@@ -197,7 +197,7 @@ public class QueryUtils {
                     // Select注解
                     Select select = paramsClass.getAnnotation(Select.class);
                     if (select != null) {
-                        ConditionDetails<? extends Annotation> conditionDetails = ConditionManager.getHandler(Select.class).getConditionDetails(paramsClass, null, between);
+                        ConditionDetails<? extends Annotation> conditionDetails = ConditionManager.getHandler(Select.class).getConditionDetails(paramsClass, null, select);
                         paramsDetails.addConditionDetails(conditionDetails);
                     }
 
