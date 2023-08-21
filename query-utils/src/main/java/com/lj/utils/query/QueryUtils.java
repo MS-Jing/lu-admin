@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lj.core.utils.QueryWrapper;
 import com.lj.utils.query.annotation.*;
 import com.lj.utils.query.condition.ConditionHandler;
 import com.lj.utils.query.condition.ConditionManager;

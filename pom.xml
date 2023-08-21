@@ -17,6 +17,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>core</module>
         <module>query-utils</module>
     </modules>
 

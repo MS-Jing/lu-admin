@@ -1,4 +1,4 @@
-package com.lj.utils.query;
+package com.lj.core.utils;
 
 import com.baomidou.mybatisplus.core.enums.SqlLike;
 

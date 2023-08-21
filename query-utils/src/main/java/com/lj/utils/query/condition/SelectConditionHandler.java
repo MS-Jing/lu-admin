@@ -1,7 +1,7 @@
 package com.lj.utils.query.condition;
 
 import com.lj.utils.query.AbstractQueryParams;
-import com.lj.utils.query.QueryWrapper;
+import com.lj.core.utils.QueryWrapper;
 import com.lj.utils.query.annotation.Select;
 import com.lj.utils.query.details.AnnotationDetails;
 import com.lj.utils.query.details.ConditionDetails;

@@ -1,6 +1,6 @@
 package com.lj.utils.query.enums;
 
-import com.lj.utils.query.QueryWrapper;
+import com.lj.core.utils.QueryWrapper;
 import com.lj.utils.query.WrapperFun;
 
 /**
