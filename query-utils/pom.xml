@@ -9,11 +9,11 @@
 <!--        <relativePath/>-->
     </parent>
 
-    <artifactId>utils</artifactId>
+    <artifactId>query-utils</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>utils</name>
-    <description>Demo project for Spring Boot</description>
+    <name>query-utils</name>
+    <description>query-utils</description>
     <dependencies>
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
