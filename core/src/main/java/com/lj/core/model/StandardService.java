@@ -1,8 +1,10 @@
 package com.lj.core.model;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lj.core.utils.QueryWrapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author luojing
@@ -13,7 +15,9 @@ public interface StandardService<T> extends IService<T> {
 
     StandardMapper<T> getStandardMapper();
 
-//    List<Object>
+    default List<Map<String, Object>> queryList(QueryWrapper<T> queryWrapper) {
+        return getStandardMapper().queryList(queryWrapper);
+    }
 
 
 }

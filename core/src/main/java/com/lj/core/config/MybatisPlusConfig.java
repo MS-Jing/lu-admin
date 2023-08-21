@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.lj.core.Injector.MybatisPlusSqlInjector;
 import com.lj.core.constant.CoreConstant;
 import org.apache.ibatis.reflection.MetaObject;
 import org.mybatis.spring.annotation.MapperScan;
@@ -49,5 +50,8 @@ public class MybatisPlusConfig implements MetaObjectHandler {
         this.fillStrategy(metaObject, CoreConstant.UPDATE_TIME, LocalDateTime.now());
     }
 
-
+    @Bean
+    public MybatisPlusSqlInjector mybatisPlusSqlInjector() {
+        return new MybatisPlusSqlInjector();
+    }
 }
