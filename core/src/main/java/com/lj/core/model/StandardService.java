@@ -1,7 +1,7 @@
 package com.lj.core.model;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lj.core.utils.QueryWrapper;
+import com.lj.core.utils.query.QueryWrapper;
 
 import java.util.List;
 import java.util.Map;

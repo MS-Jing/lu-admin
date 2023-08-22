@@ -2,7 +2,7 @@ package com.lj.core.model;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.lj.core.utils.QueryWrapper;
+import com.lj.core.utils.query.QueryWrapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

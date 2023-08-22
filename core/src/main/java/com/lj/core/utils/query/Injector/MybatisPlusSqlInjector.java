@@ -1,4 +1,4 @@
-package com.lj.core.Injector;
+package com.lj.core.utils.query.Injector;
 
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;

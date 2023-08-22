@@ -4,7 +4,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import com.lj.utils.query.AbstractQueryParams;
-import com.lj.core.utils.QueryWrapper;
+import com.lj.core.utils.query.QueryWrapper;
 import com.lj.utils.query.WrapperFun;
 import com.lj.utils.query.annotation.In;
 import com.lj.utils.query.details.AnnotationDetails;

@@ -3,7 +3,7 @@ package com.lj.utils.query.condition;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.TypeUtil;
 import com.lj.utils.query.AbstractQueryParams;
-import com.lj.core.utils.QueryWrapper;
+import com.lj.core.utils.query.QueryWrapper;
 import com.lj.utils.query.annotation.AllEq;
 import com.lj.utils.query.details.AnnotationDetails;
 import com.lj.utils.query.details.ParamsFieldDetail;

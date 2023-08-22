@@ -1,4 +1,4 @@
-package com.lj.core.Injector;
+package com.lj.core.utils.query.Injector;
 
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
@@ -21,9 +21,14 @@ public class QueryList extends AbstractMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
         SqlMethod sqlMethod = SqlMethod.SELECT_MAPS;
-        String sql = String.format(sqlMethod.getSql(), sqlFirst(), sqlSelectColumns(tableInfo, true), tableInfo.getTableName(),
+        String sql = String.format(sqlMethod.getSql(), sqlFirst(), sqlSelectColumns(tableInfo, true), getTableName(tableInfo),
                 sqlWhereEntityWrapper(true, tableInfo), sqlOrderBy(tableInfo), sqlComment());
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
         return this.addSelectMappedStatementForOther(mapperClass, this.methodName, sqlSource, Map.class);
+    }
+
+    private String getTableName(TableInfo tableInfo) {
+        return tableInfo.getTableName() +
+                "\n <if test=\"ew != null and ew.sqlJoinList != null\">${ew.getSqlJoin()}</if>";
     }
 }
