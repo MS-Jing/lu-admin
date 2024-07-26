@@ -20,6 +20,7 @@
         <module>query-utils</module>
         <module>lu-common</module>
         <module>lu-common-web</module>
+        <module>lu-mp</module>
     </modules>
 
     <properties>
@@ -31,6 +32,8 @@
         <hutool.version>5.8.26</hutool.version>
         <!--当前springboot的版本-->
         <spring.boot.version>2.5.12</spring.boot.version>
+        <!--mybatis-plus版本-->
+        <mybatis-plus.version>3.5.7</mybatis-plus.version>
     </properties>
 
     <dependencyManagement>
@@ -62,7 +65,7 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>3.5.2</version>
+                <version>${mybatis-plus.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
