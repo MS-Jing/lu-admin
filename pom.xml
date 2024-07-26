@@ -7,8 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.5.RELEASE</version>
-<!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+        <version>2.5.12</version>
     </parent>
 
     <groupId>com.lj</groupId>
@@ -19,20 +18,46 @@
     <modules>
         <module>core</module>
         <module>query-utils</module>
+        <module>lu-common</module>
+        <module>lu-common-web</module>
     </modules>
 
     <properties>
+        <!--java 版本-->
         <java.version>1.8</java.version>
+        <!--打包跳过测试-->
         <maven.test.skip>true</maven.test.skip>
+        <!--hutool-->
+        <hutool.version>5.8.26</hutool.version>
+        <!--当前springboot的版本-->
+        <spring.boot.version>2.5.12</spring.boot.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-common</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-common-web</artifactId>
+                <version>${version}</version>
+            </dependency>
             <!--hutool工具类-->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
-                <version>5.8.15</version>
+                <version>${hutool.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
