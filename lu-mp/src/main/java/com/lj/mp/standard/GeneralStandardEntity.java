@@ -1,4 +1,4 @@
-package com.lj.mp.model;
+package com.lj.mp.standard;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;

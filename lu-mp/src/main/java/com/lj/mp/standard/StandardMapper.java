@@ -1,4 +1,4 @@
-package com.lj.mp.model;
+package com.lj.mp.standard;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;

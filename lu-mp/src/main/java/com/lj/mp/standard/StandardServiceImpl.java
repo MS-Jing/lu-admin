@@ -1,4 +1,4 @@
-package com.lj.mp.model;
+package com.lj.mp.standard;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

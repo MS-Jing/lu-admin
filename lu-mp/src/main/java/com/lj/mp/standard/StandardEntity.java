@@ -1,4 +1,4 @@
-package com.lj.mp.model;
+package com.lj.mp.standard;
 
 import java.io.Serializable;
 

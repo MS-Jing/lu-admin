@@ -1,7 +1,7 @@
 package com.lj.mp.constant;
 
 import cn.hutool.core.lang.func.LambdaUtil;
-import com.lj.mp.model.GeneralStandardEntity;
+import com.lj.mp.standard.GeneralStandardEntity;
 
 /**
  * @author luojing
