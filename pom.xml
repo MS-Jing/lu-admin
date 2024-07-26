@@ -55,6 +55,11 @@
                 <artifactId>lu-common-web</artifactId>
                 <version>${version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-mp</artifactId>
+                <version>${version}</version>
+            </dependency>
             <!--hutool工具类-->
             <dependency>
                 <groupId>cn.hutool</groupId>
