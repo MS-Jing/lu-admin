@@ -20,6 +20,7 @@
         <module>lu-common</module>
         <module>lu-common-web</module>
         <module>lu-mp</module>
+        <module>lu-modules</module>
     </modules>
 
     <properties>
@@ -45,6 +46,7 @@
                 <scope>import</scope>
             </dependency>
 
+            <!--基础模块-->
             <dependency>
                 <groupId>com.lj</groupId>
                 <artifactId>lu-common</artifactId>
@@ -60,6 +62,30 @@
                 <artifactId>lu-mp</artifactId>
                 <version>${version}</version>
             </dependency>
+
+            <!--系统模块-->
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-sys</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-sys-api</artifactId>
+                <version>${version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-auth</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-auth-api</artifactId>
+                <version>${version}</version>
+            </dependency>
+
             <!--hutool工具类-->
             <dependency>
                 <groupId>cn.hutool</groupId>
