@@ -16,6 +16,10 @@
             <groupId>com.lj</groupId>
             <artifactId>lu-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lj</groupId>
+            <artifactId>lu-mp</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
