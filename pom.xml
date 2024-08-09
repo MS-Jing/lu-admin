@@ -34,6 +34,7 @@
         <spring.boot.version>2.5.12</spring.boot.version>
         <!--mybatis-plus版本-->
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <sa-token.version>1.38.0</sa-token.version>
     </properties>
 
     <dependencyManagement>
@@ -85,6 +86,15 @@
                 <artifactId>lu-auth-api</artifactId>
                 <version>${version}</version>
             </dependency>
+
+            <!--权限框架 sa-token-->
+            <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
 
             <!--hutool工具类-->
             <dependency>
