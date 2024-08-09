@@ -19,6 +19,9 @@ target/
 *.iml
 *.ipr
 **/.mvn
+**/.gitignore
+**/mvnw
+**/mvnw.cmd
 
 ### NetBeans ###
 /nbproject/private/
