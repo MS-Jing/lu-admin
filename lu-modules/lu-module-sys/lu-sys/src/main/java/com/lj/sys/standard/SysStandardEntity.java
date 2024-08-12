@@ -2,7 +2,7 @@ package com.lj.sys.standard;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.lj.mp.standard.GeneralStandardEntity;
+import com.lj.mp.standard.entity.GeneralStandardEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

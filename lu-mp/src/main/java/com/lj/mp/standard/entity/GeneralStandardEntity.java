@@ -1,6 +1,9 @@
-package com.lj.mp.standard;
+package com.lj.mp.standard.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,9 +16,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class GeneralStandardEntity extends StandardEntity {
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
+public abstract class GeneralStandardEntity extends IdLongStandardEntity {
 
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
