@@ -1,4 +1,4 @@
-package com.lj.auth.controller;
+package com.lj.sys.auth.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;

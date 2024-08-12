@@ -31,10 +31,6 @@
             <groupId>com.lj</groupId>
             <artifactId>lu-sys-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.lj</groupId>
-            <artifactId>lu-auth-api</artifactId>
-        </dependency>
     </dependencies>
 
     <build>

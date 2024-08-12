@@ -20,6 +20,10 @@
             <groupId>com.lj</groupId>
             <artifactId>lu-mp</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

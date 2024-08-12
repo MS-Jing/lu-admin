@@ -13,7 +13,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>lu-module-sys</module>
-        <module>lu-module-auth</module>
     </modules>
 
 

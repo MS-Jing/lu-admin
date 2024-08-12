@@ -76,17 +76,6 @@
                 <version>${version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.lj</groupId>
-                <artifactId>lu-auth</artifactId>
-                <version>${version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.lj</groupId>
-                <artifactId>lu-auth-api</artifactId>
-                <version>${version}</version>
-            </dependency>
-
             <!--权限框架 sa-token-->
             <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
             <dependency>
