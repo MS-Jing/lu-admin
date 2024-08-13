@@ -35,7 +35,9 @@
         <!--mybatis-plus版本-->
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <sa-token.version>1.38.0</sa-token.version>
+        <!--swagger knife4j是对原生得到swagger做了增强 springfox的版本需要与knife4j版本中的对应-->
         <knife4j.version>2.0.9</knife4j.version>
+        <springfox.version>2.10.5</springfox.version>
     </properties>
 
     <dependencyManagement>
@@ -98,10 +100,16 @@
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
+            <!--swagger-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
