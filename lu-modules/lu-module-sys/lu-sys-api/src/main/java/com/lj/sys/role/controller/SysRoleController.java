@@ -2,6 +2,7 @@ package com.lj.sys.role.controller;
 
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.sys.role.service.SysRoleService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @ResponseResultVo
 @RequestMapping("/sys/role")
+@Api("角色管理")
 public class SysRoleController {
 
     @Autowired
