@@ -1,4 +1,4 @@
-package com.lj.sys.config;
+package com.lj.sys;
 
 import com.github.xiaoymin.knife4j.spring.extension.OpenApiExtensionResolver;
 import io.swagger.annotations.ApiOperation;
