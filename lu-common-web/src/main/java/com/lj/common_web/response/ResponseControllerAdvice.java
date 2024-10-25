@@ -28,10 +28,17 @@ public class ResponseControllerAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> aClass) {
+        // 判断方法上是否有ResponseResultVo注解
+        ResponseResultVo methodAnnotation = returnType.getMethodAnnotation(ResponseResultVo.class);
+        if (methodAnnotation != null) {
+            return methodAnnotation.value();
+        }
         //判断类上是否有ResponseResultVo注解
         ResponseResultVo annotation = returnType.getDeclaringClass().getAnnotation(ResponseResultVo.class);
-        ResponseResultVo methodAnnotation = returnType.getMethodAnnotation(ResponseResultVo.class);
-        return annotation != null || methodAnnotation != null;
+        if (annotation != null) {
+            return annotation.value();
+        }
+        return false;
     }
 
     @Override
