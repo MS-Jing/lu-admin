@@ -1,15 +1,16 @@
 package com.lj.common_web.exception;
 
-import com.lj.common.exception.CommonException;
+import cn.hutool.core.util.ClassUtil;
 import com.lj.common_web.response.ResponseCode;
 import com.lj.common_web.response.ResponseVO;
 import com.lj.common_web.utils.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author luojing
@@ -22,51 +23,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @Autowired
+    private List<com.lj.common_web.exception.ExceptionHandler<? extends Exception>> exceptionHandlerList;
 
-    /**
-     * 公共异常
-     */
-    @ExceptionHandler(CommonException.class)
-    public ResponseVO<String> handler(CommonException e) {
-        reportLog(e);
-        ResponseCode resultCode = ResponseCode.getResponseCode(e.getCode());
-        if (resultCode != null) {
-            return ResponseVO.error(resultCode, e.getMsg());
-        }
-        return ResponseVO.error(ResponseCode.FAILED, e.getMsg());
-    }
-
-    /**
-     * 方法不被支持
-     */
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseVO<String> handler(HttpRequestMethodNotSupportedException e) {
-        reportLog(e);
-        return ResponseVO.of(ResponseCode.METHOD_NOT_ALLOWED);
-    }
-
-    /**
-     * 实体校验异常
-     */
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseVO<String> handler(MethodArgumentNotValidException e) {
-        ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
-        reportLog(e, objectError.getDefaultMessage());
-        return ResponseVO.error(ResponseCode.BAD_REQUEST, objectError.getDefaultMessage());
-    }
-
-    /**
-     * 断言异常
-     */
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseVO<String> handler(IllegalArgumentException e) {
-        reportLog(e);
-        return ResponseVO.error(ResponseCode.BAD_REQUEST, e.getMessage());
-    }
 
     @ExceptionHandler(Exception.class)
     public ResponseVO<String> handler(Exception e) {
         reportLog(e);
+        for (com.lj.common_web.exception.ExceptionHandler<? extends Exception> handler : exceptionHandlerList) {
+            Class<?> exception = handler.getException();
+            if (exception.equals(ClassUtil.getClass(e))) {
+                return handler.toHandler(e);
+            }
+        }
         return ResponseVO.of(ResponseCode.FAILED);
     }
 
@@ -75,6 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     private void reportLog(Exception e, String exceptionMessage) {
-        log.error("request url: [" + ServletUtil.getRequest().getRequestURI() + "]; " + e.getClass().getSimpleName() + ": [" + exceptionMessage + "]");
+        HttpServletRequest request = ServletUtil.getRequest();
+        log.error("ip: [{}];request url: [{}]; {}: [{}]", ServletUtil.getIpAddr(request), request.getRequestURI(), e.getClass().getSimpleName(), exceptionMessage);
     }
 }
