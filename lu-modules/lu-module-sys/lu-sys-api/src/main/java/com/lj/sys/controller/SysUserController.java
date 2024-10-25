@@ -1,7 +1,7 @@
-package com.lj.sys.role.controller;
+package com.lj.sys.controller;
 
 import com.lj.common_web.annotation.ResponseResultVo;
-import com.lj.sys.role.service.SysRoleService;
+import com.lj.sys.user.service.SysUserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,19 +9,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 系统角色表 前端控制器
+ * 系统用户 前端控制器
  * </p>
  *
  * @author lj
- * @since 2024-08-12
+ * @since 2024-08-09
  */
 @RestController
 @ResponseResultVo
-@RequestMapping("/sys/role")
-@Api("角色管理")
-public class SysRoleController {
+@RequestMapping("/sys/user")
+@Api("用户管理")
+public class SysUserController {
 
     @Autowired
-    private SysRoleService sysRoleService;
+    private SysUserService sysUserService;
+
 
 }

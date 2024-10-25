@@ -33,7 +33,7 @@ public class SysConfigure {
                 .groupName("系统模块Api")
                 .select()
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("com.lj.sys"))
+                .apis(RequestHandlerSelectors.basePackage("com.lj.sys.controller"))
                 .paths(PathSelectors.any())
                 .build().extensions(openApiExtensionResolver.buildExtensions("系统模块Api"));
     }

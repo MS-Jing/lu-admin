@@ -1,4 +1,4 @@
-package com.lj.sys.menu.controller;
+package com.lj.sys.controller;
 
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.sys.menu.service.SysMenuService;
