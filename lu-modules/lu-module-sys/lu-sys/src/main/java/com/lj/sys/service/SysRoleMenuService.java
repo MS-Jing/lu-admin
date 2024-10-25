@@ -1,7 +1,7 @@
-package com.lj.sys.role.service;
+package com.lj.sys.service;
 
 import com.lj.mp.standard.StandardService;
-import com.lj.sys.role.entity.SysRoleMenu;
+import com.lj.sys.entity.SysRoleMenu;
 
 /**
  * <p>

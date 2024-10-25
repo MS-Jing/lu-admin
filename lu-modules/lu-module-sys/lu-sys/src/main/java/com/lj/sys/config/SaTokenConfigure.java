@@ -1,4 +1,4 @@
-package com.lj.sys.auth;
+package com.lj.sys.config;
 
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.stp.StpUtil;

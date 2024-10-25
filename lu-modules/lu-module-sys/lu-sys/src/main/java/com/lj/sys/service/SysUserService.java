@@ -1,7 +1,7 @@
-package com.lj.sys.user.service;
+package com.lj.sys.service;
 
 import com.lj.mp.standard.StandardService;
-import com.lj.sys.user.entity.SysUser;
+import com.lj.sys.entity.SysUser;
 
 /**
  * <p>

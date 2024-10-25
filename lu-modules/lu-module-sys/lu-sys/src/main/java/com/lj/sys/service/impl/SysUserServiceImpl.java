@@ -1,9 +1,9 @@
-package com.lj.sys.user.service.impl;
+package com.lj.sys.service.impl;
 
 import com.lj.mp.standard.StandardServiceImpl;
-import com.lj.sys.user.entity.SysUser;
-import com.lj.sys.user.mapper.SysUserMapper;
-import com.lj.sys.user.service.SysUserService;
+import com.lj.sys.entity.SysUser;
+import com.lj.sys.mapper.SysUserMapper;
+import com.lj.sys.service.SysUserService;
 import org.springframework.stereotype.Service;
 
 /**

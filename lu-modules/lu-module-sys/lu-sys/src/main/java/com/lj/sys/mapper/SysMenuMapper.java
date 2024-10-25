@@ -1,7 +1,7 @@
-package com.lj.sys.menu.mapper;
+package com.lj.sys.mapper;
 
 import com.lj.mp.standard.StandardMapper;
-import com.lj.sys.menu.entity.SysMenu;
+import com.lj.sys.entity.SysMenu;
 import org.springframework.stereotype.Repository;
 
 /**

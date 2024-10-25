@@ -1,4 +1,4 @@
-package com.lj.sys.user.entity;
+package com.lj.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lj.sys.standard.SysStandardEntity;

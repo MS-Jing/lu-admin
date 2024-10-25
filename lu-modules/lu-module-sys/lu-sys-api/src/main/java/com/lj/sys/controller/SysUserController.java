@@ -1,7 +1,7 @@
 package com.lj.sys.controller;
 
 import com.lj.common_web.annotation.ResponseResultVo;
-import com.lj.sys.user.service.SysUserService;
+import com.lj.sys.service.SysUserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

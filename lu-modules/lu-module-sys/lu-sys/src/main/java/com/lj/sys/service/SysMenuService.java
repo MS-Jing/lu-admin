@@ -1,6 +1,6 @@
-package com.lj.sys.menu.service;
+package com.lj.sys.service;
 
-import com.lj.sys.menu.entity.SysMenu;
+import com.lj.sys.entity.SysMenu;
 import com.lj.mp.standard.StandardService;
 
 /**

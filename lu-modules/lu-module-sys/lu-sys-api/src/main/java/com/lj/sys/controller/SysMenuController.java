@@ -1,7 +1,7 @@
 package com.lj.sys.controller;
 
 import com.lj.common_web.annotation.ResponseResultVo;
-import com.lj.sys.menu.service.SysMenuService;
+import com.lj.sys.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

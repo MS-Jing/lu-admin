@@ -1,9 +1,9 @@
-package com.lj.sys.menu.service.impl;
+package com.lj.sys.service.impl;
 
 import com.lj.mp.standard.StandardServiceImpl;
-import com.lj.sys.menu.entity.SysMenu;
-import com.lj.sys.menu.mapper.SysMenuMapper;
-import com.lj.sys.menu.service.SysMenuService;
+import com.lj.sys.entity.SysMenu;
+import com.lj.sys.mapper.SysMenuMapper;
+import com.lj.sys.service.SysMenuService;
 import org.springframework.stereotype.Service;
 
 /**

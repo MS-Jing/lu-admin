@@ -1,8 +1,7 @@
-package com.lj.sys.user.mapper;
+package com.lj.sys.mapper;
 
 import com.lj.mp.standard.StandardMapper;
-import com.lj.sys.user.entity.SysUser;
-import org.apache.ibatis.annotations.Mapper;
+import com.lj.sys.entity.SysUser;
 import org.springframework.stereotype.Repository;
 
 /**

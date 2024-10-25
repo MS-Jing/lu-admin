@@ -1,7 +1,7 @@
-package com.lj.sys.user.mapper;
+package com.lj.sys.mapper;
 
 import com.lj.mp.standard.StandardMapper;
-import com.lj.sys.user.entity.SysUserRole;
+import com.lj.sys.entity.SysUserRole;
 import org.springframework.stereotype.Repository;
 
 /**

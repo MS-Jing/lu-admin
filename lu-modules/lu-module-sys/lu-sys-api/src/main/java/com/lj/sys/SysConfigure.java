@@ -1,5 +1,6 @@
 package com.lj.sys;
 
+import cn.hutool.core.util.ClassUtil;
 import com.github.xiaoymin.knife4j.spring.extension.OpenApiExtensionResolver;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +34,7 @@ public class SysConfigure {
                 .groupName("系统模块Api")
                 .select()
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("com.lj.sys.controller"))
+                .apis(RequestHandlerSelectors.basePackage(ClassUtil.getPackage(SysConfigure.class) + ".controller"))
                 .paths(PathSelectors.any())
                 .build().extensions(openApiExtensionResolver.buildExtensions("系统模块Api"));
     }

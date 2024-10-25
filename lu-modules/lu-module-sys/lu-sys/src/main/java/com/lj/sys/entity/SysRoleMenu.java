@@ -1,4 +1,4 @@
-package com.lj.sys.role.entity;
+package com.lj.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lj.sys.standard.SysStandardEntity;
@@ -7,22 +7,22 @@ import lombok.Setter;
 
 /**
  * <p>
- * 系统角色表
+ * 角色菜单关联表
  * </p>
  *
  * @author lj
- * @since 2024-08-12
+ * @since 2024-08-13
  */
 @Getter
 @Setter
-@TableName("sys_role")
-public class SysRole extends SysStandardEntity {
+@TableName("sys_role_menu")
+public class SysRoleMenu extends SysStandardEntity {
 
     private static final long serialVersionUID = 1L;
 
-    private String roleName;
+    private Long roleId;
 
-    private String remark;
+    private Long menuId;
 
 
 }

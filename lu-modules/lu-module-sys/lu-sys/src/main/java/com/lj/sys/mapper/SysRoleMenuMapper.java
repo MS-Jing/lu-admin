@@ -1,7 +1,7 @@
-package com.lj.sys.role.mapper;
+package com.lj.sys.mapper;
 
 import com.lj.mp.standard.StandardMapper;
-import com.lj.sys.role.entity.SysRoleMenu;
+import com.lj.sys.entity.SysRoleMenu;
 
 /**
  * <p>
