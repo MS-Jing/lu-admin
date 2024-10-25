@@ -10,6 +10,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan("com.lj.sys")
-@MapperScan("com.lj.sys.*.mapper")
+@MapperScan("com.lj.sys.mapper")
 public class SysAutoConfiguration {
 }

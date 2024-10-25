@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.lj.mp.constant.MpConstant;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
  */
 @Configuration
 @ConditionalOnClass(MetaObjectHandler.class)
+@ConditionalOnMissingBean(MetaObjectHandler.class)
 public class MyBatisPlusFillHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
