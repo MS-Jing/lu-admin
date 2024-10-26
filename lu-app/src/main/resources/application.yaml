@@ -6,7 +6,7 @@ spring:
     password: root
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: com.lj.mp.log.MpStdOutImpl
   global-config:
     banner: false
 
