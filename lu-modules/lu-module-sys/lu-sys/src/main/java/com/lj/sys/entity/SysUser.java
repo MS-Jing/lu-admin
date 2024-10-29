@@ -1,6 +1,7 @@
 package com.lj.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lj.sys.enums.SysUserStatus;
 import com.lj.sys.standard.SysStandardEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +31,7 @@ public class SysUser extends SysStandardEntity {
 
     private String mobile;
 
-    private Integer userStatus;
+    private SysUserStatus userStatus;
 
 
 }

@@ -3,13 +3,14 @@ package com.lj.sys.controller;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.common_web.utils.ServletUtil;
+import com.lj.sys.params.LoginParams;
 import com.lj.sys.service.SysAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -44,13 +45,9 @@ public class AuthController {
 
     @PostMapping("/login")
     @ApiOperation("认证接口")
-    public SaResult doLogin(String username, String password) {
-        // 第1步，先登录上
-        StpUtil.login(10001);
-        // 第2步，获取 Token  相关参数
-        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        // 第3步，返回给前端
-        return SaResult.data(tokenInfo);
+    public SaTokenInfo doLogin(@Validated @RequestBody LoginParams params) {
+        return authService.doLogin(params.of());
+
     }
 
     @GetMapping("/isLogin")

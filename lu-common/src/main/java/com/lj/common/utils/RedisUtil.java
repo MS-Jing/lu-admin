@@ -168,6 +168,9 @@ public class RedisUtil {
             if (key == null || (value = redisTemplate.opsForValue().get(key)) == null) {
                 return null;
             }
+            if (String.class.equals(aClass)) {
+                return aClass.cast(value);
+            }
             return toObject(value, aClass);
         } catch (Exception e) {
             log.warn("失败: ", e);
@@ -443,7 +446,7 @@ public class RedisUtil {
     public <T> List<T> getList(String key, long start, long end, Class<T> aClass) {
         try {
             List<String> range = redisTemplate.opsForList().range(key, start, end);
-            if (CollUtil.isEmpty(range)){
+            if (CollUtil.isEmpty(range)) {
                 return Collections.emptyList();
             }
             List<T> objects = new ArrayList<>();

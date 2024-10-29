@@ -1,11 +1,18 @@
 package com.lj.sys.service.impl;
 
+import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.dev33.satoken.stp.SaTokenInfo;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ICaptcha;
 import cn.hutool.core.util.StrUtil;
 import com.lj.common.exception.CommonException;
 import com.lj.common.utils.RedisUtil;
+import com.lj.sys.dto.LoginDto;
+import com.lj.sys.entity.SysUser;
+import com.lj.sys.enums.SysUserStatus;
 import com.lj.sys.service.SysAuthService;
+import com.lj.sys.service.SysUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,6 +28,8 @@ public class SysAuthServiceImpl implements SysAuthService {
 
     @Resource
     private RedisUtil redisUtil;
+    @Resource
+    private SysUserService userService;
 
     /**
      * 验证码redis前缀
@@ -44,5 +53,39 @@ public class SysAuthServiceImpl implements SysAuthService {
             throw new CommonException("无法获取验证码！请联系管理员！");
         }
         captcha.write(out);
+    }
+
+    @Override
+    public boolean validate(String uuid, String captcha) {
+        if (StrUtil.isBlank(uuid)) {
+            throw new CommonException("uuid不能为空");
+        }
+        String code = redisUtil.get(CAPTCHA_PREFIX + uuid, String.class);
+        if (StrUtil.isBlank(code)) {
+            throw new CommonException("验证码已失效!");
+        }
+        // 删除验证码
+        redisUtil.delete(CAPTCHA_PREFIX + uuid);
+        // 对比
+        return StrUtil.equalsIgnoreCase(code, captcha);
+    }
+
+    @Override
+    public SaTokenInfo doLogin(LoginDto loginDto) {
+        // 校验验证码
+        if (!validate(loginDto.getUuid(), loginDto.getCaptcha())) {
+            throw new CommonException("验证码不正确!");
+        }
+        SysUser sysUser = userService.getUserByUserName(loginDto.getUserName());
+        if (sysUser == null || !StrUtil.equalsIgnoreCase(sysUser.getPassword(), SaSecureUtil.sha256(loginDto.getPassword()))) {
+            throw new CommonException("用户名或密码不正确!");
+        }
+        if (!SysUserStatus.NORMAL.equals(sysUser.getUserStatus())) {
+            throw new CommonException("当前账号处于 [" + sysUser.getUserStatus().getDesc() + "] 状态！");
+        }
+        // 登录
+        StpUtil.login(sysUser.getId());
+        // 获取token信息
+        return StpUtil.getTokenInfo();
     }
 }

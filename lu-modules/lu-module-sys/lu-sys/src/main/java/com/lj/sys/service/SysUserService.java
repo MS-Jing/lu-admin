@@ -13,5 +13,7 @@ import com.lj.sys.entity.SysUser;
  */
 public interface SysUserService extends StandardService<SysUser> {
 
-
+    default SysUser getUserByUserName(String userName) {
+        return getOne(lambdaQueryWrapper().eq(SysUser::getUserName, userName));
+    }
 }
