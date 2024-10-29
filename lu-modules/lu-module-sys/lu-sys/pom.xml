@@ -43,6 +43,13 @@
             <artifactId>sa-token-redis-jackson</artifactId>
         </dependency>
 
+        <!--hutool的验证码工具-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-captcha</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 </project>
