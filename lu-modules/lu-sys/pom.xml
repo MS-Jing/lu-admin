@@ -32,9 +32,11 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
 
+        <!--为什么只引入sa-token-core 而不引入sa-token-spring-boot-starter-->
+        <!--因为sa-token-spring-boot-starter中含有web相关的依赖，而这个模块只需要sa的核心-->
         <dependency>
             <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <artifactId>sa-token-core</artifactId>
         </dependency>
 
         <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
