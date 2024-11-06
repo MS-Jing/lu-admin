@@ -12,7 +12,8 @@
     <artifactId>lu-modules</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>lu-module-sys</module>
+        <module>lu-sys</module>
+        <module>lu-sys-api</module>
     </modules>
 
 
