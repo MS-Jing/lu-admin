@@ -2,7 +2,8 @@ package com.lj.sys.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
-import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.StrUtil;
+import com.lj.common.exception.CommonException;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.common_web.utils.ServletUtil;
 import com.lj.sys.params.LoginParams;
@@ -26,6 +27,7 @@ import java.io.IOException;
 @ResponseResultVo
 @RequestMapping("/sys/auth")
 @Api(tags = "认证管理")
+@Validated
 public class AuthController {
 
     @Resource
@@ -34,7 +36,10 @@ public class AuthController {
     @GetMapping("captcha")
     @ApiOperation("获取一个验证码")
     @SaIgnore
-    public void captcha(@ApiParam(value = "获取验证码的uuid", required = true) @RequestParam String uuid) throws IOException {
+    public void captcha(@ApiParam(value = "获取验证码的uuid", required = true) String uuid) throws IOException {
+        if (StrUtil.isBlank(uuid)) {
+            throw new CommonException("uuid不能为空");
+        }
         HttpServletResponse response = ServletUtil.getResponse();
         response.setHeader("Cache-Control", "no-store, no-cache");
         response.setContentType("image/png");
@@ -47,14 +52,12 @@ public class AuthController {
     @ApiOperation("认证接口")
     public SaTokenInfo doLogin(@Validated @RequestBody LoginParams params) {
         return authService.doLogin(params.of());
-
     }
 
-    @GetMapping("/isLogin")
-    @ApiOperation("是否已经认证")
-    public Boolean isLogin() {
-        return StpUtil.isLogin();
+    @PostMapping("/logout")
+    @ApiOperation("注销接口")
+    public void logout() {
+        authService.logout();
     }
-
 
 }

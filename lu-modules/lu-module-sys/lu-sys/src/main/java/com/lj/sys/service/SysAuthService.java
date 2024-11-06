@@ -15,4 +15,6 @@ public interface SysAuthService {
     boolean validate(String uuid,String captcha);
 
     SaTokenInfo doLogin(LoginDto loginDto);
+
+    void logout();
 }

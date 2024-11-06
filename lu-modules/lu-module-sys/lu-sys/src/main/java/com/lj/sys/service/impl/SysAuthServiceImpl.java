@@ -88,4 +88,9 @@ public class SysAuthServiceImpl implements SysAuthService {
         // 获取token信息
         return StpUtil.getTokenInfo();
     }
+
+    @Override
+    public void logout() {
+        StpUtil.logout();
+    }
 }
