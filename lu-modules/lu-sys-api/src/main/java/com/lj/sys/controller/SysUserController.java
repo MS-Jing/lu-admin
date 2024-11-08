@@ -1,6 +1,7 @@
 package com.lj.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.sys.params.SysUserPageParams;
@@ -38,5 +39,13 @@ public class SysUserController {
         IPage<SysUserVo> page = sysUserService.pageQuery(params.toDto());
         return page.convert(SysUserResult::of);
     }
+
+    @GetMapping("/info")
+    @ApiOperation("用户个人信息")
+    public SysUserResult info() {
+        Long userId = StpUtil.getLoginIdAsLong();
+        return SysUserResult.of(sysUserService.info(userId));
+    }
+
 
 }

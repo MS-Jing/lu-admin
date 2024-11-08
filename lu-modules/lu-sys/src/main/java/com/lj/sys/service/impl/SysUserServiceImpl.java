@@ -30,4 +30,10 @@ public class SysUserServiceImpl extends StandardServiceImpl<SysUserMapper, SysUs
                         .like(StrUtil.isNotBlank(dto.getNickName()), SysUser::getNickName, dto.getNickName()))
                 .convert(sysUser -> BeanUtil.toBean(sysUser, SysUserVo.class));
     }
+
+    @Override
+    public SysUserVo info(Long userId) {
+        SysUser sysUser = this.getById(userId);
+        return BeanUtil.toBean(sysUser, SysUserVo.class);
+    }
 }

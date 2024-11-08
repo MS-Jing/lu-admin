@@ -21,4 +21,6 @@ public interface SysUserService extends StandardService<SysUser> {
     }
 
     IPage<SysUserVo> pageQuery(SysUserPageDto dto);
+
+    SysUserVo info(Long userId);
 }
