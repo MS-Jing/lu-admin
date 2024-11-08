@@ -38,6 +38,7 @@
         <!--swagger knife4j是对原生得到swagger做了增强 springfox的版本需要与knife4j版本中的对应-->
         <knife4j.version>2.0.9</knife4j.version>
         <springfox.version>2.10.5</springfox.version>
+        <swagger.version>1.5.22</swagger.version>
     </properties>
 
     <dependencyManagement>
@@ -119,6 +120,11 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
