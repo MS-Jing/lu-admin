@@ -34,6 +34,9 @@ public class SysUserServiceImpl extends StandardServiceImpl<SysUserMapper, SysUs
     @Override
     public SysUserVo info(Long userId) {
         SysUser sysUser = this.getById(userId);
+        if (sysUser == null) {
+            return null;
+        }
         return BeanUtil.toBean(sysUser, SysUserVo.class);
     }
 }

@@ -10,8 +10,10 @@ import com.lj.sys.service.SysUserService;
 import com.lj.sys.vo.SysUserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,6 +48,17 @@ public class SysUserController {
         Long userId = StpUtil.getLoginIdAsLong();
         return SysUserResult.of(sysUserService.info(userId));
     }
+
+    @GetMapping("/info/{userId}")
+    @SaCheckPermission("sys:user:info")
+    @ApiOperation("用户信息")
+    public SysUserResult info(@PathVariable("userId") @ApiParam("用户id") Long userId) {
+        if (userId == null) {
+            return null;
+        }
+        return SysUserResult.of(sysUserService.info(userId));
+    }
+
 
 
 }

@@ -28,6 +28,9 @@ public class SysUserResult {
     private Integer userStatus;
 
     public static SysUserResult of(SysUserVo sysUserVo) {
+        if (sysUserVo == null) {
+            return null;
+        }
         SysUserResult sysUserResult = new SysUserResult();
         sysUserResult.setId(sysUserVo.getId());
         sysUserResult.setNickName(sysUserVo.getNickName());
