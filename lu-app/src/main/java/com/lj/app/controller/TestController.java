@@ -1,6 +1,8 @@
 package com.lj.app.controller;
 
 import com.lj.common_web.annotation.ResponseResultVo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @ResponseResultVo
 @RequestMapping("/test/")
+@Tag(name = "测试api")
 public class TestController {
 
     @GetMapping("/sayHello")
+    @Operation(summary = "测试接口", description = "测试接口")
     public String isLogin() {
         return "sayHello";
     }

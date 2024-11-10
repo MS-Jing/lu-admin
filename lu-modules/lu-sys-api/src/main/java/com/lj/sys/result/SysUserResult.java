@@ -1,7 +1,7 @@
 package com.lj.sys.result;
 
 import com.lj.sys.vo.SysUserVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -9,22 +9,23 @@ import lombok.Data;
  * @since 2024/11/7 18:34
  */
 @Data
+@Schema(description = "系统用户信息")
 public class SysUserResult {
     private Long id;
 
-    @ApiModelProperty("用户昵称")
+    @Schema(description = "用户昵称")
     private String nickName;
 
-    @ApiModelProperty("用户名")
+    @Schema(description = "用户名")
     private String userName;
 
-    @ApiModelProperty("用户邮箱")
+    @Schema(description = "用户邮箱")
     private String email;
 
-    @ApiModelProperty("移动电话")
+    @Schema(description = "移动电话")
     private String mobile;
 
-    @ApiModelProperty("用户状态")
+    @Schema(description = "用户状态")
     private Integer userStatus;
 
     public static SysUserResult of(SysUserVo sysUserVo) {

@@ -1,4 +1,4 @@
-package com.lj.common.validator.group;
+package com.lj.common.utils.validator.group;
 
 /**
  * @author luojing

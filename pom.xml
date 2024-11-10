@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.12</version>
+        <version>3.2.4</version>
     </parent>
 
     <groupId>com.lj</groupId>
@@ -25,20 +25,23 @@
 
     <properties>
         <!--java 版本-->
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
+        <resource.delimiter>@</resource.delimiter>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--打包跳过测试-->
         <maven.test.skip>true</maven.test.skip>
         <!--hutool-->
         <hutool.version>5.8.26</hutool.version>
         <!--当前springboot的版本-->
-        <spring.boot.version>2.5.12</spring.boot.version>
+        <spring.boot.version>3.2.4</spring.boot.version>
         <!--mybatis-plus版本-->
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <sa-token.version>1.38.0</sa-token.version>
         <!--swagger knife4j是对原生得到swagger做了增强 springfox的版本需要与knife4j版本中的对应-->
-        <knife4j.version>2.0.9</knife4j.version>
-        <springfox.version>2.10.5</springfox.version>
-        <swagger.version>1.5.22</swagger.version>
+        <knife4j.version>4.5.0</knife4j.version>
+        <swagger.version>2.2.19</swagger.version>
     </properties>
 
     <dependencyManagement>
@@ -84,7 +87,7 @@
             <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
             <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-spring-boot-starter</artifactId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
             <dependency>
@@ -111,19 +114,19 @@
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
             <!--swagger-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations-jakarta</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
         </dependencies>

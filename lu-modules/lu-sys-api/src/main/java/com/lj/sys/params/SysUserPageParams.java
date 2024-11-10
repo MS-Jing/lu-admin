@@ -2,8 +2,7 @@ package com.lj.sys.params;
 
 import com.lj.mp.utils.AbstractPageQueryParams;
 import com.lj.sys.dto.SysUserPageDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,10 +13,10 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("系统用户分页查询参数")
+@Schema(name = "系统用户分页查询参数")
 public class SysUserPageParams extends AbstractPageQueryParams {
 
-    @ApiModelProperty("用户昵称")
+    @Schema(description = "用户昵称")
     private String nickName;
 
     public SysUserPageDto toDto() {

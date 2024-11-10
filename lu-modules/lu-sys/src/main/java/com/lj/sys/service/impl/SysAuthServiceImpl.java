@@ -15,7 +15,7 @@ import com.lj.sys.service.SysAuthService;
 import com.lj.sys.service.SysUserService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 

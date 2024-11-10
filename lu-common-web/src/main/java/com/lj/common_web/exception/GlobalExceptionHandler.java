@@ -4,12 +4,12 @@ import cn.hutool.core.util.ClassUtil;
 import com.lj.common_web.response.ResponseCode;
 import com.lj.common_web.response.ResponseVO;
 import com.lj.common_web.utils.ServletUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

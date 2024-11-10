@@ -25,8 +25,8 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                         // swagger接口
                         "/doc.html",
                         "/swagger-resources/**",
-                        "/v2/api-docs",
-                        "/v2/api-docs-ext",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs-ext/**",
                         // 静态资源
                         "/favicon.ico",
                         "/webjars/**"
