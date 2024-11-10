@@ -34,8 +34,6 @@
         <maven.test.skip>true</maven.test.skip>
         <!--hutool-->
         <hutool.version>5.8.26</hutool.version>
-        <!--当前springboot的版本-->
-        <spring.boot.version>3.2.4</spring.boot.version>
         <!--mybatis-plus版本-->
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <sa-token.version>1.38.0</sa-token.version>
@@ -46,41 +44,33 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!--基础模块-->
             <dependency>
                 <groupId>com.lj</groupId>
                 <artifactId>lu-common</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lj</groupId>
                 <artifactId>lu-common-web</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lj</groupId>
                 <artifactId>lu-mp</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!--系统模块-->
             <dependency>
                 <groupId>com.lj</groupId>
                 <artifactId>lu-sys</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lj</groupId>
                 <artifactId>lu-sys-api</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!--权限框架 sa-token-->
