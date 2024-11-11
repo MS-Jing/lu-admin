@@ -3,6 +3,8 @@ package com.lj.sys.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.mp.standard.StandardService;
 import com.lj.sys.dto.SysUserPageDto;
+import com.lj.sys.dto.SysUserSaveDto;
+import com.lj.sys.dto.SysUserUpdateDto;
 import com.lj.sys.entity.SysUser;
 import com.lj.sys.vo.SysUserVo;
 
@@ -23,4 +25,8 @@ public interface SysUserService extends StandardService<SysUser> {
     IPage<SysUserVo> pageQuery(SysUserPageDto dto);
 
     SysUserVo info(Long userId);
+
+    void save(SysUserSaveDto saveDto);
+
+    void update(SysUserUpdateDto updateDto);
 }

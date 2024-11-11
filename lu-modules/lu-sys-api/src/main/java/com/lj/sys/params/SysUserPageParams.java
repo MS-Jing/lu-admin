@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "系统用户分页查询参数")
+@Schema(description = "系统用户分页查询参数")
 public class SysUserPageParams extends AbstractPageQueryParams {
 
     @Schema(description = "用户昵称")

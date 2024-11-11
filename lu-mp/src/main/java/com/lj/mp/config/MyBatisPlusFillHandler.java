@@ -24,7 +24,7 @@ public class MyBatisPlusFillHandler implements MetaObjectHandler {
         this.fillStrategy(metaObject, MpConstant.CREATE_TIME, now);
         this.fillStrategy(metaObject, MpConstant.UPDATE_TIME, now);
         this.fillStrategy(metaObject, MpConstant.VERSION, 0);
-        this.fillStrategy(metaObject, MpConstant.DELETED, 0);
+        this.fillStrategy(metaObject, MpConstant.DELETED, false);
     }
 
     @Override
