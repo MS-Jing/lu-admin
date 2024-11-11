@@ -1,7 +1,7 @@
 package com.lj.sys.params;
 
 import com.lj.mp.utils.AbstractPageQueryParams;
-import com.lj.sys.dto.SysUserPageDto;
+import com.lj.sys.entity.dto.SysUserPageDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,4 +1,4 @@
-package com.lj.sys.vo;
+package com.lj.sys.entity.vo;
 
 import com.lj.sys.enums.SysUserStatus;
 import lombok.Data;

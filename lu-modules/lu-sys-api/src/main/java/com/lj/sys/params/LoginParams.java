@@ -1,6 +1,6 @@
 package com.lj.sys.params;
 
-import com.lj.sys.dto.LoginDto;
+import com.lj.sys.entity.dto.LoginDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

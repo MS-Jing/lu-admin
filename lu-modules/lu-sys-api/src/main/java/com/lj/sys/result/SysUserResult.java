@@ -1,6 +1,6 @@
 package com.lj.sys.result;
 
-import com.lj.sys.vo.SysUserVo;
+import com.lj.sys.entity.vo.SysUserVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

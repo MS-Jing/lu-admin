@@ -1,7 +1,7 @@
 package com.lj.sys.service;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
-import com.lj.sys.dto.LoginDto;
+import com.lj.sys.entity.dto.LoginDto;
 
 import java.io.OutputStream;
 

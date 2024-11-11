@@ -7,14 +7,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common.exception.CommonException;
 import com.lj.mp.standard.StandardServiceImpl;
 import com.lj.mp.utils.PageQueryUtils;
-import com.lj.sys.dto.SysUserPageDto;
-import com.lj.sys.dto.SysUserSaveDto;
-import com.lj.sys.dto.SysUserUpdateDto;
+import com.lj.sys.entity.dto.SysUserPageDto;
+import com.lj.sys.entity.dto.SysUserSaveDto;
+import com.lj.sys.entity.dto.SysUserUpdateDto;
 import com.lj.sys.entity.SysUser;
 import com.lj.sys.enums.SysUserStatus;
 import com.lj.sys.mapper.SysUserMapper;
 import com.lj.sys.service.SysUserService;
-import com.lj.sys.vo.SysUserVo;
+import com.lj.sys.entity.vo.SysUserVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,6 +1,6 @@
 package com.lj.sys.params;
 
-import com.lj.sys.dto.SysUserUpdateDto;
+import com.lj.sys.entity.dto.SysUserUpdateDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

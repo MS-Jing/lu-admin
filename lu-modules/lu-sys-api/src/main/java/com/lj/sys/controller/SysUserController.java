@@ -12,7 +12,7 @@ import com.lj.sys.params.SysUserSaveParams;
 import com.lj.sys.params.SysUserUpdateParams;
 import com.lj.sys.result.SysUserResult;
 import com.lj.sys.service.SysUserService;
-import com.lj.sys.vo.SysUserVo;
+import com.lj.sys.entity.vo.SysUserVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

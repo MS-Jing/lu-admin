@@ -1,4 +1,4 @@
-package com.lj.sys.dto;
+package com.lj.sys.entity.dto;
 
 import com.lj.sys.entity.SysUser;
 import lombok.Data;

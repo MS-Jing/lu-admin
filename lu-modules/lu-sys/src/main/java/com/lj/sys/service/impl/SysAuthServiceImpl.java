@@ -8,7 +8,7 @@ import cn.hutool.captcha.ICaptcha;
 import cn.hutool.core.util.StrUtil;
 import com.lj.common.exception.CommonException;
 import com.lj.common.utils.RedisUtil;
-import com.lj.sys.dto.LoginDto;
+import com.lj.sys.entity.dto.LoginDto;
 import com.lj.sys.entity.SysUser;
 import com.lj.sys.enums.SysUserStatus;
 import com.lj.sys.service.SysAuthService;
