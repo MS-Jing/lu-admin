@@ -1,6 +1,7 @@
 package com.lj.generator.service;
 
 import com.lj.generator.entity.GenTableConfig;
+import com.lj.generator.entity.vo.TableInfoResult;
 import com.lj.mp.standard.StandardService;
 
 /**
@@ -13,4 +14,5 @@ import com.lj.mp.standard.StandardService;
  */
 public interface GenTableConfigService extends StandardService<GenTableConfig> {
 
+    TableInfoResult loadTableInfo(String tableName);
 }

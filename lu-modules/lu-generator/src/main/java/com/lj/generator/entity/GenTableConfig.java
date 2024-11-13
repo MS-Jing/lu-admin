@@ -22,6 +22,8 @@ public class GenTableConfig extends SysStandardEntity {
 
     private String tableName;
 
+    private String comment;
+
     private String author;
 
     private String moduleName;

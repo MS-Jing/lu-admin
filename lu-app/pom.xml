@@ -40,7 +40,7 @@
         </dependency>
         <dependency>
             <groupId>com.lj</groupId>
-            <artifactId>lu-generator</artifactId>
+            <artifactId>lu-generator-api</artifactId>
         </dependency>
     </dependencies>
 
