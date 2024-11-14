@@ -22,9 +22,14 @@ public class GenColumnConfig extends SysStandardEntity {
 
     private Long tableId;
 
+    private Boolean columnPk;
+
     private String columnName;
 
+    private String columnTypeName;
+
     private Integer columnSize;
+    private Integer columnDigit;
 
     private String fieldName;
 
