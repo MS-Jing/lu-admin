@@ -10,6 +10,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
+@EnumDict(name = "Sortord")
 public enum SortordEnum implements ICommonEnum<String> {
     ASC("ASC", "升序"),
 

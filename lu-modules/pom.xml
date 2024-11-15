@@ -18,6 +18,8 @@
         <module>lu-generator-api</module>
         <module>lu-auth</module>
         <module>lu-auth-api</module>
+        <module>lu-dict</module>
+        <module>lu-dict-api</module>
     </modules>
 
 

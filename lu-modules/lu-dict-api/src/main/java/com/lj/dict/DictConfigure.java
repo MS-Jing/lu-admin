@@ -1,4 +1,4 @@
-package com.lj.sys;
+package com.lj.dict;
 
 import cn.hutool.core.util.ClassUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,18 +8,17 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author luojing
- * @since 2024/8/13 10:58
+ * @date 2024/11/15
  */
 @Configuration
-public class SysConfigure {
-
+public class DictConfigure {
     @Bean
-    public GroupedOpenApi sysApi() {
+    public GroupedOpenApi dictApi() {
         // 创建了一个api接口的分组
         return GroupedOpenApi.builder()
-                .group("sys")
-                .displayName("系统模块")
-                .packagesToScan(ClassUtil.getPackage(SysConfigure.class) + ".controller")
+                .group("dict")
+                .displayName("字典模块")
+                .packagesToScan(ClassUtil.getPackage(DictConfigure.class) + ".controller")
                 .addOpenApiMethodFilter(method -> method.isAnnotationPresent(Operation.class))
                 .build();
     }
