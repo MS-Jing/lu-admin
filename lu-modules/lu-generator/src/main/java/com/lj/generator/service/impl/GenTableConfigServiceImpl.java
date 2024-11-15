@@ -55,7 +55,8 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
                     .fieldName(GenUtils.columnNameToFieldName(column.getName()))
                     .fieldType(TypeMapper.getJavaType(column.getType(), (int) column.getSize()))
                     .comment(column.getComment())
-                    .required(!column.isNullable())
+                    // 主键不是非必须的
+                    .required(!column.isPk() && !column.isNullable())
                     .build();
             columnInfoList.add(columnInfo);
         }
