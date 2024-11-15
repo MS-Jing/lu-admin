@@ -1,13 +1,13 @@
-package com.lj.sys.controller;
+package com.lj.auth.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.hutool.core.util.StrUtil;
+import com.lj.auth.params.LoginParams;
+import com.lj.auth.service.SysAuthService;
 import com.lj.common.exception.CommonException;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.common_web.utils.ServletUtil;
-import com.lj.sys.params.LoginParams;
-import com.lj.sys.service.SysAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

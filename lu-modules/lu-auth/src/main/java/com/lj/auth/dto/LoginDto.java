@@ -1,4 +1,4 @@
-package com.lj.sys.entity.dto;
+package com.lj.auth.dto;
 
 import lombok.Data;
 

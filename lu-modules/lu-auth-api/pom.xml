@@ -9,25 +9,35 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>lu-sys</artifactId>
+    <artifactId>lu-auth-api</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>com.lj</groupId>
-            <artifactId>lu-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.lj</groupId>
-            <artifactId>lu-mp</artifactId>
+            <artifactId>lu-auth</artifactId>
         </dependency>
 
-        <!--为什么只引入sa-token-core 而不引入sa-token-spring-boot3-starter-->
-        <!--因为sa-token-spring-boot3-starter中含有web相关的依赖，而这个模块只需要sa的核心-->
+        <dependency>
+            <groupId>com.lj</groupId>
+            <artifactId>lu-common-web</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-core</artifactId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
         </dependency>
-
+        <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redis-jackson</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

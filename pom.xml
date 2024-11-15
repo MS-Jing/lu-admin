@@ -63,6 +63,18 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!--认证模块-->
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-auth-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!--系统模块-->
             <dependency>
                 <groupId>com.lj</groupId>

@@ -1,4 +1,4 @@
-package com.lj.sys.config;
+package com.lj.auth.config;
 
 import cn.dev33.satoken.stp.StpInterface;
 import cn.hutool.core.util.NumberUtil;

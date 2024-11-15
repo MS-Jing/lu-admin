@@ -1,4 +1,4 @@
-package com.lj.sys.service.impl;
+package com.lj.auth.service.impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.SaTokenInfo;
@@ -6,16 +6,16 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ICaptcha;
 import cn.hutool.core.util.StrUtil;
+import com.lj.auth.dto.LoginDto;
+import com.lj.auth.service.SysAuthService;
 import com.lj.common.exception.CommonException;
 import com.lj.common.utils.RedisUtil;
-import com.lj.sys.entity.dto.LoginDto;
 import com.lj.sys.entity.SysUser;
 import com.lj.sys.enums.SysUserStatus;
-import com.lj.sys.service.SysAuthService;
 import com.lj.sys.service.SysUserService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 

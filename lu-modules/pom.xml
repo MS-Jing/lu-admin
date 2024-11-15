@@ -16,6 +16,8 @@
         <module>lu-sys-api</module>
         <module>lu-generator</module>
         <module>lu-generator-api</module>
+        <module>lu-auth</module>
+        <module>lu-auth-api</module>
     </modules>
 
 

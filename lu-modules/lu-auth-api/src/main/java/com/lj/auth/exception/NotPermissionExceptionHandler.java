@@ -1,4 +1,4 @@
-package com.lj.sys.exception;
+package com.lj.auth.exception;
 
 import cn.dev33.satoken.exception.NotPermissionException;
 import com.lj.common_web.exception.ExceptionHandler;

@@ -9,16 +9,34 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>lu-sys</artifactId>
+    <artifactId>lu-auth</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.lj</groupId>
             <artifactId>lu-common</artifactId>
         </dependency>
+
+        <!--需要依赖系统相关的表数据-->
         <dependency>
             <groupId>com.lj</groupId>
-            <artifactId>lu-mp</artifactId>
+            <artifactId>lu-sys</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- 提供Redis连接池 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
         </dependency>
 
         <!--为什么只引入sa-token-core 而不引入sa-token-spring-boot3-starter-->
@@ -28,6 +46,11 @@
             <artifactId>sa-token-core</artifactId>
         </dependency>
 
+        <!--hutool的验证码工具-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-captcha</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
