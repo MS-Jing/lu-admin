@@ -14,17 +14,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SysMyBatisPlusFillHandler extends MyBatisPlusFillHandler {
 
+    private static final String CREATE_USER = LambdaUtil.getFieldName(SysStandardEntity::getCreateUser);
+    private static final String UPDATE_USER = LambdaUtil.getFieldName(SysStandardEntity::getUpdateUser);
+
     @Override
     public void insertFill(MetaObject metaObject) {
         super.insertFill(metaObject);
-        this.fillStrategy(metaObject, LambdaUtil.getFieldName(SysStandardEntity::getCreateUser), getUserId());
-        this.fillStrategy(metaObject, LambdaUtil.getFieldName(SysStandardEntity::getUpdateUser), getUserId());
+        this.fillStrategy(metaObject, CREATE_USER, getUserId());
+        this.fillStrategy(metaObject, UPDATE_USER, getUserId());
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         super.updateFill(metaObject);
-        this.fillStrategy(metaObject, LambdaUtil.getFieldName(SysStandardEntity::getUpdateUser), getUserId());
+        this.fillStrategy(metaObject, UPDATE_USER, getUserId());
     }
 
     /**
