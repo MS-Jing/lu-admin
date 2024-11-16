@@ -44,4 +44,11 @@ public class GeneratorController {
     public TableInfoResult loadTableInfo(@Parameter(description = "加载的表名") String tableName) {
         return genTableConfigService.loadTableInfo(tableName);
     }
+
+    @GetMapping("/optional/superClass")
+    @SaCheckPermission("gen:table:list")
+    @Operation(summary = "选择父类", description = "生成的每一个表的实体都要选择一个父类")
+    public List<String> optionalSuperClass() {
+        return genTableConfigService.optionalSuperClass();
+    }
 }

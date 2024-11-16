@@ -29,4 +29,6 @@ public interface GenTableConfigService extends StandardService<GenTableConfig> {
      */
     TableInfoResult loadTableInfo(String tableName);
 
+    List<String> optionalSuperClass();
+
 }

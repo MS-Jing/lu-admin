@@ -2,6 +2,7 @@ package com.lj.generator.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
@@ -13,14 +14,18 @@ import com.lj.generator.mapper.GenTableConfigMapper;
 import com.lj.generator.service.GenTableConfigService;
 import com.lj.generator.utils.GenUtils;
 import com.lj.generator.utils.TypeMapper;
+import com.lj.mp.standard.StandardEntity;
 import com.lj.mp.standard.StandardServiceImpl;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -31,7 +36,8 @@ import java.util.List;
  * @since 2024-11-12
  */
 @Service
-public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfigMapper, GenTableConfig> implements GenTableConfigService {
+@Slf4j
+public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfigMapper, GenTableConfig> implements GenTableConfigService, InitializingBean {
 
     @Resource
     private DataSource dataSource;
@@ -77,5 +83,34 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
                 .tablePrefix(underline.length > 2 ? underline[0] : "")
                 .columnInfoList(columnInfoList)
                 .build();
+    }
+
+    private final List<String> superClassList = new ArrayList<>();
+
+    @Override
+    public List<String> optionalSuperClass() {
+        return superClassList;
+    }
+
+    private void init() {
+        // 先把规范的实体添加进去
+        superClassList.add(ClassUtil.getClassName(StandardEntity.class, false));
+        // 扫描类路径下所有 实现StandardEntity的抽象类
+        Set<Class<?>> superClassSet = ClassUtil.scanPackageBySuper("", StandardEntity.class);
+        for (Class<?> superClass : superClassSet) {
+            // 只有抽象类才能被作为父类
+            if (!ClassUtil.isAbstract(superClass)) {
+                continue;
+            }
+            superClassList.add(ClassUtil.getClassName(superClass, false));
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.info("加载可选父类...");
+        long start = System.currentTimeMillis();
+        init();
+        log.info("加载可选父类加载完毕 {} ms", System.currentTimeMillis() - start);
     }
 }
