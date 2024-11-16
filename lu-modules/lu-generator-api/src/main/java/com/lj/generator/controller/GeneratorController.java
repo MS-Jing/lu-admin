@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * <p>
  * 生成器表配置 前端控制器
@@ -29,8 +31,15 @@ public class GeneratorController {
     @Resource
     private GenTableConfigService genTableConfigService;
 
+    @GetMapping("/enable/table")
+    @SaCheckPermission("gen:table:list")
+    @Operation(summary = "获取可生成的表名", description = "新增时，如果表已经配置了无法再次创建，也就无法再次选择")
+    public List<String> enableGenTable() {
+        return genTableConfigService.enableGenTable();
+    }
+
     @GetMapping("/load/table")
-    @SaCheckPermission("gen:table:save")
+    @SaCheckPermission("gen:table:list")
     @Operation(summary = "加载表信息")
     public TableInfoResult loadTableInfo(@Parameter(description = "加载的表名") String tableName) {
         return genTableConfigService.loadTableInfo(tableName);

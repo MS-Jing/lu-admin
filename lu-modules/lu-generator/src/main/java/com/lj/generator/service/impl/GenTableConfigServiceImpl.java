@@ -1,5 +1,6 @@
 package com.lj.generator.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
@@ -34,6 +35,16 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
 
     @Resource
     private DataSource dataSource;
+
+    @Override
+    public List<String> enableGenTable() {
+        // 所有的物理表
+        List<String> tableList = MetaUtil.getTables(dataSource);
+        // 查询所有已生成的表
+        List<String> configTableList = this.listObjs(this.lambdaQueryWrapper().select(GenTableConfig::getTableName), Object::toString);
+        // 没有配置的表名
+        return CollUtil.subtractToList(tableList, configTableList);
+    }
 
     @Override
     public TableInfoResult loadTableInfo(String tableName) {
