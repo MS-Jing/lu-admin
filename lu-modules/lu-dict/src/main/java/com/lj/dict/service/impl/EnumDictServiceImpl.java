@@ -2,20 +2,22 @@ package com.lj.dict.service.impl;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import com.lj.common.enums.EnumDict;
 import com.lj.common.enums.ICommonEnum;
+import com.lj.dict.dto.DictQueryDto;
 import com.lj.dict.service.EnumDictService;
+import com.lj.dict.vo.EnumDictItem;
+import com.lj.dict.vo.EnumDictVo;
+import com.lj.mp.standard.IStandardEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author luojing
@@ -26,48 +28,93 @@ import java.util.Set;
 public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
 
     /**
-     * 名称与枚举的映射
+     * 字典名称与字典信息映射
      */
-    private Map<String, Class<?>> nameEnumMap = new HashMap<>();
+    private final Map<String, EnumDictVo> enumDictMap = new HashMap<>();
+
     /**
-     * 值类型与枚举的映射
+     * lang包包名，lang包下的类型可以直接拿来使用
      */
-    private MultiValueMap<String, Class<?>> valueTypeEnumMap = new LinkedMultiValueMap<>();
+    private static final String langPackage = ClassUtil.getPackage(Object.class);
+
+
+    @Override
+    public List<EnumDictVo> getDict(DictQueryDto dto) {
+        return enumDictMap.values().stream()
+                // 是空的条件就全部返回
+                .filter(dict -> StrUtil.isBlank(dto.getName()) || dict.getName().equals(dto.getName()))
+                .filter(dict -> dto.getStandard() == null || dict.getStandard().equals(dto.getStandard()))
+                .filter(dict -> StrUtil.isBlank(dto.getValueType()) || dict.getValueType().equals(dto.getValueType()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EnumDictItem<Object>> getDictItemByName(String dictName) {
+        EnumDictVo enumDictVo = enumDictMap.get(dictName);
+        if (enumDictVo == null) {
+            return Collections.emptyList();
+        }
+        return enumDictVo.getDictItemList();
+    }
+
 
     private void init() {
-        Set<Class<?>> classes = ClassUtil.scanPackageBySuper("", ICommonEnum.class);
-        String langPackage = ClassUtil.getPackage(Object.class);
-        for (Class<?> aClass : classes) {
+        // 扫描类路径下所有 实现ICommonEnum的枚举
+        Set<Class<?>> enumClassSet = ClassUtil.scanPackageBySuper("", ICommonEnum.class);
+        for (Class<?> enumClass : enumClassSet) {
             // 不是枚举的排除 例如IStandardEnum接口
-            if (!ClassUtil.isEnum(aClass)) {
+            if (!ClassUtil.isEnum(enumClass)) {
                 continue;
             }
-            // 获取名称
-            String name;
-            EnumDict annotation = AnnotationUtil.getAnnotation(aClass, EnumDict.class);
-            if (annotation != null) {
-                name = annotation.name();
-            } else {
-                name = ClassUtil.getClassName(aClass, true);
-            }
-            Class<?> old = nameEnumMap.get(name);
-            if (old != null) {
-                log.warn("无法添加枚举({})作为字典,因为有与之同名的枚举({})",
-                        ClassUtil.getClassName(aClass, false), ClassUtil.getClassName(old, false));
-                continue;
-            }
-            // 添加名称映射
-            nameEnumMap.put(name, aClass);
-            // 值类型
-            Class<?> valueType = getTypeArgument(aClass);
-            if (langPackage.equals(ClassUtil.getPackage(valueType))) {
-                // 在lang包下可直接使用,所以不需要全类名
-                valueTypeEnumMap.add(ClassUtil.getClassName(valueType, true), aClass);
-            } else {
-                valueTypeEnumMap.add(ClassUtil.getClassName(valueType, false), aClass);
+            EnumDictVo enumDictVo = toEnumDictDto(enumClass);
+            if (enumDictVo != null) {
+                enumDictMap.put(enumDictVo.getName(), enumDictVo);
             }
         }
     }
+
+    private EnumDictVo toEnumDictDto(Class<?> enumClass) {
+        // 获取名称和描述
+        String name;
+        String description = "";
+        EnumDict annotation = AnnotationUtil.getAnnotation(enumClass, EnumDict.class);
+        if (annotation != null) {
+            name = annotation.name();
+            description = annotation.description();
+        } else {
+            name = ClassUtil.getClassName(enumClass, true);
+        }
+        EnumDictVo temp = enumDictMap.get(name);
+        if (temp != null) {
+            log.warn("无法添加枚举({})作为字典,因为有与之同名的枚举({})",
+                    ClassUtil.getClassName(enumClass, false), name);
+            return null;
+        }
+        EnumDictVo enumDictVo = new EnumDictVo();
+        enumDictVo.setName(name);
+        enumDictVo.setDescription(description);
+        // 值类型
+        Class<?> valueType = getTypeArgument(enumClass);
+        // 在lang包下可直接使用,所以不需要全类名
+        enumDictVo.setValueType(ClassUtil.getClassName(valueType, langPackage.equals(ClassUtil.getPackage(valueType))));
+        enumDictVo.setStandard(IStandardEnum.class.isAssignableFrom(enumClass));
+        List<EnumDictItem<Object>> dictItemList = new ArrayList<>();
+        for (Object enumConstant : enumClass.getEnumConstants()) {
+            ICommonEnum<Object> commonEnum = (ICommonEnum<Object>) enumConstant;
+            EnumDictItem<Object> dictItem = new EnumDictItem<>();
+            dictItem.setItemValue(commonEnum.getValue());
+            dictItem.setDescription(commonEnum.getDesc());
+            dictItemList.add(dictItem);
+        }
+        enumDictVo.setDictItemList(dictItemList);
+        return enumDictVo;
+    }
+
+    private Class<?> getTypeArgument(Class<?> aClass) {
+        ParameterizedType parameterizedType = TypeUtil.toParameterizedType(aClass, 1);
+        return TypeUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
+    }
+
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -75,10 +122,5 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
         long start = System.currentTimeMillis();
         init();
         log.info("加载枚举字典加载完毕 {} ms", System.currentTimeMillis() - start);
-    }
-
-    private Class<?> getTypeArgument(Class<?> aClass) {
-        ParameterizedType parameterizedType = TypeUtil.toParameterizedType(aClass, 1);
-        return TypeUtil.getClass(parameterizedType.getActualTypeArguments()[0]);
     }
 }

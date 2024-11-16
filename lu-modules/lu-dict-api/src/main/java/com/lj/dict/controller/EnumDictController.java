@@ -1,11 +1,21 @@
 package com.lj.dict.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.lj.common_web.annotation.ResponseResultVo;
+import com.lj.dict.params.DictQueryParams;
 import com.lj.dict.service.EnumDictService;
+import com.lj.dict.vo.EnumDictItem;
+import com.lj.dict.vo.EnumDictVo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author luojing
@@ -21,9 +31,18 @@ public class EnumDictController {
     @Resource
     private EnumDictService enumDictService;
 
-    // 枚举查询list 是否是标准枚举字典 字典名称 字典值类型
+    @GetMapping("/list")
+    @SaCheckPermission("dict:enum:list")
+    @Operation(summary = "获取枚举字典")
+    public List<EnumDictVo> getDict(@ParameterObject DictQueryParams params) {
+        return enumDictService.getDict(params.toDto());
+    }
 
-    // 根据枚举名称查询字典
-
+    @GetMapping("/item")
+    @SaCheckPermission("dict:enum:list")
+    @Operation(summary = "根据枚举字典名称获取字典项")
+    public List<EnumDictItem<Object>> getItemByName(@Parameter(description = "枚举字典名称") String name) {
+        return enumDictService.getDictItemByName(name);
+    }
 
 }

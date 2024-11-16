@@ -19,4 +19,9 @@ public @interface EnumDict {
      * @return 枚举字典的名字
      */
     String name();
+
+    /**
+     * @return 字典描述
+     */
+    String description() default "";
 }
