@@ -2,13 +2,17 @@ package com.lj.generator.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrPool;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
 import com.lj.common.utils.CheckUtils;
+import com.lj.common.utils.ClassUtils;
 import com.lj.generator.entity.GenTableConfig;
 import com.lj.generator.entity.vo.ColumnInfoResult;
+import com.lj.generator.entity.vo.SuperClassFieldInfo;
+import com.lj.generator.entity.vo.SuperClassInfo;
 import com.lj.generator.entity.vo.TableInfoResult;
 import com.lj.generator.mapper.GenTableConfigMapper;
 import com.lj.generator.service.GenTableConfigService;
@@ -22,10 +26,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -85,16 +88,19 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
                 .build();
     }
 
-    private final List<String> superClassList = new ArrayList<>();
+    private final List<SuperClassInfo> superClassList = new ArrayList<>();
+
 
     @Override
     public List<String> optionalSuperClass() {
-        return superClassList;
+        return superClassList.stream().map(SuperClassInfo::getName).collect(Collectors.toList());
     }
 
     private void init() {
+        // 这里防止多次反射父类进行一下缓存
+        Map<Class<?>, List<SuperClassFieldInfo>> infoMap = new HashMap<>();
         // 先把规范的实体添加进去
-        superClassList.add(ClassUtil.getClassName(StandardEntity.class, false));
+        superClassList.add(toSuperClassInfo(StandardEntity.class, infoMap));
         // 扫描类路径下所有 实现StandardEntity的抽象类
         Set<Class<?>> superClassSet = ClassUtil.scanPackageBySuper("", StandardEntity.class);
         for (Class<?> superClass : superClassSet) {
@@ -102,8 +108,45 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
             if (!ClassUtil.isAbstract(superClass)) {
                 continue;
             }
-            superClassList.add(ClassUtil.getClassName(superClass, false));
+            superClassList.add(toSuperClassInfo(superClass, infoMap));
         }
+    }
+
+    private SuperClassInfo toSuperClassInfo(Class<?> superClass, Map<Class<?>, List<SuperClassFieldInfo>> infoMap) {
+        SuperClassInfo superClassInfo = new SuperClassInfo();
+        superClassInfo.setName(ClassUtil.getClassName(superClass, false));
+        // 解析字段
+        superClassInfo.setFieldInfoList(getFieldInfoList(superClass, infoMap));
+        return superClassInfo;
+    }
+
+    private List<SuperClassFieldInfo> getFieldInfoList(Class<?> clazz, Map<Class<?>, List<SuperClassFieldInfo>> infoMap) {
+        List<SuperClassFieldInfo> fieldInfoList = infoMap.get(clazz);
+        if (fieldInfoList != null) {
+            // 之前被自己的子类加载过，那么直接返回
+            return fieldInfoList;
+        }
+        List<SuperClassFieldInfo> result = new ArrayList<>();
+        // 将父类的字段加载进来
+        Class<?> superClass = clazz.getSuperclass();
+        if (clazz != StandardEntity.class) {
+            List<SuperClassFieldInfo> superFieldInfoList = infoMap.get(superClass);
+            // 父类已经被加载过了直接加进来
+            // 父类还没有被加载过，先去加载父类的字段信息
+            result.addAll(Optional.ofNullable(superFieldInfoList).orElseGet(() -> getFieldInfoList(superClass, infoMap)));
+        }
+        // 加载自己的
+        Field[] declaredFields = ClassUtil.getDeclaredFields(clazz);
+        for (Field declaredField : declaredFields) {
+            SuperClassFieldInfo fieldInfo = new SuperClassFieldInfo();
+            fieldInfo.setName(declaredField.getName());
+            Class<?> fieldType = declaredField.getType();
+            fieldInfo.setFieldType(ClassUtils.getClassName(fieldType));
+            result.add(fieldInfo);
+        }
+        // 将自己的字段列表加入到缓存中
+        infoMap.put(clazz, result);
+        return result;
     }
 
     @Override

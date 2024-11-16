@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import com.lj.common.enums.EnumDict;
 import com.lj.common.enums.ICommonEnum;
+import com.lj.common.utils.ClassUtils;
 import com.lj.dict.dto.DictQueryDto;
 import com.lj.dict.service.EnumDictService;
 import com.lj.dict.vo.EnumDictItem;
@@ -31,11 +32,6 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
      * 字典名称与字典信息映射
      */
     private final Map<String, EnumDictVo> enumDictMap = new HashMap<>();
-
-    /**
-     * lang包包名，lang包下的类型可以直接拿来使用
-     */
-    private static final String langPackage = ClassUtil.getPackage(Object.class);
 
 
     @Override
@@ -96,7 +92,7 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
         // 值类型
         Class<?> valueType = getTypeArgument(enumClass);
         // 在lang包下可直接使用,所以不需要全类名
-        enumDictVo.setValueType(ClassUtil.getClassName(valueType, langPackage.equals(ClassUtil.getPackage(valueType))));
+        enumDictVo.setValueType(ClassUtils.getClassName(valueType));
         enumDictVo.setStandard(IStandardEnum.class.isAssignableFrom(enumClass));
         List<EnumDictItem<Object>> dictItemList = new ArrayList<>();
         for (Object enumConstant : enumClass.getEnumConstants()) {
