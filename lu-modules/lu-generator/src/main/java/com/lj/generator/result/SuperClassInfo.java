@@ -1,4 +1,4 @@
-package com.lj.generator.entity.vo;
+package com.lj.generator.result;
 
 import lombok.Data;
 

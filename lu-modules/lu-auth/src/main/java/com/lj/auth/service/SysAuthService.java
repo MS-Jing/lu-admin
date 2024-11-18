@@ -1,7 +1,7 @@
 package com.lj.auth.service;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
-import com.lj.auth.dto.LoginDto;
+import com.lj.auth.params.LoginParams;
 
 import java.io.OutputStream;
 
@@ -14,7 +14,7 @@ public interface SysAuthService {
 
     boolean validate(String uuid,String captcha);
 
-    SaTokenInfo doLogin(LoginDto loginDto);
+    SaTokenInfo doLogin(LoginParams params);
 
     void logout();
 }

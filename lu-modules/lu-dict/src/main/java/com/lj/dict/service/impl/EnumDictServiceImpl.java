@@ -7,10 +7,10 @@ import cn.hutool.core.util.TypeUtil;
 import com.lj.common.enums.EnumDict;
 import com.lj.common.enums.ICommonEnum;
 import com.lj.common.utils.ClassUtils;
-import com.lj.dict.dto.DictQueryDto;
+import com.lj.dict.params.DictQueryParams;
 import com.lj.dict.service.EnumDictService;
-import com.lj.dict.vo.EnumDictItem;
-import com.lj.dict.vo.EnumDictVo;
+import com.lj.dict.result.EnumDictItem;
+import com.lj.dict.result.EnumDictVo;
 import com.lj.mp.standard.IStandardEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,12 +35,12 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
 
 
     @Override
-    public List<EnumDictVo> getDict(DictQueryDto dto) {
+    public List<EnumDictVo> getDict(DictQueryParams params) {
         return enumDictMap.values().stream()
                 // 是空的条件就全部返回
-                .filter(dict -> StrUtil.isBlank(dto.getName()) || dict.getName().equals(dto.getName()))
-                .filter(dict -> dto.getStandard() == null || dict.getStandard().equals(dto.getStandard()))
-                .filter(dict -> StrUtil.isBlank(dto.getValueType()) || dict.getValueType().equals(dto.getValueType()))
+                .filter(dict -> StrUtil.isBlank(params.getName()) || dict.getName().equals(params.getName()))
+                .filter(dict -> params.getStandard() == null || dict.getStandard().equals(params.getStandard()))
+                .filter(dict -> StrUtil.isBlank(params.getValueType()) || dict.getValueType().equals(params.getValueType()))
                 .collect(Collectors.toList());
     }
 

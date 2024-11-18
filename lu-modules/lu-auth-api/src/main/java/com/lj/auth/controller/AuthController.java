@@ -51,7 +51,7 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "认证接口")
     public SaTokenInfo doLogin(@Validated @RequestBody LoginParams params) {
-        return authService.doLogin(params.of());
+        return authService.doLogin(params);
     }
 
     @PostMapping("/logout")

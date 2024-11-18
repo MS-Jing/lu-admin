@@ -2,11 +2,11 @@ package com.lj.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.mp.standard.StandardService;
-import com.lj.sys.entity.dto.SysUserPageDto;
-import com.lj.sys.entity.dto.SysUserSaveDto;
-import com.lj.sys.entity.dto.SysUserUpdateDto;
+import com.lj.sys.params.SysUserPageParams;
+import com.lj.sys.params.SysUserSaveParams;
+import com.lj.sys.params.SysUserUpdateParams;
 import com.lj.sys.entity.SysUser;
-import com.lj.sys.entity.vo.SysUserVo;
+import com.lj.sys.result.SysUserResult;
 
 /**
  * <p>
@@ -22,11 +22,11 @@ public interface SysUserService extends StandardService<SysUser> {
         return getOne(lambdaQueryWrapper().eq(SysUser::getUserName, userName));
     }
 
-    IPage<SysUserVo> pageQuery(SysUserPageDto dto);
+    IPage<SysUserResult> pageQuery(SysUserPageParams params);
 
-    SysUserVo info(Long userId);
+    SysUserResult info(Long userId);
 
-    void save(SysUserSaveDto saveDto);
+    void save(SysUserSaveParams params);
 
-    void update(SysUserUpdateDto updateDto);
+    void update(SysUserUpdateParams params);
 }

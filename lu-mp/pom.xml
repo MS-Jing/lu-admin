@@ -25,13 +25,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         </dependency>
-        <!--这里并没有直接引入swagger，只是引入了注解，AbstractPageQueryParams需要给前端提供注解-->
-        <!--<optional>true</optional> 并不会将该依赖传给引用它的pom,这里只是为了编译打包不报错-->
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations-jakarta</artifactId>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 
 

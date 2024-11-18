@@ -1,13 +1,13 @@
 package com.lj.sys.params;
 
-import com.lj.sys.entity.dto.SysUserUpdateDto;
+import com.lj.sys.entity.SysUser;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
  * @author luojing
- * @since 2024/11/11 10:52
+ * @since 2024/11/11 14:31
  */
 @Data
 @Schema(description = "系统用户更新参数")
@@ -26,12 +26,13 @@ public class SysUserUpdateParams {
     @Schema(description = "移动电话")
     private String mobile;
 
-    public SysUserUpdateDto toDto() {
-        SysUserUpdateDto sysUserUpdateDto = new SysUserUpdateDto();
-        sysUserUpdateDto.setId(userId);
-        sysUserUpdateDto.setNickName(nickName);
-        sysUserUpdateDto.setEmail(email);
-        sysUserUpdateDto.setMobile(mobile);
-        return sysUserUpdateDto;
+
+    public SysUser toEntity() {
+        SysUser sysUser = new SysUser();
+        sysUser.setId(userId);
+        sysUser.setNickName(nickName);
+        sysUser.setEmail(email);
+        sysUser.setMobile(mobile);
+        return sysUser;
     }
 }

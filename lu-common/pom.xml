@@ -50,6 +50,11 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-extra</artifactId>
         </dependency>
+        <!--这里只是提供了需要的相关注解,保证编译不报错，如果引入了common-web依赖的话，会自然集成knife4j-->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

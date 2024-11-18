@@ -1,6 +1,5 @@
 package com.lj.dict.params;
 
-import com.lj.dict.dto.DictQueryDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -27,12 +26,4 @@ public class DictQueryParams {
      */
     @Schema(description = "枚举字典值类型")
     private String valueType;
-
-    public DictQueryDto toDto() {
-        DictQueryDto dictQueryDto = new DictQueryDto();
-        dictQueryDto.setName(name);
-        dictQueryDto.setStandard(standard);
-        dictQueryDto.setValueType(valueType);
-        return dictQueryDto;
-    }
 }

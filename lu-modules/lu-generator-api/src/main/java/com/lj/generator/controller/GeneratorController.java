@@ -2,7 +2,7 @@ package com.lj.generator.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.lj.common_web.annotation.ResponseResultVo;
-import com.lj.generator.entity.vo.TableInfoResult;
+import com.lj.generator.result.TableInfoResult;
 import com.lj.generator.service.GenTableConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

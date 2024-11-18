@@ -1,20 +1,19 @@
 package com.lj.sys.service.impl;
 
 import cn.dev33.satoken.secure.SaSecureUtil;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common.exception.CommonException;
 import com.lj.mp.standard.StandardServiceImpl;
 import com.lj.mp.utils.PageQueryUtils;
-import com.lj.sys.entity.dto.SysUserPageDto;
-import com.lj.sys.entity.dto.SysUserSaveDto;
-import com.lj.sys.entity.dto.SysUserUpdateDto;
+import com.lj.sys.params.SysUserPageParams;
+import com.lj.sys.params.SysUserSaveParams;
+import com.lj.sys.params.SysUserUpdateParams;
 import com.lj.sys.entity.SysUser;
 import com.lj.sys.enums.SysUserStatus;
 import com.lj.sys.mapper.SysUserMapper;
 import com.lj.sys.service.SysUserService;
-import com.lj.sys.entity.vo.SysUserVo;
+import com.lj.sys.result.SysUserResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,41 +30,37 @@ public class SysUserServiceImpl extends StandardServiceImpl<SysUserMapper, SysUs
 
 
     @Override
-    public IPage<SysUserVo> pageQuery(SysUserPageDto dto) {
-        return this.page(PageQueryUtils.getPage(dto), lambdaQueryWrapper()
-                        .like(StrUtil.isNotBlank(dto.getNickName()), SysUser::getNickName, dto.getNickName()))
-                .convert(sysUser -> BeanUtil.toBean(sysUser, SysUserVo.class));
+    public IPage<SysUserResult> pageQuery(SysUserPageParams params) {
+        return this.page(PageQueryUtils.getPage(params), lambdaQueryWrapper()
+                        .like(StrUtil.isNotBlank(params.getNickName()), SysUser::getNickName, params.getNickName()))
+                .convert(SysUserResult::of);
     }
 
     @Override
-    public SysUserVo info(Long userId) {
-        SysUser sysUser = this.getById(userId);
-        if (sysUser == null) {
-            return null;
-        }
-        return BeanUtil.toBean(sysUser, SysUserVo.class);
+    public SysUserResult info(Long userId) {
+        return SysUserResult.of(this.getById(userId));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(SysUserSaveDto saveDto) {
-        if (saveDto == null) {
+    public void save(SysUserSaveParams params) {
+        if (params == null) {
             throw new CommonException("新增用户信息不能为空");
         }
-        SysUser entity = saveDto.toEntity();
+        SysUser entity = params.toEntity();
         // 密码加密
-        entity.setPassword(SaSecureUtil.sha256(saveDto.getPassword()));
+        entity.setPassword(SaSecureUtil.sha256(params.getPassword()));
         // 设置状态为正常
         entity.setUserStatus(SysUserStatus.NORMAL);
         this.save(entity);
     }
 
     @Override
-    public void update(SysUserUpdateDto updateDto) {
-        if (updateDto == null) {
+    public void update(SysUserUpdateParams params) {
+        if (params == null) {
             throw new CommonException("更新用户信息不能为空");
         }
-        SysUser entity = updateDto.toEntity();
+        SysUser entity = params.toEntity();
         this.updateById(entity);
     }
 }

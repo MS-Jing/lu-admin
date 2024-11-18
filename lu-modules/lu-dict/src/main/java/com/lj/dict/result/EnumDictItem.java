@@ -1,4 +1,4 @@
-package com.lj.dict.vo;
+package com.lj.dict.result;
 
 import lombok.Data;
 

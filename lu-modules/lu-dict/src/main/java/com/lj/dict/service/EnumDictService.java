@@ -1,8 +1,8 @@
 package com.lj.dict.service;
 
-import com.lj.dict.dto.DictQueryDto;
-import com.lj.dict.vo.EnumDictItem;
-import com.lj.dict.vo.EnumDictVo;
+import com.lj.dict.params.DictQueryParams;
+import com.lj.dict.result.EnumDictItem;
+import com.lj.dict.result.EnumDictVo;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ public interface EnumDictService {
     /**
      * 获取字典
      *
-     * @param dto 字典查询条件
+     * @param params 字典查询条件
      * @return 字典列表
      */
-    List<EnumDictVo> getDict(DictQueryDto dto);
+    List<EnumDictVo> getDict(DictQueryParams params);
 
     /**
      * 通过字典名称获取字典项

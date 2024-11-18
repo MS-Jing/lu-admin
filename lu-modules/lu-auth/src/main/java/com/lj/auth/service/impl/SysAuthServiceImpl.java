@@ -6,7 +6,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ICaptcha;
 import cn.hutool.core.util.StrUtil;
-import com.lj.auth.dto.LoginDto;
+import com.lj.auth.params.LoginParams;
 import com.lj.auth.service.SysAuthService;
 import com.lj.common.exception.CommonException;
 import com.lj.common.utils.RedisUtil;
@@ -71,13 +71,13 @@ public class SysAuthServiceImpl implements SysAuthService {
     }
 
     @Override
-    public SaTokenInfo doLogin(LoginDto loginDto) {
+    public SaTokenInfo doLogin(LoginParams params) {
         // 校验验证码
-        if (!validate(loginDto.getUuid(), loginDto.getCaptcha())) {
+        if (!validate(params.getUuid(), params.getCaptcha())) {
             throw new CommonException("验证码不正确!");
         }
-        SysUser sysUser = userService.getUserByUserName(loginDto.getUserName());
-        if (sysUser == null || !StrUtil.equalsIgnoreCase(sysUser.getPassword(), SaSecureUtil.sha256(loginDto.getPassword()))) {
+        SysUser sysUser = userService.getUserByUserName(params.getUserName());
+        if (sysUser == null || !StrUtil.equalsIgnoreCase(sysUser.getPassword(), SaSecureUtil.sha256(params.getPassword()))) {
             throw new CommonException("用户名或密码不正确!");
         }
         if (!SysUserStatus.NORMAL.equals(sysUser.getUserStatus())) {
