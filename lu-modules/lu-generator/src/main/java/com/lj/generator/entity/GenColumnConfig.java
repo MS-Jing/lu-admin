@@ -35,6 +35,11 @@ public class GenColumnConfig extends SysStandardEntity {
 
     private String fieldType;
 
+    /**
+     * 账号类型可以下拉，然后选择对应类型的字典
+     */
+    private String enumDictType;
+
     private Integer fieldSort;
 
     private String comment;
