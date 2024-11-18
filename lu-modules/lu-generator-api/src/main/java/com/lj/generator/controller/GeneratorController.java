@@ -1,9 +1,11 @@
 package com.lj.generator.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.generator.params.GenTableConfigPageParams;
+import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
 import com.lj.generator.result.GenTableConfigPageResult;
 import com.lj.generator.result.TableInfoResult;
 import com.lj.generator.service.GenTableConfigService;
@@ -12,9 +14,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -61,5 +62,12 @@ public class GeneratorController {
     @Operation(summary = "配置表分页", description = "配置表分页查询")
     public IPage<GenTableConfigPageResult> pageQuery(@ParameterObject GenTableConfigPageParams pageParams) {
         return genTableConfigService.pageQuery(pageParams);
+    }
+
+    @PostMapping("/saveOrUpdate")
+    @SaCheckPermission(value = {"gen:table:save", "gen:table:update"}, mode = SaMode.OR)
+    @Operation(summary = "新增或者更新表配置")
+    public void saveOrUpdate(@RequestBody @Validated GenTableConfigSaveOrUpdateParams params) {
+        genTableConfigService.saveOrUpdate(params);
     }
 }

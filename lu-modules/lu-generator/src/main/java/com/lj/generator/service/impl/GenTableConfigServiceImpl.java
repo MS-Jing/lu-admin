@@ -10,10 +10,14 @@ import cn.hutool.db.meta.Table;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common.utils.CheckUtils;
 import com.lj.common.utils.ClassUtils;
+import com.lj.generator.entity.GenColumnConfig;
 import com.lj.generator.entity.GenTableConfig;
-import com.lj.generator.params.GenTableConfigPageParams;
-import com.lj.generator.result.*;
 import com.lj.generator.mapper.GenTableConfigMapper;
+import com.lj.generator.params.GenColumnConfigSaveOrUpdateParams;
+import com.lj.generator.params.GenTableConfigPageParams;
+import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
+import com.lj.generator.result.*;
+import com.lj.generator.service.GenColumnConfigService;
 import com.lj.generator.service.GenTableConfigService;
 import com.lj.generator.utils.GenUtils;
 import com.lj.generator.utils.TypeMapper;
@@ -24,6 +28,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
@@ -44,6 +49,8 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
 
     @Resource
     private DataSource dataSource;
+    @Resource
+    private GenColumnConfigService columnConfigService;
 
     @Override
     public List<String> enableGenTable() {
@@ -102,6 +109,31 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         return this.page(PageQueryUtils.getPage(pageParams), lambdaQueryWrapper()
                         .eq(StrUtil.isNotBlank(pageParams.getTableName()), GenTableConfig::getTableName, pageParams.getTableName()))
                 .convert(GenTableConfigPageResult::of);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveOrUpdate(GenTableConfigSaveOrUpdateParams params) {
+        verifySaveOrUpdateParams(params);
+        // 保存表配置
+        GenTableConfig entity = params.toEntity();
+        if (entity.getId() != null) {
+            this.updateById(entity);
+        } else {
+            this.save(entity);
+        }
+        // 保存列配置
+        List<GenColumnConfig> genColumnConfigList = params.getColumnConfigList().stream().map(GenColumnConfigSaveOrUpdateParams::toEntity).toList();
+        // 将新增和更新的分开
+        List<GenColumnConfig> updateList = genColumnConfigList.stream().filter(c -> c.getId() != null).toList();
+        List<GenColumnConfig> saveList = genColumnConfigList.stream().filter(c -> c.getId() == null).toList();
+        // 不用判空mp会判空的
+        columnConfigService.updateBatchById(updateList);
+        columnConfigService.saveBatch(saveList);
+    }
+
+    private void verifySaveOrUpdateParams(GenTableConfigSaveOrUpdateParams params) {
+        // todo 校验
     }
 
     private void init() {
