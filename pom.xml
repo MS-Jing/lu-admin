@@ -99,6 +99,18 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!--字典模块-->
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-dict</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lj</groupId>
+                <artifactId>lu-dict-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!--权限框架 sa-token-->
             <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
             <dependency>

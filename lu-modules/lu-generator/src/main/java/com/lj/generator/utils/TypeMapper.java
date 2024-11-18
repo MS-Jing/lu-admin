@@ -1,6 +1,12 @@
 package com.lj.generator.utils;
 
+import com.lj.common.utils.ClassUtils;
+
+import java.math.BigDecimal;
 import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,18 +18,18 @@ import java.util.Map;
  */
 public class TypeMapper {
     private static final String byteArrType = "byte[]";
-    private static final String byteType = "Byte";
-    private static final String longType = "Long";
-    private static final String booleanType = "Boolean";
-    private static final String shortType = "Short";
-    private static final String stringType = "String";
-    private static final String localDateTimeType = "java.time.LocalDateTime";
-    private static final String localDateType = "java.time.LocalDate";
-    private static final String localTimeType = "java.time.LocalTime";
-    private static final String doubleType = "Double";
-    private static final String integerType = "Integer";
-    private static final String bigDecimalType = "java.math.BigDecimal";
-    private static final String objectType = "Object";
+    private static final String byteType = ClassUtils.getClassName(Byte.class);
+    private static final String longType = ClassUtils.getClassName(Long.class);
+    private static final String booleanType = ClassUtils.getClassName(Boolean.class);
+    private static final String shortType = ClassUtils.getClassName(Short.class);
+    private static final String stringType = ClassUtils.getClassName(String.class);
+    private static final String localDateTimeType = ClassUtils.getClassName(LocalDateTime.class);
+    private static final String localDateType = ClassUtils.getClassName(LocalDate.class);
+    private static final String localTimeType = ClassUtils.getClassName(LocalTime.class);
+    private static final String doubleType = ClassUtils.getClassName(Double.class);
+    private static final String integerType = ClassUtils.getClassName(Integer.class);
+    private static final String bigDecimalType = ClassUtils.getClassName(BigDecimal.class);
+    private static final String objectType = ClassUtils.getClassName(Object.class);
     private static final Map<Integer, String> typeMap = new HashMap<>();
 
     static {

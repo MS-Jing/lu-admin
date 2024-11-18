@@ -46,6 +46,10 @@
             <groupId>com.lj</groupId>
             <artifactId>lu-generator-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lj</groupId>
+            <artifactId>lu-dict-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
