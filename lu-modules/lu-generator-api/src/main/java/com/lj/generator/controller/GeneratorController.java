@@ -1,13 +1,17 @@
 package com.lj.generator.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
+import com.lj.generator.params.GenTableConfigPageParams;
+import com.lj.generator.result.GenTableConfigPageResult;
 import com.lj.generator.result.TableInfoResult;
 import com.lj.generator.service.GenTableConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,5 +54,12 @@ public class GeneratorController {
     @Operation(summary = "选择父类", description = "生成的每一个表的实体都要选择一个父类")
     public List<String> optionalSuperClass() {
         return genTableConfigService.optionalSuperClass();
+    }
+
+    @GetMapping("/pageQuery")
+    @SaCheckPermission("gen:table:list")
+    @Operation(summary = "配置表分页", description = "配置表分页查询")
+    public IPage<GenTableConfigPageResult> pageQuery(@ParameterObject GenTableConfigPageParams pageParams) {
+        return genTableConfigService.pageQuery(pageParams);
     }
 }

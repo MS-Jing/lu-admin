@@ -3,22 +3,23 @@ package com.lj.generator.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common.utils.CheckUtils;
 import com.lj.common.utils.ClassUtils;
 import com.lj.generator.entity.GenTableConfig;
-import com.lj.generator.result.ColumnInfoResult;
-import com.lj.generator.result.SuperClassFieldInfo;
-import com.lj.generator.result.SuperClassInfo;
-import com.lj.generator.result.TableInfoResult;
+import com.lj.generator.params.GenTableConfigPageParams;
+import com.lj.generator.result.*;
 import com.lj.generator.mapper.GenTableConfigMapper;
 import com.lj.generator.service.GenTableConfigService;
 import com.lj.generator.utils.GenUtils;
 import com.lj.generator.utils.TypeMapper;
 import com.lj.mp.standard.StandardEntity;
 import com.lj.mp.standard.StandardServiceImpl;
+import com.lj.mp.utils.PageQueryUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -94,6 +95,13 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     @Override
     public List<String> optionalSuperClass() {
         return superClassList.stream().map(SuperClassInfo::getName).collect(Collectors.toList());
+    }
+
+    @Override
+    public IPage<GenTableConfigPageResult> pageQuery(GenTableConfigPageParams pageParams) {
+        return this.page(PageQueryUtils.getPage(pageParams), lambdaQueryWrapper()
+                        .eq(StrUtil.isNotBlank(pageParams.getTableName()), GenTableConfig::getTableName, pageParams.getTableName()))
+                .convert(GenTableConfigPageResult::of);
     }
 
     private void init() {

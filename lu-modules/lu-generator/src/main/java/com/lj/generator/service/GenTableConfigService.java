@@ -1,6 +1,9 @@
 package com.lj.generator.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.generator.entity.GenTableConfig;
+import com.lj.generator.params.GenTableConfigPageParams;
+import com.lj.generator.result.GenTableConfigPageResult;
 import com.lj.generator.result.TableInfoResult;
 import com.lj.mp.standard.StandardService;
 
@@ -31,4 +34,5 @@ public interface GenTableConfigService extends StandardService<GenTableConfig> {
 
     List<String> optionalSuperClass();
 
+    IPage<GenTableConfigPageResult> pageQuery(GenTableConfigPageParams pageParams);
 }
