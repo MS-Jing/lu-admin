@@ -148,44 +148,29 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     private void verifySaveOrUpdateParams(GenTableConfigSaveOrUpdateParams params) {
         // 父类字段
         String superClass = params.getSuperClass();
-        // 父类字段名与字段类型映射
-        Map<String, String> superClassFieldNameTypeMap = superClassList.stream().filter(sc -> sc.getName().equals(superClass))
+        // 父类列名与字段信息映射
+        Map<String, SuperClassFieldInfo> superClassColumnNameInfoMap = superClassList.stream().filter(sc -> sc.getName().equals(superClass))
                 .map(SuperClassInfo::getFieldInfoList)
                 .findFirst()
                 .orElseThrow(() -> new CommonException("不支持的父类:" + superClass))
-                .stream().collect(Collectors.toMap(SuperClassFieldInfo::getName, SuperClassFieldInfo::getFieldType));
+                .stream().collect(Collectors.toMap(SuperClassFieldInfo::getColumnName, Function.identity()));
         // 物理表信息
         TableInfoResult tableInfoResult = loadTableInfo(params.getTableName());
-        // 校验该父类是否可以分配给该物理表StandardEntity没有一个字段，所有实体都可以继承
-        if (CollUtil.isNotEmpty(superClassFieldNameTypeMap)) {
-            Set<String> temp = new HashSet<>();
-            List<ColumnInfoResult> columnInfoList = tableInfoResult.getColumnInfoList();
-            for (ColumnInfoResult columnInfoResult : columnInfoList) {
-                String fieldType = superClassFieldNameTypeMap.get(columnInfoResult.getFieldName());
-                if (fieldType == null) {
-                    continue;
-                }
-                if (!columnInfoResult.getFieldType().equals(fieldType)) {
-                    throw new CommonException("父类字段: " + columnInfoResult.getFieldName() + " 与数据库列: " + columnInfoResult.getColumnName() + "类型不匹配!");
-                }
-                temp.add(columnInfoResult.getFieldName());
-            }
-            List<String> dissatisfyFieldName = CollUtil.subtractToList(superClassFieldNameTypeMap.keySet(), temp);
-            if (CollUtil.isNotEmpty(dissatisfyFieldName)) {
-                throw new CommonException("无法将父类分配给表,缺少字段:" + dissatisfyFieldName);
-            }
-        }
-        // 校验物理表的字段是否与要生成的表匹配
+        // 校验父类与要生成的表还有物理表的匹配
         Map<String, GenColumnConfigSaveOrUpdateParams> columnNameColumnConfig = params.getColumnConfigList().stream().collect(Collectors.toMap(GenColumnConfigSaveOrUpdateParams::getColumnName, Function.identity()));
+        Set<String> temp = new HashSet<>();
         List<ColumnInfoResult> columnInfoList = tableInfoResult.getColumnInfoList();
         for (ColumnInfoResult columnInfoResult : columnInfoList) {
-            GenColumnConfigSaveOrUpdateParams columnParams = columnNameColumnConfig.get(columnInfoResult.getColumnName());
+            String columnName = columnInfoResult.getColumnName();
+            GenColumnConfigSaveOrUpdateParams columnParams = columnNameColumnConfig.get(columnName);
             if (columnParams == null) {
+                // 要生成的实体必须要有物理表的所有字段
                 throw new CommonException("缺少列: " + columnInfoResult.getColumnName() + " 配置");
             }
             String fieldType = columnInfoResult.getFieldType();
             // 字典枚举类型去字段类型优先级高
             String enumDictType = columnParams.getEnumDictType();
+            EnumDictVo enumDict = null;
             if (StrUtil.isNotBlank(enumDictType)) {
                 List<EnumDictVo> dict = enumDictService.getDict(DictQueryParams.builder()
                         .name(enumDictType)
@@ -197,9 +182,28 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
                 if (CollUtil.isEmpty(dict)) {
                     throw new CommonException("字典不存在或者类型不匹配:" + enumDictType);
                 }
+                enumDict = dict.get(0);
             } else if (!fieldType.equals(columnParams.getFieldType())) {
-                throw new CommonException("字段与列类型不匹配" + columnParams.getFieldType() + "->" + fieldType);
+                throw new CommonException("字段与列类型不匹配 " + columnParams.getFieldType() + "->" + fieldType);
             }
+            // 判断父类
+            SuperClassFieldInfo superClassFieldInfo = superClassColumnNameInfoMap.get(columnName);
+            if (superClassFieldInfo == null) {
+                continue;
+            }
+            // 父类的类型可能并不与数据库的类型一样(可能是枚举)
+            if (enumDict != null) {
+                if (!enumDict.getClassName().equals(superClassFieldInfo.getFieldType())) {
+                    throw new CommonException("列: " + columnName + " 在父类中已出现,他并不是字典" + enumDictType + "类型");
+                }
+            } else if (!columnParams.getFieldType().equals(superClassFieldInfo.getFieldType())){
+                throw new CommonException("列: " + columnName + " 在父类中已出现,类型不匹配 "+ columnParams.getFieldType() + "->" + superClassFieldInfo.getFieldType());
+            }
+            temp.add(columnName);
+        }
+        List<String> dissatisfyFieldName = CollUtil.subtractToList(superClassColumnNameInfoMap.keySet(), temp);
+        if (CollUtil.isNotEmpty(dissatisfyFieldName)) {
+            throw new CommonException("无法将分配父类,缺少字段:" + dissatisfyFieldName);
         }
     }
 
