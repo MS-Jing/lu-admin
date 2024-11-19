@@ -16,7 +16,10 @@ public class EnumDictVo {
      */
     private String name;
 
-    // todo 缺少字典类名
+    /**
+     * 字典类名
+     */
+    private String className;
 
     /**
      * 字典描述

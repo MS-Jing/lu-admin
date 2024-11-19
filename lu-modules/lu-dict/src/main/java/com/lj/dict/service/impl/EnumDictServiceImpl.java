@@ -8,9 +8,9 @@ import com.lj.common.enums.EnumDict;
 import com.lj.common.enums.ICommonEnum;
 import com.lj.common.utils.ClassUtils;
 import com.lj.dict.params.DictQueryParams;
-import com.lj.dict.service.EnumDictService;
 import com.lj.dict.result.EnumDictItem;
 import com.lj.dict.result.EnumDictVo;
+import com.lj.dict.service.EnumDictService;
 import com.lj.mp.standard.IStandardEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -88,6 +88,7 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
         }
         EnumDictVo enumDictVo = new EnumDictVo();
         enumDictVo.setName(name);
+        enumDictVo.setClassName(ClassUtil.getClassName(enumClass, false));
         enumDictVo.setDescription(description);
         // 值类型
         Class<?> valueType = getTypeArgument(enumClass);
