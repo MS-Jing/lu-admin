@@ -131,6 +131,11 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         }
         // 保存列配置
         List<GenColumnConfig> genColumnConfigList = params.getColumnConfigList().stream().map(GenColumnConfigSaveOrUpdateParams::toEntity).toList();
+        // 字段排序
+        int sort = 1;
+        for (GenColumnConfig genColumnConfig : genColumnConfigList) {
+            genColumnConfig.setFieldSort(sort++);
+        }
         // 将新增和更新的分开
         List<GenColumnConfig> updateList = genColumnConfigList.stream().filter(c -> c.getId() != null).toList();
         List<GenColumnConfig> saveList = genColumnConfigList.stream().filter(c -> c.getId() == null).toList();
