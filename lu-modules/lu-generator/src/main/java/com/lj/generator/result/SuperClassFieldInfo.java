@@ -14,6 +14,11 @@ public class SuperClassFieldInfo {
     private String name;
 
     /**
+     * 对应的列名称
+     */
+    private String columnName;
+
+    /**
      * 字段类型
      */
     private String fieldType;

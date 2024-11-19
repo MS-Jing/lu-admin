@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common.exception.CommonException;
 import com.lj.common.utils.CheckUtils;
@@ -246,6 +247,13 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         for (Field declaredField : declaredFields) {
             SuperClassFieldInfo fieldInfo = new SuperClassFieldInfo();
             fieldInfo.setName(declaredField.getName());
+            // 获取列名
+            TableField tableField = declaredField.getAnnotation(TableField.class);
+            if (tableField != null && StrUtil.isNotBlank(tableField.value())) {
+                fieldInfo.setColumnName(tableField.value());
+            } else {
+                fieldInfo.setColumnName(GenUtils.fieldNameToColumnName(declaredField.getName()));
+            }
             Class<?> fieldType = declaredField.getType();
             fieldInfo.setFieldType(ClassUtils.getClassName(fieldType));
             result.add(fieldInfo);
