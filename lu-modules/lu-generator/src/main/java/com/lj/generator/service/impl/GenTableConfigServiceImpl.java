@@ -8,8 +8,12 @@ import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lj.common.exception.CommonException;
 import com.lj.common.utils.CheckUtils;
 import com.lj.common.utils.ClassUtils;
+import com.lj.dict.params.DictQueryParams;
+import com.lj.dict.result.EnumDictVo;
+import com.lj.dict.service.EnumDictService;
 import com.lj.generator.entity.GenColumnConfig;
 import com.lj.generator.entity.GenTableConfig;
 import com.lj.generator.mapper.GenTableConfigMapper;
@@ -33,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +56,8 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     private DataSource dataSource;
     @Resource
     private GenColumnConfigService columnConfigService;
+    @Resource
+    private EnumDictService enumDictService;
 
     @Override
     public List<String> enableGenTable() {
@@ -133,7 +140,61 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     }
 
     private void verifySaveOrUpdateParams(GenTableConfigSaveOrUpdateParams params) {
-        // todo 校验
+        // 父类字段
+        String superClass = params.getSuperClass();
+        // 父类字段名与字段类型映射
+        Map<String, String> superClassFieldNameTypeMap = superClassList.stream().filter(sc -> sc.getName().equals(superClass))
+                .map(SuperClassInfo::getFieldInfoList)
+                .findFirst()
+                .orElseThrow(() -> new CommonException("不支持的父类:" + superClass))
+                .stream().collect(Collectors.toMap(SuperClassFieldInfo::getName, SuperClassFieldInfo::getFieldType));
+        // 物理表信息
+        TableInfoResult tableInfoResult = loadTableInfo(params.getTableName());
+        // 校验该父类是否可以分配给该物理表StandardEntity没有一个字段，所有实体都可以继承
+        if (CollUtil.isNotEmpty(superClassFieldNameTypeMap)) {
+            Set<String> temp = new HashSet<>();
+            List<ColumnInfoResult> columnInfoList = tableInfoResult.getColumnInfoList();
+            for (ColumnInfoResult columnInfoResult : columnInfoList) {
+                String fieldType = superClassFieldNameTypeMap.get(columnInfoResult.getFieldName());
+                if (fieldType == null) {
+                    continue;
+                }
+                if (!columnInfoResult.getFieldType().equals(fieldType)) {
+                    throw new CommonException("父类字段: " + columnInfoResult.getFieldName() + " 与数据库列: " + columnInfoResult.getColumnName() + "类型不匹配!");
+                }
+                temp.add(columnInfoResult.getFieldName());
+            }
+            List<String> dissatisfyFieldName = CollUtil.subtractToList(superClassFieldNameTypeMap.keySet(), temp);
+            if (CollUtil.isNotEmpty(dissatisfyFieldName)) {
+                throw new CommonException("无法将父类分配给表,缺少字段:" + dissatisfyFieldName);
+            }
+        }
+        // 校验物理表的字段是否与要生成的表匹配
+        Map<String, GenColumnConfigSaveOrUpdateParams> columnNameColumnConfig = params.getColumnConfigList().stream().collect(Collectors.toMap(GenColumnConfigSaveOrUpdateParams::getColumnName, Function.identity()));
+        List<ColumnInfoResult> columnInfoList = tableInfoResult.getColumnInfoList();
+        for (ColumnInfoResult columnInfoResult : columnInfoList) {
+            GenColumnConfigSaveOrUpdateParams columnParams = columnNameColumnConfig.get(columnInfoResult.getColumnName());
+            if (columnParams == null) {
+                throw new CommonException("缺少列: " + columnInfoResult.getColumnName() + " 配置");
+            }
+            String fieldType = columnInfoResult.getFieldType();
+            // 字典枚举类型去字段类型优先级高
+            String enumDictType = columnParams.getEnumDictType();
+            if (StrUtil.isNotBlank(enumDictType)) {
+                List<EnumDictVo> dict = enumDictService.getDict(DictQueryParams.builder()
+                        .name(enumDictType)
+                        // 一定要是mp标准的枚举 （实现了IEnum接口）
+                        .standard(true)
+                        // 字段类型一定要匹配啊 不能说这个字段我要个int类型，但是你却给我一个string类型的枚举吧
+                        .valueType(fieldType)
+                        .build());
+                if (CollUtil.isEmpty(dict)) {
+                    throw new CommonException("字典不存在或者类型不匹配:" + enumDictType);
+                }
+            } else if (!fieldType.equals(columnParams.getFieldType())) {
+                throw new CommonException("字段与列类型不匹配" + columnParams.getFieldType() + "->" + fieldType);
+            }
+        }
     }
 
     private void init() {

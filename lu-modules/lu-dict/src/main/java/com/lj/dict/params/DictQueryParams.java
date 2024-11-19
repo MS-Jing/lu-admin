@@ -1,6 +1,7 @@
 package com.lj.dict.params;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Data;
  * @date 2024/11/16
  */
 @Data
+@Builder
 public class DictQueryParams {
     /**
      * 字典名称

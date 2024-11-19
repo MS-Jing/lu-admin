@@ -26,6 +26,10 @@
             <groupId>com.lj</groupId>
             <artifactId>lu-sys</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lj</groupId>
+            <artifactId>lu-dict</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.lj</groupId>
