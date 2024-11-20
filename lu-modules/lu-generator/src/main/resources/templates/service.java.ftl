@@ -1,20 +1,20 @@
-package ${package.Service};
+package ${packageInfo.service};
 
-import ${package.Entity}.${entity};
-import ${superServiceClassPackage};
+import ${packageInfo.entity}.${entityName};
+import com.lj.mp.standard.StandardService;
+<#list packageInfo.servicePackages as pkg>
+ import ${pkg};
+</#list>
 
 /**
  * <p>
- * ${table.comment!} 服务类
+ * ${tableInfo.comment!} 服务类
  * </p>
  *
  * @author ${author}
  * @since ${date}
  */
-<#if kotlin>
-interface ${table.serviceName} : ${superServiceClass}<${entity}>
-<#else>
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+public interface ${tableInfo.serviceName} extends StandardService<${entityName}> {
 
 }
-</#if>
+

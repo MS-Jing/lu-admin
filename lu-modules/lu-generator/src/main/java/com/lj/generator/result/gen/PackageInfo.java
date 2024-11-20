@@ -2,6 +2,7 @@ package com.lj.generator.result.gen;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,4 +31,9 @@ public class PackageInfo {
      * 实体要导入的包
      */
     private List<String> entityPackages;
+
+    /**
+     * service 要导入的包
+     */
+    private List<String> servicePackages = new ArrayList<>();
 }

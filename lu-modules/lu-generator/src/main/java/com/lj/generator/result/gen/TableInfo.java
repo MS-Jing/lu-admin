@@ -21,4 +21,8 @@ public class TableInfo {
     private String controllerName;
 
     private String mapperName;
+
+    private String serviceName;
+
+    private String serviceImplName;
 }
