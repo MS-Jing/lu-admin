@@ -2,7 +2,7 @@ package com.lj.generator.result.gen;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author luojing
@@ -15,7 +15,19 @@ public class GenTemplateInfo {
 
     private TableInfo tableInfo;
 
+    private List<FieldInfo> fieldInfoList;
+
     private String moduleName;
+
+    /**
+     * 实体的名称
+     */
+    private String entityName;
+
+    /**
+     * 实体的父类
+     */
+    private String superEntityClass;
 
     private String author;
 

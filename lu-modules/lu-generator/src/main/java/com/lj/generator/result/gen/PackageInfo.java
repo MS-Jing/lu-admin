@@ -2,6 +2,8 @@ package com.lj.generator.result.gen;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author luojing
  * @since 2024/11/20 15:01
@@ -23,4 +25,9 @@ public class PackageInfo {
     private String mapper;
 
     private String entity;
+
+    /**
+     * 实体要导入的包
+     */
+    private List<String> entityPackages;
 }
