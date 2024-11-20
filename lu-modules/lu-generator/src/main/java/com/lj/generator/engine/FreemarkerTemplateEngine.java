@@ -28,15 +28,25 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
     }
 
     @Override
-    public void writer(Map<String, Object> objectMap, String templatePath, File outputFile) {
+    public void writer(Map<String, Object> dataModel, String templatePath, File outputFile) {
+        this.writer((Object) dataModel, templatePath, outputFile);
+    }
+
+    @Override
+    public void writer(Object dataModel, String templatePath, File outputFile) {
 
     }
 
     @Override
-    public String preview(Map<String, Object> objectMap, String templatePath) {
+    public String preview(Map<String, Object> dataModel, String templatePath) {
+        return this.preview((Object) dataModel, templatePath);
+    }
+
+    @Override
+    public String preview(Object dataModel, String templatePath) {
         StringWriter writer = new StringWriter();
         try {
-            configuration.getTemplate(templatePath).process(objectMap,writer);
+            configuration.getTemplate(templatePath).process(dataModel, writer);
         } catch (TemplateException | IOException e) {
             throw new RuntimeException(e);
         }

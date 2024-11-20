@@ -19,17 +19,34 @@ public interface TemplateEngine {
     /**
      * 写出到文件
      *
-     * @param objectMap    模板需要的model数据
+     * @param dataModel    模板需要的数据模型
      * @param templatePath 模板的位置
      * @param outputFile   输出的文件
      */
-    void writer(Map<String, Object> objectMap, String templatePath, File outputFile);
+    void writer(Map<String, Object> dataModel, String templatePath, File outputFile);
+
+    /**
+     * 写出到文件
+     *
+     * @param dataModel    模板需要的数据模型
+     * @param templatePath 模板的位置
+     * @param outputFile   输出的文件
+     */
+    void writer(Object dataModel, String templatePath, File outputFile);
 
     /**
      * 预览直接返回字符串
      *
-     * @param objectMap    模板需要的model数据
+     * @param dataModel    模板需要的数据模型
      * @param templatePath 模板的位置
      */
-    String preview(Map<String, Object> objectMap, String templatePath);
+    String preview(Map<String, Object> dataModel, String templatePath);
+
+    /**
+     * 预览直接返回字符串
+     *
+     * @param dataModel    模板需要的数据模型
+     * @param templatePath 模板的位置
+     */
+    String preview(Object dataModel, String templatePath);
 }
