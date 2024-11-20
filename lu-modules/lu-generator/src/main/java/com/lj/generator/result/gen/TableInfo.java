@@ -19,4 +19,6 @@ public class TableInfo {
      * controller的名字
      */
     private String controllerName;
+
+    private String mapperName;
 }
