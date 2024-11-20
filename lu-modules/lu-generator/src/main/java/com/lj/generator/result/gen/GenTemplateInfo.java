@@ -11,25 +11,53 @@ import java.util.List;
  */
 @Data
 public class GenTemplateInfo {
-    private PackageInfo packageInfo;
 
-    private TableInfo tableInfo;
+    /**
+     * 真实的表名
+     */
+    private String tableName;
 
+    /**
+     * 表注释
+     */
+    private String tableComment;
+
+    /**
+     * 字段信息
+     */
     private List<FieldInfo> fieldInfoList;
 
+    /**
+     * 模块名
+     */
     private String moduleName;
-
-    /**
-     * 实体的名称
-     */
-    private String entityName;
-
-    /**
-     * 实体的父类
-     */
-    private String superEntityClass;
 
     private String author;
 
     private String date;
+
+    /**
+     * 实体相关
+     */
+    private EntityInfo entity;
+
+    /**
+     * mapper
+     */
+    private MapperInfo mapper;
+
+    /**
+     * service
+     */
+    private ServiceInfo service;
+
+    /**
+     * serviceImpl
+     */
+    private ServiceImplInfo serviceImpl;
+
+    /**
+     * controller
+     */
+    private ControllerInfo controller;
 }

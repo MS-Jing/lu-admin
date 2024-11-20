@@ -1,4 +1,4 @@
-package ${packageInfo.controller};
+package ${controller.packagePath};
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,17 +7,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * <p>
- * ${tableInfo.comment!} 前端控制器
+ * ${tableComment!} 前端控制器
  * </p>
  *
  * @author ${author}
  * @since ${date}
  */
 @RestController
-@RequestMapping("/${moduleName}/${tableInfo.name}")
+@RequestMapping("/${moduleName}/${controller.url}")
 @ResponseResultVo
-@Tag(name = "${tableInfo.comment!} 管理")
-public class ${tableInfo.controllerName} {
+@Tag(name = "${tableComment!} 管理")
+public class ${controller.className} {
 
 
 }

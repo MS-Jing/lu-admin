@@ -1,20 +1,20 @@
-package ${packageInfo.service};
+package ${service.packagePath};
 
-import ${packageInfo.entity}.${entityName};
+import ${entity.packagePath}.${entity.className};
 import com.lj.mp.standard.StandardService;
-<#list packageInfo.servicePackages as pkg>
+<#list service.packages as pkg>
  import ${pkg};
 </#list>
 
 /**
  * <p>
- * ${tableInfo.comment!} 服务类
+ * ${tableComment!} 服务类
  * </p>
  *
  * @author ${author}
  * @since ${date}
  */
-public interface ${tableInfo.serviceName} extends StandardService<${entityName}> {
+public interface ${service.className} extends StandardService<${entity.className}> {
 
 }
 

@@ -1,20 +1,20 @@
-package ${packageInfo.serviceImpl};
+package ${serviceImpl.packagePath};
 
-import ${packageInfo.entity}.${entityName};
-import ${packageInfo.mapper}.${tableInfo.mapperName};
-import ${packageInfo.service}.${tableInfo.serviceName};
+import ${entity.packagePath}.${entity.className};
+import ${mapper.packagePath}.${mapper.className};
+import ${service.packagePath}.${service.className};
 import com.lj.mp.standard.StandardServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * ${tableInfo.comment!} 服务实现类
+ * ${tableComment!} 服务实现类
  * </p>
  *
  * @author ${author}
  * @since ${date}
  */
 @Service
-public class ${tableInfo.serviceImplName} extends StandardServiceImpl<${tableInfo.mapperName}, ${entityName}> implements ${tableInfo.serviceName} {
+public class ${serviceImpl.className} extends StandardServiceImpl<${mapper.className}, ${entity.className}> implements ${service.className} {
 
 }

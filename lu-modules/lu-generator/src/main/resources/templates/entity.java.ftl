@@ -1,15 +1,15 @@
-package ${packageInfo.entity};
+package ${entity.packagePath};
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-<#list packageInfo.entityPackages as pkg>
+<#list entity.packages as pkg>
 import ${pkg};
 </#list>
 
 /**
  * <p>
- * ${tableInfo.comment!}
+ * ${tableComment!}
  * </p>
  *
  * @author ${author}
@@ -17,8 +17,8 @@ import ${pkg};
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("${tableInfo.name}")
-public class ${entityName} extends ${superEntityClass} {
+@TableName("${tableName}")
+public class ${entity.className} extends ${entity.superEntityClass} {
 
     private static final long serialVersionUID = 1L;
 <#list fieldInfoList as field>

@@ -1,20 +1,20 @@
-package ${packageInfo.mapper};
+package ${mapper.packagePath};
 
-import ${packageInfo.entity}.${entityName};
+import ${entity.packagePath}.${entity.className};
 import com.lj.mp.standard.StandardMapper;
 import org.springframework.stereotype.Repository;
 
 
 /**
  * <p>
- * ${tableInfo.comment!} Mapper 接口
+ * ${tableComment!} Mapper 接口
  * </p>
  *
  * @author ${author}
  * @since ${date}
  */
 @Repository
-public interface ${tableInfo.mapperName} extends StandardMapper<${entityName}> {
+public interface ${mapper.className} extends StandardMapper<${entity.className}> {
 
 }
 
