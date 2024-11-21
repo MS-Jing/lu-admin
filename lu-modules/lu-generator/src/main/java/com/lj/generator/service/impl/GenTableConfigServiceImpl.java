@@ -26,6 +26,7 @@ import com.lj.generator.service.GenColumnConfigService;
 import com.lj.generator.service.GenTableConfigService;
 import com.lj.generator.utils.GenUtils;
 import com.lj.generator.utils.TypeMapper;
+import com.lj.mp.log.MpLogHelper;
 import com.lj.mp.standard.StandardEntity;
 import com.lj.mp.standard.StandardServiceImpl;
 import com.lj.mp.utils.PageQueryUtils;
@@ -135,6 +136,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         // 字段排序
         int sort = 1;
         for (GenColumnConfig genColumnConfig : genColumnConfigList) {
+            genColumnConfig.setTableId(entity.getId());
             genColumnConfig.setFieldSort(sort++);
         }
         // 将新增和更新的分开
@@ -196,8 +198,8 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
                 if (!enumDict.getClassName().equals(superClassFieldInfo.getFieldType())) {
                     throw new CommonException("列: " + columnName + " 在父类中已出现,他并不是字典" + enumDictType + "类型");
                 }
-            } else if (!columnParams.getFieldType().equals(superClassFieldInfo.getFieldType())){
-                throw new CommonException("列: " + columnName + " 在父类中已出现,类型不匹配 "+ columnParams.getFieldType() + "->" + superClassFieldInfo.getFieldType());
+            } else if (!columnParams.getFieldType().equals(superClassFieldInfo.getFieldType())) {
+                throw new CommonException("列: " + columnName + " 在父类中已出现,类型不匹配 " + columnParams.getFieldType() + "->" + superClassFieldInfo.getFieldType());
             }
             temp.add(columnName);
         }
