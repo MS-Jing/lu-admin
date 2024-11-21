@@ -283,7 +283,9 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
             }
             if (StrUtil.isNotBlank(columnConfig.getEnumDictType())) {
                 // 说明是字典
-                fieldInfo.setEnumDict(getEnumDictVo(columnConfig.getEnumDictType(), columnConfig.getFieldType()));
+                EnumDictVo enumDictVo = getEnumDictVo(columnConfig.getEnumDictType(), columnConfig.getFieldType());
+                fieldInfo.setEnumDict(enumDictVo);
+                fieldInfo.setEnumDictFieldType(ClassUtils.getClassSimpleName(enumDictVo.getClassName()));
             }
             fieldInfos.add(fieldInfo);
         }
@@ -295,12 +297,16 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         packages.add(superClassInfo.getName());
         List<FieldInfo> fieldInfoList = genTemplateInfo.getFieldInfoList();
         for (FieldInfo fieldInfo : fieldInfoList) {
-            if (!fieldInfo.isExistSuperClass() && fieldInfo.isPk()) {
+            if (fieldInfo.isExistSuperClass()) {
+                // 在父类的字段无需导入包
+                continue;
+            }
+            if (fieldInfo.isPk()) {
                 // 主键id不在父类
                 packages.add(ClassUtil.getClassName(TableId.class, false));
             }
-            if (!fieldInfo.isExistSuperClass() && fieldInfo.isConvert()) {
-                // 字段不需要转换
+            if (fieldInfo.isConvert()) {
+                // 字段需要转换
                 packages.add(ClassUtil.getClassName(TableField.class, false));
             }
             if (fieldInfo.getEnumDict() != null) {

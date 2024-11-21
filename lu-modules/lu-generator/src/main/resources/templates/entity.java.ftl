@@ -22,16 +22,18 @@ public class ${entity.className} extends ${entity.superEntityClass} {
 
     private static final long serialVersionUID = 1L;
 <#list fieldInfoList as field>
+    <#if !field.existSuperClass>
 
     /**
-     * ${field.comment}
-     */
+    * ${field.comment}
+    */
     <#if field.pk>
     @TableId(value = "${field.columnName}", type = IdType.ASSIGN_ID)
     </#if>
     <#if field.convert>
     @TableField("${field.columnName}")
     </#if>
-    private ${field.fieldType} ${field.fieldName};
+    private <#if field.enumDictFieldType??>${field.enumDictFieldType}<#else>${field.fieldType}</#if> ${field.fieldName};
+    </#if>
 </#list>
 }
