@@ -25,8 +25,8 @@ public class ${entity.className} extends ${entity.superEntityClass} {
     <#if !field.existSuperClass>
 
     /**
-    * ${field.comment}
-    */
+     * ${field.comment}
+     */
     <#if field.pk>
     @TableId(value = "${field.columnName}", type = IdType.ASSIGN_ID)
     </#if>
