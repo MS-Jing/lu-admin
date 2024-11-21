@@ -2,12 +2,11 @@ package com.lj.generator.engine;
 
 import cn.hutool.core.text.StrPool;
 import freemarker.template.Configuration;
+import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -34,7 +33,16 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
 
     @Override
     public void writer(Object dataModel, String templatePath, File outputFile) {
-
+        try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
+            Template template = configuration.getTemplate(templatePath);
+            try {
+                template.process(dataModel, new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8));
+            } catch (TemplateException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
