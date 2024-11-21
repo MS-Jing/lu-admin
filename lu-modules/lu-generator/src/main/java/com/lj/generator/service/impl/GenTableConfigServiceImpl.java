@@ -391,6 +391,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     public void afterPropertiesSet() throws Exception {
         log.info("加载可选父类...");
         long start = System.currentTimeMillis();
+        templateEngine.init();
         init();
         log.info("加载可选父类加载完毕 {} ms", System.currentTimeMillis() - start);
     }
