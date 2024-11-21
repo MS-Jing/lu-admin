@@ -99,7 +99,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         return TableInfoResult.builder()
                 .tableName(tableMeta.getTableName())
                 .comment(tableMeta.getComment())
-                .tablePrefix(underline.length > 2 ? underline[0] : "")
+                .tablePrefix(underline.length >= 2 ? underline[0] : "")
                 .columnInfoList(columnInfoList)
                 .build();
     }
