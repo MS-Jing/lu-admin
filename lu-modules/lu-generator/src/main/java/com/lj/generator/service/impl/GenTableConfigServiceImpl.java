@@ -10,6 +10,7 @@ import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common.exception.CommonException;
 import com.lj.common.utils.CheckUtils;
@@ -18,6 +19,7 @@ import com.lj.dict.params.DictQueryParams;
 import com.lj.dict.result.EnumDictVo;
 import com.lj.dict.service.EnumDictService;
 import com.lj.generator.constant.GenConstant;
+import com.lj.generator.engine.TemplateEngine;
 import com.lj.generator.entity.GenColumnConfig;
 import com.lj.generator.entity.GenTableConfig;
 import com.lj.generator.mapper.GenTableConfigMapper;
@@ -66,6 +68,8 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     private GenColumnConfigService columnConfigService;
     @Resource
     private EnumDictService enumDictService;
+    @Resource
+    private TemplateEngine templateEngine;
 
     @Override
     public List<String> enableGenTable() {
@@ -227,7 +231,10 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     public List<GenPreviewResult> preview(Long tableId) {
         GenTableConfig tableConfig = getById(tableId);
         CheckUtils.ifNull(tableConfig, "表不存在！");
-        buildGenTemplateInfo(tableConfig);
+        GenTemplateInfo genTemplateInfo = buildGenTemplateInfo(tableConfig);
+        // 预览实体表
+        String preview = templateEngine.preview(genTemplateInfo, "/templates/entity.java.ftl");
+        System.out.println(preview);
 
         return null;
     }
@@ -237,14 +244,15 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         SuperClassInfo superClassInfo = getSuperClassInfoByName(tableConfig.getSuperClass());
         // 判断字段
         List<FieldInfo> fieldInfos = buildFieldInfoList(tableConfig, superClassInfo);
-        return new GenTemplateInfo()
+        GenTemplateInfo genTemplateInfo = new GenTemplateInfo()
                 .setTableName(tableConfig.getTableName())
                 .setTableComment(tableConfig.getComment())
                 .setModuleName(tableConfig.getModuleName())
                 .setAuthor(tableConfig.getAuthor())
                 .setDate(LocalDateTimeUtil.format(LocalDateTime.now(), "yyyy-MM-dd HH:mm:ss"))
-                .setFieldInfoList(fieldInfos)
-                .setEntity(buildEntityInfo(tableConfig, basePackageName, superClassInfo));
+                .setFieldInfoList(fieldInfos);
+        genTemplateInfo.setEntity(buildEntityInfo(genTemplateInfo, tableConfig, basePackageName, superClassInfo));
+        return genTemplateInfo;
     }
 
     public List<FieldInfo> buildFieldInfoList(GenTableConfig tableConfig, SuperClassInfo superClassInfo) {
@@ -282,12 +290,34 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         return fieldInfos;
     }
 
-    private EntityInfo buildEntityInfo(GenTableConfig tableConfig, String basePackageName, SuperClassInfo superClassInfo) {
+    private EntityInfo buildEntityInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName, SuperClassInfo superClassInfo) {
+        Set<String> packages = new HashSet<>();
+        packages.add(superClassInfo.getName());
+        List<FieldInfo> fieldInfoList = genTemplateInfo.getFieldInfoList();
+        for (FieldInfo fieldInfo : fieldInfoList) {
+            if (!fieldInfo.isExistSuperClass() && fieldInfo.isPk()) {
+                // 主键id不在父类
+                packages.add(ClassUtil.getClassName(TableId.class, false));
+            }
+            if (!fieldInfo.isExistSuperClass() && fieldInfo.isConvert()) {
+                // 字段不需要转换
+                packages.add(ClassUtil.getClassName(TableField.class, false));
+            }
+            if (fieldInfo.getEnumDict() != null) {
+                // 需要把字典导入，字典的优先级大于原类型
+                packages.add(fieldInfo.getEnumDict().getClassName());
+                continue;
+            }
+            if (StrUtil.isNotBlank(fieldInfo.getImportType())) {
+                // 原类型需要导入包
+                packages.add(fieldInfo.getImportType());
+            }
+        }
         EntityInfo entityInfo = new EntityInfo();
         entityInfo.setSuperEntityClass(ClassUtils.getClassSimpleName(superClassInfo.getName()));
         String packagePath = basePackageName + StrPool.DOT + GenConstant.entityPackageName;
         entityInfo.setPackagePath(packagePath);
-        entityInfo.setPackages(Arrays.asList(superClassInfo.getName()));
+        entityInfo.setPackages(packages);
         // 文件名
         String className = GenUtils.tableNameToClassName(tableConfig.getTableName(), Boolean.TRUE.equals(tableConfig.getUnprefix()) ? tableConfig.getTablePrefix() : "");
         entityInfo.setClassName(className);

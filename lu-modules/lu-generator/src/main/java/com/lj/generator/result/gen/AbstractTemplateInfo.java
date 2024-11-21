@@ -2,7 +2,7 @@ package com.lj.generator.result.gen;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author luojing
@@ -20,7 +20,7 @@ public abstract class AbstractTemplateInfo {
      * 要导入的包名
      * 例如： java.util.List
      */
-    private List<String> packages;
+    private Set<String> packages;
 
     /**
      * 生成的文件名
