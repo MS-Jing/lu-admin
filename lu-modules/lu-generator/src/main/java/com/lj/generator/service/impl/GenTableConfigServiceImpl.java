@@ -1,6 +1,8 @@
 package com.lj.generator.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
@@ -15,6 +17,7 @@ import com.lj.common.utils.ClassUtils;
 import com.lj.dict.params.DictQueryParams;
 import com.lj.dict.result.EnumDictVo;
 import com.lj.dict.service.EnumDictService;
+import com.lj.generator.constant.GenConstant;
 import com.lj.generator.entity.GenColumnConfig;
 import com.lj.generator.entity.GenTableConfig;
 import com.lj.generator.mapper.GenTableConfigMapper;
@@ -22,11 +25,13 @@ import com.lj.generator.params.GenColumnConfigSaveOrUpdateParams;
 import com.lj.generator.params.GenTableConfigPageParams;
 import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
 import com.lj.generator.result.*;
+import com.lj.generator.result.gen.EntityInfo;
+import com.lj.generator.result.gen.FieldInfo;
+import com.lj.generator.result.gen.GenTemplateInfo;
 import com.lj.generator.service.GenColumnConfigService;
 import com.lj.generator.service.GenTableConfigService;
 import com.lj.generator.utils.GenUtils;
 import com.lj.generator.utils.TypeMapper;
-import com.lj.mp.log.MpLogHelper;
 import com.lj.mp.standard.StandardEntity;
 import com.lj.mp.standard.StandardServiceImpl;
 import com.lj.mp.utils.PageQueryUtils;
@@ -38,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -113,6 +119,10 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         return superClassList.stream().map(SuperClassInfo::getName).collect(Collectors.toList());
     }
 
+    private SuperClassInfo getSuperClassInfoByName(String superClass) {
+        return superClassList.stream().filter(superClassInfo -> superClassInfo.getName().equals(superClass)).findFirst().orElseThrow(() -> new CommonException("父类不存在？"));
+    }
+
     @Override
     public IPage<GenTableConfigPageResult> pageQuery(GenTableConfigPageParams pageParams) {
         return this.page(PageQueryUtils.getPage(pageParams), lambdaQueryWrapper()
@@ -174,17 +184,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
             String enumDictType = columnParams.getEnumDictType();
             EnumDictVo enumDict = null;
             if (StrUtil.isNotBlank(enumDictType)) {
-                List<EnumDictVo> dict = enumDictService.getDict(DictQueryParams.builder()
-                        .name(enumDictType)
-                        // 一定要是mp标准的枚举 （实现了IEnum接口）
-                        .standard(true)
-                        // 字段类型一定要匹配啊 不能说这个字段我要个int类型，但是你却给我一个string类型的枚举吧
-                        .valueType(fieldType)
-                        .build());
-                if (CollUtil.isEmpty(dict)) {
-                    throw new CommonException("字典不存在或者类型不匹配:" + enumDictType);
-                }
-                enumDict = dict.get(0);
+                enumDict = getEnumDictVo(enumDictType, fieldType);
             } else if (!fieldType.equals(columnParams.getFieldType())) {
                 throw new CommonException("字段与列类型不匹配 " + columnParams.getFieldType() + "->" + fieldType);
             }
@@ -207,6 +207,94 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         if (CollUtil.isNotEmpty(dissatisfyFieldName)) {
             throw new CommonException("无法将分配父类,缺少字段:" + dissatisfyFieldName);
         }
+    }
+
+    private EnumDictVo getEnumDictVo(String enumDictType, String fieldType) {
+        List<EnumDictVo> dict = enumDictService.getDict(DictQueryParams.builder()
+                .name(enumDictType)
+                // 一定要是mp标准的枚举 （实现了IEnum接口）
+                .standard(true)
+                // 字段类型一定要匹配啊 不能说这个字段我要个int类型，但是你却给我一个string类型的枚举吧
+                .valueType(fieldType)
+                .build());
+        if (CollUtil.isEmpty(dict)) {
+            throw new CommonException("字典不存在或者类型不匹配:" + enumDictType);
+        }
+        return dict.get(0);
+    }
+
+    @Override
+    public List<GenPreviewResult> preview(Long tableId) {
+        GenTableConfig tableConfig = getById(tableId);
+        CheckUtils.ifNull(tableConfig, "表不存在！");
+        buildGenTemplateInfo(tableConfig);
+
+        return null;
+    }
+
+    private GenTemplateInfo buildGenTemplateInfo(GenTableConfig tableConfig) {
+        String basePackageName = tableConfig.getPackageName() + StrPool.DOT + tableConfig.getModuleName();
+        SuperClassInfo superClassInfo = getSuperClassInfoByName(tableConfig.getSuperClass());
+        // 判断字段
+        List<FieldInfo> fieldInfos = buildFieldInfoList(tableConfig, superClassInfo);
+        return new GenTemplateInfo()
+                .setTableName(tableConfig.getTableName())
+                .setTableComment(tableConfig.getComment())
+                .setModuleName(tableConfig.getModuleName())
+                .setAuthor(tableConfig.getAuthor())
+                .setDate(LocalDateTimeUtil.format(LocalDateTime.now(), "yyyy-MM-dd HH:mm:ss"))
+                .setFieldInfoList(fieldInfos)
+                .setEntity(buildEntityInfo(tableConfig, basePackageName, superClassInfo));
+    }
+
+    public List<FieldInfo> buildFieldInfoList(GenTableConfig tableConfig, SuperClassInfo superClassInfo) {
+        List<GenColumnConfig> columnConfigList = columnConfigService.getByTableId(tableConfig.getId());
+        CheckUtils.ifEmpty(columnConfigList, "列配置为空？");
+        // 父类对应的列
+        Set<String> superClassColumn = superClassInfo.getFieldInfoList().stream().map(SuperClassFieldInfo::getColumnName).collect(Collectors.toSet());
+        List<FieldInfo> fieldInfos = new ArrayList<>();
+        for (GenColumnConfig columnConfig : columnConfigList) {
+            FieldInfo fieldInfo = new FieldInfo()
+                    .setExistSuperClass(superClassColumn.contains(columnConfig.getColumnName()))
+                    .setFieldName(columnConfig.getFieldName())
+                    .setFieldType(ClassUtils.getClassSimpleName(columnConfig.getFieldType()))
+                    .setColumnName(columnConfig.getColumnName())
+                    .setComment(columnConfig.getComment())
+                    .setConvert(!GenUtils.fieldEqualityColumn(columnConfig.getFieldName(), columnConfig.getColumnName()))
+                    .setPk(columnConfig.getColumnPk())
+                    .setRequired(columnConfig.getRequired())
+                    .setShowInList(columnConfig.getShowInList())
+                    .setShowInQuery(columnConfig.getShowInQuery())
+                    .setQueryType(columnConfig.getQueryType())
+                    .setShowInSave(columnConfig.getShowInSave())
+                    .setShowInUpdate(columnConfig.getShowInUpdate())
+                    .setFormType(columnConfig.getFormType());
+            if (!columnConfig.getFieldType().equals(fieldInfo.getFieldType())) {
+                // 说明不是lang包下的类型，需要引入
+                fieldInfo.setImportType(columnConfig.getFieldType());
+            }
+            if (StrUtil.isNotBlank(columnConfig.getEnumDictType())) {
+                // 说明是字典
+                fieldInfo.setEnumDict(getEnumDictVo(columnConfig.getEnumDictType(), columnConfig.getFieldType()));
+            }
+            fieldInfos.add(fieldInfo);
+        }
+        return fieldInfos;
+    }
+
+    private EntityInfo buildEntityInfo(GenTableConfig tableConfig, String basePackageName, SuperClassInfo superClassInfo) {
+        EntityInfo entityInfo = new EntityInfo();
+        entityInfo.setSuperEntityClass(ClassUtils.getClassSimpleName(superClassInfo.getName()));
+        String packagePath = basePackageName + StrPool.DOT + GenConstant.entityPackageName;
+        entityInfo.setPackagePath(packagePath);
+        entityInfo.setPackages(Arrays.asList(superClassInfo.getName()));
+        // 文件名
+        String className = GenUtils.tableNameToClassName(tableConfig.getTableName(), Boolean.TRUE.equals(tableConfig.getUnprefix()) ? tableConfig.getTablePrefix() : "");
+        entityInfo.setClassName(className);
+        entityInfo.setFileName(className + GenConstant.javaFileSuffix);
+        // 文件路径
+        entityInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
+        return entityInfo;
     }
 
     private void init() {

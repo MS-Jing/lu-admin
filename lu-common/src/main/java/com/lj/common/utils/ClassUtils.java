@@ -1,5 +1,6 @@
 package com.lj.common.utils;
 
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ClassUtil;
 
 /**
@@ -25,5 +26,23 @@ public class ClassUtils extends ClassUtil {
      */
     public static String getClassName(Class<?> clazz) {
         return ClassUtil.getClassName(clazz, langPackage.equals(ClassUtil.getPackage(clazz)));
+    }
+
+    /**
+     * 通过className的名称返回类的简易名字
+     * java.lang.String -> String
+     * String -> String
+     * java.math.BigDecimal -> BigDecimal
+     * BigDecimal -> BigDecimal
+     *
+     * @param className className
+     * @return className
+     */
+    public static String getClassSimpleName(String className) {
+        int i = className.lastIndexOf(StrPool.DOT);
+        if (i == -1) {
+            return className;
+        }
+        return className.substring(i+1);
     }
 }

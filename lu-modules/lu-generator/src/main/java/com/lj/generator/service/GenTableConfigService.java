@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.generator.entity.GenTableConfig;
 import com.lj.generator.params.GenTableConfigPageParams;
 import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
+import com.lj.generator.result.GenPreviewResult;
 import com.lj.generator.result.GenTableConfigPageResult;
 import com.lj.generator.result.TableInfoResult;
 import com.lj.mp.standard.StandardService;
@@ -38,4 +39,11 @@ public interface GenTableConfigService extends StandardService<GenTableConfig> {
     IPage<GenTableConfigPageResult> pageQuery(GenTableConfigPageParams pageParams);
 
     void saveOrUpdate(GenTableConfigSaveOrUpdateParams params);
+
+    /**
+     * 预览指定表的生成结果
+     * @param tableId 表id
+     * @return 指定表的所有要生成的文件结果
+     */
+    List<GenPreviewResult> preview(Long tableId);
 }

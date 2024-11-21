@@ -1,6 +1,8 @@
 package com.lj.generator.result.gen;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
  * 生成器模板需要得信息
  */
 @Data
+@Accessors(chain = true)
 public class GenTemplateInfo {
 
     /**

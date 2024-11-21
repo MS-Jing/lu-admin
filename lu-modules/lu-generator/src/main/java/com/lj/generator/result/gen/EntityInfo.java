@@ -2,7 +2,6 @@ package com.lj.generator.result.gen;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * @author luojing
