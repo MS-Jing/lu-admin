@@ -39,6 +39,36 @@ public class GenTemplateInfo {
     private String date;
 
     /**
+     * 主键类型
+     */
+    private String pkType;
+
+    /**
+     * 是否生成分页接口
+     */
+    private Boolean genPage;
+
+    /**
+     * 是否生成信息接口
+     */
+    private Boolean genInfo;
+
+    /**
+     * 是否生成保存接口
+     */
+    private Boolean genSave;
+
+    /**
+     * 是否生成更新接口
+     */
+    private Boolean genUpdate;
+
+    /**
+     * 是否生成删除接口
+     */
+    private Boolean genDeleted;
+
+    /**
      * 实体相关
      */
     private EntityInfo entity;

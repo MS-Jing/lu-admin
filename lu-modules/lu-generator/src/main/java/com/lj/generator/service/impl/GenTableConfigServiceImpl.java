@@ -238,7 +238,10 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
 //        String preview = templateEngine.preview(genTemplateInfo, GenConstant.pageResultTemplate);
 //        String preview = templateEngine.preview(genTemplateInfo, GenConstant.infoResultTemplate);
 //        String preview = templateEngine.preview(genTemplateInfo, GenConstant.saveParamTemplate);
-        String preview = templateEngine.preview(genTemplateInfo, GenConstant.updateParamTemplate);
+//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.updateParamTemplate);
+//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.serviceTemplate);
+        String preview = templateEngine.preview(genTemplateInfo, GenConstant.serviceImplTemplate);
+//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.mapperTemplate);
         System.out.println(preview);
 
         return null;
@@ -255,14 +258,82 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
                 .setModuleName(tableConfig.getModuleName())
                 .setAuthor(tableConfig.getAuthor())
                 .setDate(LocalDateTimeUtil.format(LocalDateTime.now(), "yyyy-MM-dd HH:mm:ss"))
-                .setFieldInfoList(fieldInfos);
+                .setFieldInfoList(fieldInfos)
+                .setPkType(fieldInfos.stream()
+                        .filter(FieldInfo::isPk)
+                        .map(FieldInfo::getFieldType)
+                        .findFirst().orElseThrow(() -> new CommonException("表不存在主键?")))
+                .setGenPage(tableConfig.getGenPage())
+                .setGenInfo(tableConfig.getGenInfo())
+                .setGenSave(tableConfig.getGenSave())
+                .setGenUpdate(tableConfig.getGenUpdate())
+                .setGenDeleted(tableConfig.getGenDeleted());
         genTemplateInfo.setEntity(buildEntityInfo(genTemplateInfo, tableConfig, basePackageName, superClassInfo));
         genTemplateInfo.setPageParam(buildPageParamInfo(genTemplateInfo, tableConfig, basePackageName));
         genTemplateInfo.setPageResult(buildPageResultInfo(genTemplateInfo, tableConfig, basePackageName));
         genTemplateInfo.setInfoResult(buildInfoResultInfo(genTemplateInfo, tableConfig, basePackageName));
         genTemplateInfo.setSaveParam(buildSaveParamInfo(genTemplateInfo, tableConfig, basePackageName));
         genTemplateInfo.setUpdateParam(buildUpdateParamInfo(genTemplateInfo, tableConfig, basePackageName));
+        genTemplateInfo.setService(buildServiceInfo(genTemplateInfo, tableConfig, basePackageName));
+        genTemplateInfo.setServiceImpl(buildServiceImplInfo(genTemplateInfo, tableConfig, basePackageName));
+        genTemplateInfo.setMapper(buildMapperInfo(genTemplateInfo, tableConfig, basePackageName));
         return genTemplateInfo;
+    }
+
+    private MapperInfo buildMapperInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
+        Set<String> packages = new HashSet<>();
+        MapperInfo mapperInfo = new MapperInfo();
+        String packagePath = basePackageName + StrPool.DOT + GenConstant.mapperPackageName;
+        mapperInfo.setPackagePath(packagePath);
+        mapperInfo.setPackages(packages);
+        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.mapperSuffix;
+        mapperInfo.setClassName(className);
+        mapperInfo.setFileName(className + GenConstant.javaFileSuffix);
+        // 文件路径
+        mapperInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
+        return mapperInfo;
+    }
+
+    private ServiceInfo buildServiceInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
+        Set<String> packages = new HashSet<>();
+        if (genTemplateInfo.getGenPage()) {
+            packages.add(ClassUtil.getClassName(IPage.class, false));
+            packages.add(genTemplateInfo.getPageParam().getClassPath());
+            packages.add(genTemplateInfo.getPageResult().getClassPath());
+        }
+        if (genTemplateInfo.getGenInfo()) {
+            packages.add(genTemplateInfo.getInfoResult().getClassPath());
+        }
+        if (genTemplateInfo.getGenSave()) {
+            packages.add(genTemplateInfo.getSaveParam().getClassPath());
+        }
+        if (genTemplateInfo.getGenSave()) {
+            packages.add(genTemplateInfo.getUpdateParam().getClassPath());
+        }
+        ServiceInfo serviceInfo = new ServiceInfo();
+        String packagePath = basePackageName + StrPool.DOT + GenConstant.servicePackageName;
+        serviceInfo.setPackagePath(packagePath);
+        serviceInfo.setPackages(packages);
+        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.serviceSuffix;
+        serviceInfo.setClassName(className);
+        serviceInfo.setFileName(className + GenConstant.javaFileSuffix);
+        // 文件路径
+        serviceInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
+        return serviceInfo;
+    }
+
+    private ServiceImplInfo buildServiceImplInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
+        Set<String> packages = new HashSet<>();
+        ServiceImplInfo serviceImplInfo = new ServiceImplInfo();
+        String packagePath = basePackageName + StrPool.DOT + GenConstant.servicePackageName + StrPool.DOT + GenConstant.serviceImplPackageName;
+        serviceImplInfo.setPackagePath(packagePath);
+        serviceImplInfo.setPackages(packages);
+        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.serviceImplSuffix;
+        serviceImplInfo.setClassName(className);
+        serviceImplInfo.setFileName(className + GenConstant.javaFileSuffix);
+        // 文件路径
+        serviceImplInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
+        return serviceImplInfo;
     }
 
     public List<FieldInfo> buildFieldInfoList(GenTableConfig tableConfig, SuperClassInfo superClassInfo) {

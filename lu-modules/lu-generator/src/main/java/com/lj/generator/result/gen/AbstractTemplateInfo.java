@@ -1,5 +1,7 @@
 package com.lj.generator.result.gen;
 
+import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
 import java.util.Set;
@@ -36,4 +38,11 @@ public abstract class AbstractTemplateInfo {
      * 生成的类名 如果是Java文件文件名与类名相同
      */
     private String className;
+
+    /**
+     * @return 获取类全路径类名
+     */
+    public String getClassPath() {
+        return StrUtil.join(StrPool.DOT, packagePath, className);
+    }
 }

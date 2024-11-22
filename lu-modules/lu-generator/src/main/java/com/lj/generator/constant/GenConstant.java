@@ -14,11 +14,23 @@ public interface GenConstant {
     String entityPackageName = "entity";
 
     /**
+     * service所在包名
+     */
+    String servicePackageName = "service";
+    String serviceImplPackageName = "impl";
+
+    String mapperPackageName = "mapper";
+
+    /**
      * 参数所在包名
      */
     String paramPackageName = "param";
 
     String resultPackageName = "result";
+
+    String serviceSuffix = "Service";
+    String serviceImplSuffix = "ServiceImpl";
+    String mapperSuffix = "Mapper";
 
     /**
      * 分页参数文件后缀名
@@ -41,6 +53,9 @@ public interface GenConstant {
     String infoResultTemplate = "/templates/infoResult.java.ftl";
     String saveParamTemplate = "/templates/saveParam.java.ftl";
     String updateParamTemplate = "/templates/updateParam.java.ftl";
+    String serviceTemplate = "/templates/service.java.ftl";
+    String serviceImplTemplate = "/templates/serviceImpl.java.ftl";
+    String mapperTemplate = "/templates/mapper.java.ftl";
 
 
 }
