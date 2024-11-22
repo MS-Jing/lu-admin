@@ -28,8 +28,8 @@ public class ${serviceImpl.className} extends StandardServiceImpl<${mapper.class
     <#if genPage>
 
     @Override
-    public IPage<${pageResult.className}> page(${pageParam.className} param){
-        return this.page(PageQueryUtils.getPage(param),lambdaQueryWrapper()
+    public IPage<${pageResult.className}> page(${pageParam.className} param) {
+        return this.page(PageQueryUtils.getPage(param), lambdaQueryWrapper()
                 // todo 查询条件
                        ).convert(${pageResult.className}::of);
     }
@@ -37,14 +37,14 @@ public class ${serviceImpl.className} extends StandardServiceImpl<${mapper.class
     <#if genInfo>
 
     @Override
-    public ${infoResult.className} info(${pkType} id){
+    public ${infoResult.className} info(${pkType} id) {
         return ${infoResult.className}.of(this.getById(id));
     }
     </#if>
     <#if genSave>
 
     @Override
-    public void save(${saveParam.className} param){
+    public void save(${saveParam.className} param) {
         ${entity.className} entity = param.toEntity();
         this.save(entity);
     }
