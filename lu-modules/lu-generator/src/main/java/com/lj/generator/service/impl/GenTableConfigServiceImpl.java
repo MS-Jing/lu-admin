@@ -233,7 +233,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         CheckUtils.ifNull(tableConfig, "表不存在！");
         GenTemplateInfo genTemplateInfo = buildGenTemplateInfo(tableConfig);
         // 预览实体表
-        String preview = templateEngine.preview(genTemplateInfo, "/templates/entity.java.ftl");
+        String preview = templateEngine.preview(genTemplateInfo, GenConstant.entityTemplate);
         System.out.println(preview);
 
         return null;
@@ -397,7 +397,6 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     public void afterPropertiesSet() throws Exception {
         log.info("加载可选父类...");
         long start = System.currentTimeMillis();
-        templateEngine.init();
         init();
         log.info("加载可选父类加载完毕 {} ms", System.currentTimeMillis() - start);
     }

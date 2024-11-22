@@ -17,5 +17,7 @@ public interface GenConstant {
 
     String javaDir = StrUtil.join(FileUtil.FILE_SEPARATOR, "src", "main", "java");
 
+    String entityTemplate = "/templates/entity.java.ftl";
+
 
 }

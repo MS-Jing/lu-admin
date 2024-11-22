@@ -26,6 +26,10 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
         configuration.setClassForTemplateLoading(this.getClass(), StrPool.SLASH);
     }
 
+    public FreemarkerTemplateEngine(){
+        this.init();
+    }
+
     @Override
     public void writer(Map<String, Object> dataModel, String templatePath, File outputFile) {
         this.writer((Object) dataModel, templatePath, outputFile);
