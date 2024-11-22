@@ -24,9 +24,11 @@ public class ${entity.className} extends ${entity.superEntityClass} {
 <#list fieldInfoList as field>
     <#if !field.existSuperClass>
 
+    <#if field.comment!?length gt 0>
     /**
      * ${field.comment}
      */
+    </#if>
     <#if field.pk>
     @TableId(value = "${field.columnName}", type = IdType.ASSIGN_ID)
     </#if>

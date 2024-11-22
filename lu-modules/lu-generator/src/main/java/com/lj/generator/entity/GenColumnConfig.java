@@ -52,6 +52,8 @@ public class GenColumnConfig extends SysStandardEntity {
 
     private Integer queryType;
 
+    private Boolean showInInfo;
+
     private Boolean showInSave;
 
     private Boolean showInUpdate;

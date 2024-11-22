@@ -71,6 +71,8 @@ public class FieldInfo {
 
     private Integer queryType;
 
+    private Boolean showInInfo;
+
     private Boolean showInSave;
 
     private Boolean showInUpdate;

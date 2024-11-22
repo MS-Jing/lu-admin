@@ -13,11 +13,34 @@ public interface GenConstant {
      */
     String entityPackageName = "entity";
 
+    /**
+     * 参数所在包名
+     */
+    String paramPackageName = "param";
+
+    String resultPackageName = "result";
+
+    /**
+     * 分页参数文件后缀名
+     */
+    String pageParamSuffix = "PageParam";
+
+    String pageResultSuffix = "PageResult";
+
+    String infoResultSuffix = "InfoResult";
+    String saveParamSuffix = "SaveParam";
+    String updateParamSuffix = "UpdateParam";
+
     String javaFileSuffix = ".java";
 
     String javaDir = StrUtil.join(FileUtil.FILE_SEPARATOR, "src", "main", "java");
 
     String entityTemplate = "/templates/entity.java.ftl";
+    String pageParamTemplate = "/templates/pageParam.java.ftl";
+    String pageResultTemplate = "/templates/pageResult.java.ftl";
+    String infoResultTemplate = "/templates/infoResult.java.ftl";
+    String saveParamTemplate = "/templates/saveParam.java.ftl";
+    String updateParamTemplate = "/templates/updateParam.java.ftl";
 
 
 }

@@ -1,6 +1,5 @@
 package com.lj.generator.result.gen;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -63,4 +62,30 @@ public class GenTemplateInfo {
      * controller
      */
     private ControllerInfo controller;
+
+    /**
+     * 分页参数
+     */
+    private PageParamInfo pageParam;
+
+    /**
+     * 分页结果
+     */
+    private PageResultInfo pageResult;
+
+    /**
+     * 信息结果
+     */
+    private InfoResultInfo infoResult;
+
+    /**
+     * 保存参数
+     */
+    private SaveParamInfo saveParam;
+
+    /**
+     * 更新参数
+     */
+    private UpdateParamInfo updateParam;
+
 }

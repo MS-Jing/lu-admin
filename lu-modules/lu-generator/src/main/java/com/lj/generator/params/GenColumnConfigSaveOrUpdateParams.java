@@ -54,6 +54,9 @@ public class GenColumnConfigSaveOrUpdateParams {
     @Schema(description = "查询的类型 showInQuery为true生效")
     private Integer queryType;
 
+    @Schema(description = "字段是否出现在信息接口中")
+    private Boolean showInInfo;
+
     @Schema(description = "字段是否出现在新增接口中")
     private Boolean showInSave;
 
@@ -79,6 +82,7 @@ public class GenColumnConfigSaveOrUpdateParams {
         genColumnConfig.setShowInList(showInList);
         genColumnConfig.setShowInQuery(showInQuery);
         genColumnConfig.setQueryType(queryType);
+        genColumnConfig.setShowInInfo(showInInfo);
         genColumnConfig.setShowInSave(showInSave);
         genColumnConfig.setShowInUpdate(showInUpdate);
         genColumnConfig.setFormType(formType);
