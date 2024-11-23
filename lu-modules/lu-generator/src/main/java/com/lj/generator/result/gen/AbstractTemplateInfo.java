@@ -1,11 +1,14 @@
 package com.lj.generator.result.gen;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import com.lj.generator.engine.TemplateEngine;
 import com.lj.generator.result.GenPreviewResult;
 import lombok.Data;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -61,5 +64,11 @@ public abstract class AbstractTemplateInfo {
                 .setFileName(fileName)
                 .setPath(filePath)
                 .setContent(templateEngine.preview(genTemplateInfo, getTemplate()));
+    }
+
+    public void generate(GenTemplateInfo genTemplateInfo, TemplateEngine templateEngine, String tempDir) {
+        File file = new File(tempDir + FileUtil.FILE_SEPARATOR + CollUtil.join(filePath, FileUtil.FILE_SEPARATOR), fileName);
+        FileUtil.mkdir(file.getParent());
+        templateEngine.writer(genTemplateInfo, getTemplate(), file);
     }
 }

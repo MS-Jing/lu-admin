@@ -9,6 +9,8 @@ import com.lj.generator.result.GenTableConfigPageResult;
 import com.lj.generator.result.TableInfoResult;
 import com.lj.mp.standard.StandardService;
 
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -46,4 +48,10 @@ public interface GenTableConfigService extends StandardService<GenTableConfig> {
      * @return 指定表的所有要生成的文件结果
      */
     List<GenPreviewResult> preview(Long tableId);
+
+    /**
+     * 生成指定表
+     * @param tableId 表id
+     */
+    void generate(Long tableId, OutputStream out);
 }

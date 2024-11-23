@@ -195,4 +195,26 @@ public class GenTemplateInfo {
         }
         return previewResultList;
     }
+
+    public void generate(TemplateEngine templateEngine, String tempDir) {
+        entity.generate(this, templateEngine, tempDir);
+        mapper.generate(this, templateEngine, tempDir);
+        mapperXml.generate(this, templateEngine, tempDir);
+        service.generate(this, templateEngine, tempDir);
+        serviceImpl.generate(this, templateEngine, tempDir);
+        controller.generate(this, templateEngine, tempDir);
+        if (genPage) {
+            pageParam.generate(this, templateEngine, tempDir);
+            pageResult.generate(this, templateEngine, tempDir);
+        }
+        if (genInfo) {
+            infoResult.generate(this, templateEngine, tempDir);
+        }
+        if (genSave) {
+            saveParam.generate(this, templateEngine, tempDir);
+        }
+        if (genUpdate) {
+            updateParam.generate(this, templateEngine, tempDir);
+        }
+    }
 }

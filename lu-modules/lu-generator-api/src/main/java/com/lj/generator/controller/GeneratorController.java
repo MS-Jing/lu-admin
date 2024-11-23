@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
+import com.lj.common_web.utils.ServletUtil;
 import com.lj.generator.params.GenTableConfigPageParams;
 import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
 import com.lj.generator.result.GenPreviewResult;
@@ -14,10 +15,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -77,5 +80,17 @@ public class GeneratorController {
     @Operation(summary = "预览表生成", description = "生成的内容预览")
     public List<GenPreviewResult> preview(Long tableId) {
         return genTableConfigService.preview(tableId);
+    }
+
+    @GetMapping("/generate")
+    @SaCheckPermission("gen:table:info")
+    @Operation(summary = "生成表", description = "生成表")
+    public void generate(Long tableId) throws IOException {
+        HttpServletResponse response = ServletUtil.getResponse();
+        genTableConfigService.generate(tableId, response.getOutputStream());
+        response.setCharacterEncoding(ServletUtil.getRequest().getCharacterEncoding());
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=aaa.zip");
+        response.flushBuffer();
     }
 }

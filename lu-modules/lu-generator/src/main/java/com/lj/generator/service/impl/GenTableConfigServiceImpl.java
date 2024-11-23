@@ -1,9 +1,12 @@
 package com.lj.generator.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
@@ -15,7 +18,6 @@ import com.lj.common.utils.ClassUtils;
 import com.lj.dict.params.DictQueryParams;
 import com.lj.dict.result.EnumDictVo;
 import com.lj.dict.service.EnumDictService;
-import com.lj.generator.constant.GenConstant;
 import com.lj.generator.engine.TemplateEngine;
 import com.lj.generator.entity.GenColumnConfig;
 import com.lj.generator.entity.GenTableConfig;
@@ -40,6 +42,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Function;
@@ -228,6 +234,27 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         CheckUtils.ifNull(tableConfig, "表不存在！");
         GenTemplateInfo genTemplateInfo = buildGenTemplateInfo(tableConfig);
         return genTemplateInfo.preview(templateEngine);
+    }
+
+    @Override
+    public void generate(Long tableId, OutputStream out) {
+        GenTableConfig tableConfig = getById(tableId);
+        CheckUtils.ifNull(tableConfig, "表不存在！");
+        GenTemplateInfo genTemplateInfo = buildGenTemplateInfo(tableConfig);
+        String tempDir = StrUtil.join(FileUtil.FILE_SEPARATOR, System.getProperty("user.dir"), "temp", genTemplateInfo.getTableComment());
+        genTemplateInfo.generate(templateEngine, tempDir);
+        File tempDirFile = new File(tempDir);
+        String zipFilePath = tempDirFile.getPath() + ".zip";
+        ZipUtil.zip(tempDirFile.getPath(), zipFilePath);
+        try (FileInputStream in = new FileInputStream(zipFilePath)) {
+            IoUtil.copy(in, out);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            // 输出后删除本地文件
+            FileUtil.del(tempDir);
+            FileUtil.del(tempDir + ".zip");
+        }
     }
 
     private GenTemplateInfo buildGenTemplateInfo(GenTableConfig tableConfig) {
