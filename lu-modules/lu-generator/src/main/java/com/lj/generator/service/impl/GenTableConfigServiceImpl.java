@@ -235,8 +235,9 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
 //        String preview = templateEngine.preview(genTemplateInfo, GenConstant.saveParamTemplate);
 //        String preview = templateEngine.preview(genTemplateInfo, GenConstant.updateParamTemplate);
 //        String preview = templateEngine.preview(genTemplateInfo, GenConstant.serviceTemplate);
-        String preview = templateEngine.preview(genTemplateInfo, GenConstant.serviceImplTemplate);
+//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.serviceImplTemplate);
 //        String preview = templateEngine.preview(genTemplateInfo, GenConstant.mapperTemplate);
+        String preview = templateEngine.preview(genTemplateInfo, GenConstant.controllerTemplate);
         System.out.println(preview);
 
         return null;

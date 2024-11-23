@@ -21,6 +21,8 @@ public interface GenConstant {
 
     String mapperPackageName = "mapper";
 
+    String controllerPackageName = "controller";
+
     /**
      * 参数所在包名
      */
@@ -30,6 +32,8 @@ public interface GenConstant {
 
     String serviceSuffix = "Service";
     String serviceImplSuffix = "ServiceImpl";
+
+    String controllerSuffix = "Controller";
     String mapperSuffix = "Mapper";
 
     /**
@@ -56,6 +60,7 @@ public interface GenConstant {
     String serviceTemplate = "/templates/service.java.ftl";
     String serviceImplTemplate = "/templates/serviceImpl.java.ftl";
     String mapperTemplate = "/templates/mapper.java.ftl";
+    String controllerTemplate = "/templates/controller.java.ftl";
 
 
 }

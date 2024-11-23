@@ -36,7 +36,7 @@ public class ServiceInfo extends AbstractTemplateInfo {
         if (genTemplateInfo.getGenSave()) {
             packages.add(genTemplateInfo.getSaveParam().getClassPath());
         }
-        if (genTemplateInfo.getGenSave()) {
+        if (genTemplateInfo.getGenUpdate()) {
             packages.add(genTemplateInfo.getUpdateParam().getClassPath());
         }
         setPackages(packages);
