@@ -1,6 +1,6 @@
 package com.lj.generator.result.gen;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
@@ -72,9 +72,14 @@ public class EntityInfo extends AbstractTemplateInfo {
                 Boolean.TRUE.equals(genTemplateInfo.getUnprefix()) ? genTemplateInfo.getTablePrefix() : "");
         setClassName(className);
         setFileName(className + GenConstant.javaFileSuffix);
-        setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR,
-                genTemplateInfo.getModuleName(),
-                GenConstant.javaDir,
-                packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
+        List<String> filePath = CollUtil.newArrayList(GenConstant.backEndDir);
+        filePath.addAll(GenConstant.javaDir);
+        CollUtil.addAll(filePath, StrUtil.split(packagePath, StrPool.DOT));
+        setFilePath(filePath);
+    }
+
+    @Override
+    public String getTemplate() {
+        return GenConstant.entityTemplate;
     }
 }

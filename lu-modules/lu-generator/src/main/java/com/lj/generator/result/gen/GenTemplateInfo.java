@@ -2,12 +2,15 @@ package com.lj.generator.result.gen;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.lj.common.exception.CommonException;
+import com.lj.generator.engine.TemplateEngine;
 import com.lj.generator.entity.GenTableConfig;
+import com.lj.generator.result.GenPreviewResult;
 import com.lj.generator.result.SuperClassInfo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -93,6 +96,11 @@ public class GenTemplateInfo {
     private MapperInfo mapper;
 
     /**
+     * mapperXml
+     */
+    private MapperXmlInfo mapperXml;
+
+    /**
      * service
      */
     private ServiceInfo service;
@@ -160,6 +168,31 @@ public class GenTemplateInfo {
         this.service = new ServiceInfo(this);
         this.serviceImpl = new ServiceImplInfo(this);
         this.mapper = new MapperInfo(this);
+        this.mapperXml = new MapperXmlInfo(this);
         this.controller = new ControllerInfo(this);
+    }
+
+    public List<GenPreviewResult> preview(TemplateEngine templateEngine) {
+        List<GenPreviewResult> previewResultList = new ArrayList<>();
+        previewResultList.add(entity.preview(this, templateEngine));
+        previewResultList.add(mapper.preview(this, templateEngine));
+        previewResultList.add(mapperXml.preview(this, templateEngine));
+        previewResultList.add(service.preview(this, templateEngine));
+        previewResultList.add(serviceImpl.preview(this, templateEngine));
+        previewResultList.add(controller.preview(this, templateEngine));
+        if (genPage) {
+            previewResultList.add(pageParam.preview(this, templateEngine));
+            previewResultList.add(pageResult.preview(this, templateEngine));
+        }
+        if (genInfo) {
+            previewResultList.add(infoResult.preview(this, templateEngine));
+        }
+        if (genSave) {
+            previewResultList.add(saveParam.preview(this, templateEngine));
+        }
+        if (genUpdate) {
+            previewResultList.add(updateParam.preview(this, templateEngine));
+        }
+        return previewResultList;
     }
 }

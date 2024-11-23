@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.generator.params.GenTableConfigPageParams;
 import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
+import com.lj.generator.result.GenPreviewResult;
 import com.lj.generator.result.GenTableConfigPageResult;
 import com.lj.generator.result.TableInfoResult;
 import com.lj.generator.service.GenTableConfigService;
@@ -69,5 +70,12 @@ public class GeneratorController {
     @Operation(summary = "新增或者更新表配置")
     public void saveOrUpdate(@RequestBody @Validated GenTableConfigSaveOrUpdateParams params) {
         genTableConfigService.saveOrUpdate(params);
+    }
+
+    @GetMapping("/preview")
+    @SaCheckPermission("gen:table:info")
+    @Operation(summary = "预览表生成", description = "生成的内容预览")
+    public List<GenPreviewResult> preview(Long tableId) {
+        return genTableConfigService.preview(tableId);
     }
 }

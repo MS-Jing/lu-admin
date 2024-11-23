@@ -1,13 +1,20 @@
 package com.lj.generator.constant;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.collection.CollUtil;
+
+import java.util.List;
 
 /**
  * @author luojing
  * @since 2024/11/21 17:04
  */
 public interface GenConstant {
+
+    /**
+     * 后端目录
+     */
+    String backEndDir = "backend";
+
     /**
      * 实体所在包名
      */
@@ -48,8 +55,10 @@ public interface GenConstant {
     String updateParamSuffix = "UpdateParam";
 
     String javaFileSuffix = ".java";
+    String xmlFileSuffix = ".xml";
 
-    String javaDir = StrUtil.join(FileUtil.FILE_SEPARATOR, "src", "main", "java");
+    List<String> javaDir = CollUtil.newArrayList("src", "main", "java");
+    List<String> mapperDir = CollUtil.newArrayList("src", "main", "resources", "mapper");
 
     String entityTemplate = "/templates/entity.java.ftl";
     String pageParamTemplate = "/templates/pageParam.java.ftl";
@@ -60,6 +69,7 @@ public interface GenConstant {
     String serviceTemplate = "/templates/service.java.ftl";
     String serviceImplTemplate = "/templates/serviceImpl.java.ftl";
     String mapperTemplate = "/templates/mapper.java.ftl";
+    String mapperXmlTemplate = "/templates/mapper.xml.ftl";
     String controllerTemplate = "/templates/controller.java.ftl";
 
 

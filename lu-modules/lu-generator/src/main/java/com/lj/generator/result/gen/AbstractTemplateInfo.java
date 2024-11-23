@@ -2,9 +2,12 @@ package com.lj.generator.result.gen;
 
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
+import com.lj.generator.engine.TemplateEngine;
+import com.lj.generator.result.GenPreviewResult;
 import lombok.Data;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,7 +36,7 @@ public abstract class AbstractTemplateInfo {
     /**
      * 生成的文件目录
      */
-    private String filePath;
+    private List<String> filePath;
 
     /**
      * 生成的类名 如果是Java文件文件名与类名相同
@@ -49,5 +52,14 @@ public abstract class AbstractTemplateInfo {
 
     public AbstractTemplateInfo(GenTemplateInfo genTemplateInfo) {
         this.packages = Collections.emptySet();
+    }
+
+    public abstract String getTemplate();
+
+    public GenPreviewResult preview(GenTemplateInfo genTemplateInfo, TemplateEngine templateEngine) {
+        return new GenPreviewResult()
+                .setFileName(fileName)
+                .setPath(filePath)
+                .setContent(templateEngine.preview(genTemplateInfo, getTemplate()));
     }
 }

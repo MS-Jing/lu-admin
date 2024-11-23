@@ -227,20 +227,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         GenTableConfig tableConfig = getById(tableId);
         CheckUtils.ifNull(tableConfig, "表不存在！");
         GenTemplateInfo genTemplateInfo = buildGenTemplateInfo(tableConfig);
-        // 预览实体表
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.entityTemplate);
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.pageParamTemplate);
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.pageResultTemplate);
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.infoResultTemplate);
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.saveParamTemplate);
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.updateParamTemplate);
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.serviceTemplate);
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.serviceImplTemplate);
-//        String preview = templateEngine.preview(genTemplateInfo, GenConstant.mapperTemplate);
-        String preview = templateEngine.preview(genTemplateInfo, GenConstant.controllerTemplate);
-        System.out.println(preview);
-
-        return null;
+        return genTemplateInfo.preview(templateEngine);
     }
 
     private GenTemplateInfo buildGenTemplateInfo(GenTableConfig tableConfig) {

@@ -1,6 +1,6 @@
 package com.lj.generator.result.gen;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import com.lj.generator.constant.GenConstant;
@@ -46,8 +46,14 @@ public class InfoResultInfo extends AbstractTemplateInfo {
         String className = genTemplateInfo.getEntity().getClassName() + GenConstant.infoResultSuffix;
         setClassName(className);
         setFileName(className + GenConstant.javaFileSuffix);
-        setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, genTemplateInfo.getModuleName(),
-                GenConstant.javaDir,
-                packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
+        List<String> filePath = CollUtil.newArrayList(GenConstant.backEndDir);
+        filePath.addAll(GenConstant.javaDir);
+        CollUtil.addAll(filePath, StrUtil.split(packagePath, StrPool.DOT));
+        setFilePath(filePath);
+    }
+
+    @Override
+    public String getTemplate() {
+        return GenConstant.infoResultTemplate;
     }
 }
