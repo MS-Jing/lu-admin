@@ -1,8 +1,13 @@
 package com.lj.generator.result.gen;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
+import com.lj.common.exception.CommonException;
+import com.lj.generator.entity.GenTableConfig;
+import com.lj.generator.result.SuperClassInfo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,6 +38,15 @@ public class GenTemplateInfo {
      * 模块名
      */
     private String moduleName;
+
+    /**
+     * 包名 真实的包名应该是：packageName+"."+moduleName+具体的包名
+     */
+    private String packageName;
+
+    private String tablePrefix;
+
+    private Boolean unprefix;
 
     private String author;
 
@@ -118,4 +132,34 @@ public class GenTemplateInfo {
      */
     private UpdateParamInfo updateParam;
 
+    public GenTemplateInfo(GenTableConfig tableConfig, List<FieldInfo> fieldInfos, SuperClassInfo superClassInfo) {
+        this.tableName = tableConfig.getTableName();
+        this.tableComment = tableConfig.getComment();
+        this.moduleName = tableConfig.getModuleName();
+        this.packageName = tableConfig.getPackageName();
+        this.tablePrefix = tableConfig.getTablePrefix();
+        this.unprefix = tableConfig.getUnprefix();
+        this.author = tableConfig.getAuthor();
+        this.date = LocalDateTimeUtil.format(LocalDateTime.now(), "yyyy-MM-dd HH:mm:ss");
+        this.fieldInfoList = fieldInfos;
+        this.pkType = fieldInfos.stream()
+                .filter(FieldInfo::isPk)
+                .map(FieldInfo::getFieldType)
+                .findFirst().orElseThrow(() -> new CommonException("表不存在主键?"));
+        this.genPage = tableConfig.getGenPage();
+        this.genInfo = tableConfig.getGenInfo();
+        this.genSave = tableConfig.getGenSave();
+        this.genUpdate = tableConfig.getGenUpdate();
+        this.genDeleted = tableConfig.getGenDeleted();
+        this.entity = new EntityInfo(this, superClassInfo);
+        this.pageParam = new PageParamInfo(this);
+        this.pageResult = new PageResultInfo(this);
+        this.infoResult = new InfoResultInfo(this);
+        this.saveParam = new SaveParamInfo(this);
+        this.updateParam = new UpdateParamInfo(this);
+        this.service = new ServiceInfo(this);
+        this.serviceImpl = new ServiceImplInfo(this);
+        this.mapper = new MapperInfo(this);
+        this.controller = new ControllerInfo(this);
+    }
 }

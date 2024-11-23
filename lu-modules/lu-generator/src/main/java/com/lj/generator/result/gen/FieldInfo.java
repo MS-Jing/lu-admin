@@ -1,8 +1,13 @@
 package com.lj.generator.result.gen;
 
+import com.lj.common.utils.ClassUtils;
 import com.lj.dict.result.EnumDictVo;
+import com.lj.generator.entity.GenColumnConfig;
+import com.lj.generator.utils.GenUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.util.Set;
 
 /**
  * @author luojing
@@ -78,4 +83,26 @@ public class FieldInfo {
     private Boolean showInUpdate;
 
     private Integer formType;
+
+    public FieldInfo(Set<String> superClassColumn, GenColumnConfig columnConfig) {
+        this.existSuperClass = superClassColumn.contains(columnConfig.getColumnName());
+        this.fieldName = columnConfig.getFieldName();
+        this.fieldType = ClassUtils.getClassSimpleName(columnConfig.getFieldType());
+        this.columnName = columnConfig.getColumnName();
+        this.comment = columnConfig.getComment();
+        this.convert = !GenUtils.fieldEqualityColumn(columnConfig.getFieldName(), columnConfig.getColumnName());
+        this.pk = columnConfig.getColumnPk();
+        this.required = columnConfig.getRequired();
+        this.showInList = columnConfig.getShowInList();
+        this.showInQuery = columnConfig.getShowInQuery();
+        this.queryType = columnConfig.getQueryType();
+        this.showInInfo = columnConfig.getShowInInfo();
+        this.showInSave = columnConfig.getShowInSave();
+        this.showInUpdate = columnConfig.getShowInUpdate();
+        this.formType = columnConfig.getFormType();
+        if (!columnConfig.getFieldType().equals(fieldType)) {
+            // 说明不是lang包下的类型，需要引入
+            this.importType = columnConfig.getFieldType();
+        }
+    }
 }

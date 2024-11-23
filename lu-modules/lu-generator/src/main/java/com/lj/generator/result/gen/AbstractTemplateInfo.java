@@ -4,12 +4,13 @@ import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
  * @author luojing
  * @since 2024/11/20 17:18
- * 模板文件的一下公共的字段
+ * 模板文件的一些公共的字段
  */
 @Data
 public abstract class AbstractTemplateInfo {
@@ -44,5 +45,9 @@ public abstract class AbstractTemplateInfo {
      */
     public String getClassPath() {
         return StrUtil.join(StrPool.DOT, packagePath, className);
+    }
+
+    public AbstractTemplateInfo(GenTemplateInfo genTemplateInfo) {
+        this.packages = Collections.emptySet();
     }
 }

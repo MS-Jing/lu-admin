@@ -1,8 +1,6 @@
 package com.lj.generator.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
@@ -10,7 +8,6 @@ import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.MetaUtil;
 import cn.hutool.db.meta.Table;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common.exception.CommonException;
 import com.lj.common.utils.CheckUtils;
@@ -27,7 +24,8 @@ import com.lj.generator.params.GenColumnConfigSaveOrUpdateParams;
 import com.lj.generator.params.GenTableConfigPageParams;
 import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
 import com.lj.generator.result.*;
-import com.lj.generator.result.gen.*;
+import com.lj.generator.result.gen.FieldInfo;
+import com.lj.generator.result.gen.GenTemplateInfo;
 import com.lj.generator.service.GenColumnConfigService;
 import com.lj.generator.service.GenTableConfigService;
 import com.lj.generator.utils.GenUtils;
@@ -36,8 +34,6 @@ import com.lj.mp.standard.StandardEntity;
 import com.lj.mp.standard.StandardServiceImpl;
 import com.lj.mp.utils.PageQueryUtils;
 import jakarta.annotation.Resource;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
@@ -45,7 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -248,92 +243,11 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     }
 
     private GenTemplateInfo buildGenTemplateInfo(GenTableConfig tableConfig) {
-        String basePackageName = tableConfig.getPackageName() + StrPool.DOT + tableConfig.getModuleName();
+        // entity 的父类信息
         SuperClassInfo superClassInfo = getSuperClassInfoByName(tableConfig.getSuperClass());
-        // 判断字段
+        // 字段信息
         List<FieldInfo> fieldInfos = buildFieldInfoList(tableConfig, superClassInfo);
-        GenTemplateInfo genTemplateInfo = new GenTemplateInfo()
-                .setTableName(tableConfig.getTableName())
-                .setTableComment(tableConfig.getComment())
-                .setModuleName(tableConfig.getModuleName())
-                .setAuthor(tableConfig.getAuthor())
-                .setDate(LocalDateTimeUtil.format(LocalDateTime.now(), "yyyy-MM-dd HH:mm:ss"))
-                .setFieldInfoList(fieldInfos)
-                .setPkType(fieldInfos.stream()
-                        .filter(FieldInfo::isPk)
-                        .map(FieldInfo::getFieldType)
-                        .findFirst().orElseThrow(() -> new CommonException("表不存在主键?")))
-                .setGenPage(tableConfig.getGenPage())
-                .setGenInfo(tableConfig.getGenInfo())
-                .setGenSave(tableConfig.getGenSave())
-                .setGenUpdate(tableConfig.getGenUpdate())
-                .setGenDeleted(tableConfig.getGenDeleted());
-        genTemplateInfo.setEntity(buildEntityInfo(genTemplateInfo, tableConfig, basePackageName, superClassInfo));
-        genTemplateInfo.setPageParam(buildPageParamInfo(genTemplateInfo, tableConfig, basePackageName));
-        genTemplateInfo.setPageResult(buildPageResultInfo(genTemplateInfo, tableConfig, basePackageName));
-        genTemplateInfo.setInfoResult(buildInfoResultInfo(genTemplateInfo, tableConfig, basePackageName));
-        genTemplateInfo.setSaveParam(buildSaveParamInfo(genTemplateInfo, tableConfig, basePackageName));
-        genTemplateInfo.setUpdateParam(buildUpdateParamInfo(genTemplateInfo, tableConfig, basePackageName));
-        genTemplateInfo.setService(buildServiceInfo(genTemplateInfo, tableConfig, basePackageName));
-        genTemplateInfo.setServiceImpl(buildServiceImplInfo(genTemplateInfo, tableConfig, basePackageName));
-        genTemplateInfo.setMapper(buildMapperInfo(genTemplateInfo, tableConfig, basePackageName));
-        return genTemplateInfo;
-    }
-
-    private MapperInfo buildMapperInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
-        Set<String> packages = new HashSet<>();
-        MapperInfo mapperInfo = new MapperInfo();
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.mapperPackageName;
-        mapperInfo.setPackagePath(packagePath);
-        mapperInfo.setPackages(packages);
-        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.mapperSuffix;
-        mapperInfo.setClassName(className);
-        mapperInfo.setFileName(className + GenConstant.javaFileSuffix);
-        // 文件路径
-        mapperInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return mapperInfo;
-    }
-
-    private ServiceInfo buildServiceInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
-        Set<String> packages = new HashSet<>();
-        if (genTemplateInfo.getGenPage()) {
-            packages.add(ClassUtil.getClassName(IPage.class, false));
-            packages.add(genTemplateInfo.getPageParam().getClassPath());
-            packages.add(genTemplateInfo.getPageResult().getClassPath());
-        }
-        if (genTemplateInfo.getGenInfo()) {
-            packages.add(genTemplateInfo.getInfoResult().getClassPath());
-        }
-        if (genTemplateInfo.getGenSave()) {
-            packages.add(genTemplateInfo.getSaveParam().getClassPath());
-        }
-        if (genTemplateInfo.getGenSave()) {
-            packages.add(genTemplateInfo.getUpdateParam().getClassPath());
-        }
-        ServiceInfo serviceInfo = new ServiceInfo();
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.servicePackageName;
-        serviceInfo.setPackagePath(packagePath);
-        serviceInfo.setPackages(packages);
-        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.serviceSuffix;
-        serviceInfo.setClassName(className);
-        serviceInfo.setFileName(className + GenConstant.javaFileSuffix);
-        // 文件路径
-        serviceInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return serviceInfo;
-    }
-
-    private ServiceImplInfo buildServiceImplInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
-        Set<String> packages = new HashSet<>();
-        ServiceImplInfo serviceImplInfo = new ServiceImplInfo();
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.servicePackageName + StrPool.DOT + GenConstant.serviceImplPackageName;
-        serviceImplInfo.setPackagePath(packagePath);
-        serviceImplInfo.setPackages(packages);
-        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.serviceImplSuffix;
-        serviceImplInfo.setClassName(className);
-        serviceImplInfo.setFileName(className + GenConstant.javaFileSuffix);
-        // 文件路径
-        serviceImplInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return serviceImplInfo;
+        return new GenTemplateInfo(tableConfig, fieldInfos, superClassInfo);
     }
 
     public List<FieldInfo> buildFieldInfoList(GenTableConfig tableConfig, SuperClassInfo superClassInfo) {
@@ -343,26 +257,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         Set<String> superClassColumn = superClassInfo.getFieldInfoList().stream().map(SuperClassFieldInfo::getColumnName).collect(Collectors.toSet());
         List<FieldInfo> fieldInfos = new ArrayList<>();
         for (GenColumnConfig columnConfig : columnConfigList) {
-            FieldInfo fieldInfo = new FieldInfo()
-                    .setExistSuperClass(superClassColumn.contains(columnConfig.getColumnName()))
-                    .setFieldName(columnConfig.getFieldName())
-                    .setFieldType(ClassUtils.getClassSimpleName(columnConfig.getFieldType()))
-                    .setColumnName(columnConfig.getColumnName())
-                    .setComment(columnConfig.getComment())
-                    .setConvert(!GenUtils.fieldEqualityColumn(columnConfig.getFieldName(), columnConfig.getColumnName()))
-                    .setPk(columnConfig.getColumnPk())
-                    .setRequired(columnConfig.getRequired())
-                    .setShowInList(columnConfig.getShowInList())
-                    .setShowInQuery(columnConfig.getShowInQuery())
-                    .setQueryType(columnConfig.getQueryType())
-                    .setShowInInfo(columnConfig.getShowInInfo())
-                    .setShowInSave(columnConfig.getShowInSave())
-                    .setShowInUpdate(columnConfig.getShowInUpdate())
-                    .setFormType(columnConfig.getFormType());
-            if (!columnConfig.getFieldType().equals(fieldInfo.getFieldType())) {
-                // 说明不是lang包下的类型，需要引入
-                fieldInfo.setImportType(columnConfig.getFieldType());
-            }
+            FieldInfo fieldInfo = new FieldInfo(superClassColumn, columnConfig);
             if (StrUtil.isNotBlank(columnConfig.getEnumDictType())) {
                 // 说明是字典
                 EnumDictVo enumDictVo = getEnumDictVo(columnConfig.getEnumDictType(), columnConfig.getFieldType());
@@ -372,191 +267,6 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
             fieldInfos.add(fieldInfo);
         }
         return fieldInfos;
-    }
-
-    private PageParamInfo buildPageParamInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
-        Set<String> packages = new HashSet<>();
-        List<FieldInfo> fieldInfoList = genTemplateInfo.getFieldInfoList();
-        for (FieldInfo fieldInfo : fieldInfoList) {
-            if (!fieldInfo.getShowInQuery()) {
-                // 不出现在查询参数的字段不用检查
-                continue;
-            }
-            // 不要直接用字典接收值
-            if (StrUtil.isNotBlank(fieldInfo.getImportType())) {
-                // 原类型需要导入包
-                packages.add(fieldInfo.getImportType());
-            }
-        }
-        PageParamInfo pageParamInfo = new PageParamInfo();
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.paramPackageName;
-        pageParamInfo.setPackagePath(packagePath);
-        pageParamInfo.setPackages(packages);
-        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.pageParamSuffix;
-        pageParamInfo.setClassName(className);
-        pageParamInfo.setFileName(className + GenConstant.javaFileSuffix);
-        // 文件路径
-        pageParamInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return pageParamInfo;
-    }
-
-
-    private PageResultInfo buildPageResultInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
-        Set<String> packages = new HashSet<>();
-        List<FieldInfo> fieldInfoList = genTemplateInfo.getFieldInfoList();
-        for (FieldInfo fieldInfo : fieldInfoList) {
-            if (!fieldInfo.getShowInList()) {
-                // 不出现在查询结果的字段不用检查
-                continue;
-            }
-            // 不要直接用字典返回值
-            if (StrUtil.isNotBlank(fieldInfo.getImportType())) {
-                // 原类型需要导入包
-                packages.add(fieldInfo.getImportType());
-            }
-        }
-        PageResultInfo pageResultInfo = new PageResultInfo();
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.resultPackageName;
-        pageResultInfo.setPackagePath(packagePath);
-        pageResultInfo.setPackages(packages);
-        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.pageResultSuffix;
-        pageResultInfo.setClassName(className);
-        pageResultInfo.setFileName(className + GenConstant.javaFileSuffix);
-        pageResultInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return pageResultInfo;
-    }
-
-
-    private InfoResultInfo buildInfoResultInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
-        Set<String> packages = new HashSet<>();
-        List<FieldInfo> fieldInfoList = genTemplateInfo.getFieldInfoList();
-        for (FieldInfo fieldInfo : fieldInfoList) {
-            if (!fieldInfo.getShowInInfo()) {
-                // 不出现在查询结果的字段不用检查
-                continue;
-            }
-            // 不要直接用字典返回值
-            if (StrUtil.isNotBlank(fieldInfo.getImportType())) {
-                // 原类型需要导入包
-                packages.add(fieldInfo.getImportType());
-            }
-        }
-        InfoResultInfo infoResultInfo = new InfoResultInfo();
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.resultPackageName;
-        infoResultInfo.setPackagePath(packagePath);
-        infoResultInfo.setPackages(packages);
-        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.infoResultSuffix;
-        infoResultInfo.setClassName(className);
-        infoResultInfo.setFileName(className + GenConstant.javaFileSuffix);
-        infoResultInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return infoResultInfo;
-    }
-
-
-    private SaveParamInfo buildSaveParamInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
-        Set<String> packages = new HashSet<>();
-        List<FieldInfo> fieldInfoList = genTemplateInfo.getFieldInfoList();
-        for (FieldInfo fieldInfo : fieldInfoList) {
-            if (!fieldInfo.getShowInSave()) {
-                // 不出现在保存的字段不用检查
-                continue;
-            }
-            if (fieldInfo.getRequired()) {
-                // 必填字段需要校验
-                if (ClassUtil.getClassName(String.class, true).equals(fieldInfo.getFieldType())) {
-                    packages.add(ClassUtil.getClassName(NotBlank.class, false));
-                } else {
-                    packages.add(ClassUtil.getClassName(NotNull.class, false));
-                }
-            }
-            if (fieldInfo.getEnumDict() != null) {
-                // 字段需要转换成entity实体,所以需要把字典导入
-                packages.add(fieldInfo.getEnumDict().getClassName());
-            }
-            if (StrUtil.isNotBlank(fieldInfo.getImportType())) {
-                // 原类型需要导入包
-                packages.add(fieldInfo.getImportType());
-            }
-        }
-        SaveParamInfo saveParamInfo = new SaveParamInfo();
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.paramPackageName;
-        saveParamInfo.setPackagePath(packagePath);
-        saveParamInfo.setPackages(packages);
-        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.saveParamSuffix;
-        saveParamInfo.setClassName(className);
-        saveParamInfo.setFileName(className + GenConstant.javaFileSuffix);
-        saveParamInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return saveParamInfo;
-    }
-
-
-    private UpdateParamInfo buildUpdateParamInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName) {
-        Set<String> packages = new HashSet<>();
-        List<FieldInfo> fieldInfoList = genTemplateInfo.getFieldInfoList();
-        for (FieldInfo fieldInfo : fieldInfoList) {
-            if (!fieldInfo.getShowInUpdate()) {
-                // 不出现在保存的字段不用检查
-                continue;
-            }
-            if (fieldInfo.getEnumDict() != null) {
-                // 字段需要转换成entity实体,所以需要把字典导入
-                packages.add(fieldInfo.getEnumDict().getClassName());
-            }
-            if (StrUtil.isNotBlank(fieldInfo.getImportType())) {
-                // 原类型需要导入包
-                packages.add(fieldInfo.getImportType());
-            }
-        }
-        UpdateParamInfo updateParamInfo = new UpdateParamInfo();
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.paramPackageName;
-        updateParamInfo.setPackagePath(packagePath);
-        updateParamInfo.setPackages(packages);
-        String className = genTemplateInfo.getEntity().getClassName() + GenConstant.updateParamSuffix;
-        updateParamInfo.setClassName(className);
-        updateParamInfo.setFileName(className + GenConstant.javaFileSuffix);
-        updateParamInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return updateParamInfo;
-    }
-
-    private EntityInfo buildEntityInfo(GenTemplateInfo genTemplateInfo, GenTableConfig tableConfig, String basePackageName, SuperClassInfo superClassInfo) {
-        Set<String> packages = new HashSet<>();
-        packages.add(superClassInfo.getName());
-        List<FieldInfo> fieldInfoList = genTemplateInfo.getFieldInfoList();
-        for (FieldInfo fieldInfo : fieldInfoList) {
-            if (fieldInfo.isExistSuperClass()) {
-                // 在父类的字段无需导入包
-                continue;
-            }
-            if (fieldInfo.isPk()) {
-                // 主键id不在父类
-                packages.add(ClassUtil.getClassName(TableId.class, false));
-            }
-            if (fieldInfo.isConvert()) {
-                // 字段需要转换
-                packages.add(ClassUtil.getClassName(TableField.class, false));
-            }
-            if (fieldInfo.getEnumDict() != null) {
-                // 需要把字典导入，字典的优先级大于原类型
-                packages.add(fieldInfo.getEnumDict().getClassName());
-                continue;
-            }
-            if (StrUtil.isNotBlank(fieldInfo.getImportType())) {
-                // 原类型需要导入包
-                packages.add(fieldInfo.getImportType());
-            }
-        }
-        EntityInfo entityInfo = new EntityInfo();
-        entityInfo.setSuperEntityClass(ClassUtils.getClassSimpleName(superClassInfo.getName()));
-        String packagePath = basePackageName + StrPool.DOT + GenConstant.entityPackageName;
-        entityInfo.setPackagePath(packagePath);
-        entityInfo.setPackages(packages);
-        // 文件名
-        String className = GenUtils.tableNameToClassName(tableConfig.getTableName(), Boolean.TRUE.equals(tableConfig.getUnprefix()) ? tableConfig.getTablePrefix() : "");
-        entityInfo.setClassName(className);
-        entityInfo.setFileName(className + GenConstant.javaFileSuffix);
-        // 文件路径
-        entityInfo.setFilePath(StrUtil.join(FileUtil.FILE_SEPARATOR, tableConfig.getModuleName(), GenConstant.javaDir, packagePath.replace(StrPool.DOT, FileUtil.FILE_SEPARATOR)));
-        return entityInfo;
     }
 
     private void init() {
