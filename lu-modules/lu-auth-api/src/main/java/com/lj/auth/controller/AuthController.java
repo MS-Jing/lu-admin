@@ -41,8 +41,7 @@ public class AuthController {
             throw new CommonException("uuid不能为空");
         }
         HttpServletResponse response = ServletUtil.getResponse();
-        response.setHeader("Cache-Control", "no-store, no-cache");
-        response.setContentType("image/png");
+        ServletUtil.setPngResponseHeader();
         try (ServletOutputStream out = response.getOutputStream()) {
             authService.captcha(uuid, out);
         }

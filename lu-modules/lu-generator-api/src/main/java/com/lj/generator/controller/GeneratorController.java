@@ -87,10 +87,7 @@ public class GeneratorController {
     @Operation(summary = "生成表", description = "生成表")
     public void generate(Long tableId) throws IOException {
         HttpServletResponse response = ServletUtil.getResponse();
-        genTableConfigService.generate(tableId, response.getOutputStream());
-        response.setCharacterEncoding(ServletUtil.getRequest().getCharacterEncoding());
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=aaa.zip");
-        response.flushBuffer();
+        String fileName = genTableConfigService.generate(tableId, response.getOutputStream());
+        ServletUtil.setFileResponseHeader(fileName);
     }
 }

@@ -52,6 +52,7 @@ public interface GenTableConfigService extends StandardService<GenTableConfig> {
     /**
      * 生成指定表
      * @param tableId 表id
+     * @return 压缩后的文件名
      */
-    void generate(Long tableId, OutputStream out);
+    String generate(Long tableId, OutputStream out);
 }

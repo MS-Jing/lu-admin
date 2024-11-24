@@ -237,24 +237,29 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     }
 
     @Override
-    public void generate(Long tableId, OutputStream out) {
+    public String generate(Long tableId, OutputStream out) {
         GenTableConfig tableConfig = getById(tableId);
         CheckUtils.ifNull(tableConfig, "表不存在！");
         GenTemplateInfo genTemplateInfo = buildGenTemplateInfo(tableConfig);
-        String tempDir = StrUtil.join(FileUtil.FILE_SEPARATOR, System.getProperty("user.dir"), "temp", genTemplateInfo.getTableComment());
+        String tempDir = StrUtil.join(FileUtil.FILE_SEPARATOR,
+                System.getProperty("user.dir"),
+                "temp",
+                // 为什么还要再来一层？因为外面的temp防止有其他操作(比如其他表在生成)那一同删除了会有问题
+                genTemplateInfo.getTableComment() + "_temp",
+                genTemplateInfo.getTableComment());
+        // 这里的原理时生成到tempDir目录下，再压缩这个目录写入输出流
         genTemplateInfo.generate(templateEngine, tempDir);
-        File tempDirFile = new File(tempDir);
-        String zipFilePath = tempDirFile.getPath() + ".zip";
-        ZipUtil.zip(tempDirFile.getPath(), zipFilePath);
-        try (FileInputStream in = new FileInputStream(zipFilePath)) {
+        String zipPath = tempDir + ".zip";
+        ZipUtil.zip(tempDir, zipPath);
+        try (FileInputStream in = new FileInputStream(zipPath)) {
             IoUtil.copy(in, out);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            // 输出后删除本地文件
-            FileUtil.del(tempDir);
-            FileUtil.del(tempDir + ".zip");
+            // 输出后删除本地文件(连同压缩包一起删除)
+            FileUtil.del(new File(tempDir).getParent());
         }
+        return genTemplateInfo.getTableComment() + ".zip";
     }
 
     private GenTemplateInfo buildGenTemplateInfo(GenTableConfig tableConfig) {

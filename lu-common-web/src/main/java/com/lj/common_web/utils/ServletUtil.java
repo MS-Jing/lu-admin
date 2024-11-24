@@ -3,13 +3,12 @@ package com.lj.common_web.utils;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.lj.common.exception.UnsupportedOperationException;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * @author luojing
@@ -115,5 +114,24 @@ public class ServletUtil {
             throw new UnsupportedOperationException();
         }
         return (ServletRequestAttributes) requestAttributes;
+    }
+
+    /**
+     * 设置png响应头
+     */
+    public static void setPngResponseHeader() {
+        HttpServletResponse response = getResponse();
+        response.setHeader("Cache-Control", "no-store, no-cache");
+        response.setContentType("image/png");
+    }
+
+    /**
+     * 设置文件流的响应头
+     * @param filename 文件名称，带后缀名哦！
+     */
+    public static void setFileResponseHeader(String filename) {
+        HttpServletResponse response = getResponse();
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + filename);
     }
 }
