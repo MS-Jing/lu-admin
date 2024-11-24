@@ -16,7 +16,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>query-utils</module>
         <module>lu-common</module>
         <module>lu-common-web</module>
         <module>lu-mp</module>
