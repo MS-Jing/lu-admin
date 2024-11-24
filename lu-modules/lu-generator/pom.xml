@@ -36,19 +36,10 @@
             <artifactId>lu-mp</artifactId>
         </dependency>
 
-        <!--先做参考，后续删除-->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>${mybatis-plus.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>cn.hutool</groupId>
