@@ -1,6 +1,7 @@
 package com.lj.common.utils;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.lj.common.exception.CommonException;
@@ -93,6 +94,14 @@ public class CheckUtils {
      */
     public static void ifNotEmpty(Map<?, ?> map, String exceptionMessage) {
         ifCondition(CollUtil.isNotEmpty(map), exceptionMessage);
+    }
+
+    public static <T> void ifEmpty(T[] array, String exceptionMessage) {
+        ifCondition(ArrayUtil.isEmpty(array), exceptionMessage);
+    }
+
+    public static <T> void ifNotEmpty(T[] array, String exceptionMessage) {
+        ifCondition(ArrayUtil.isNotEmpty(array), exceptionMessage);
     }
 
 

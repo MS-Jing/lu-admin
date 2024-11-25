@@ -1,11 +1,14 @@
 package com.lj.common_web.utils;
 
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import com.lj.common.exception.UnsupportedOperationException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -122,16 +125,26 @@ public class ServletUtil {
     public static void setPngResponseHeader() {
         HttpServletResponse response = getResponse();
         response.setHeader("Cache-Control", "no-store, no-cache");
-        response.setContentType("image/png");
+        response.setContentType(MediaType.IMAGE_PNG_VALUE);
+    }
+
+
+    public static void setFileResponseHeader(String fileName) {
+        setFileResponseHeader(fileName, -1);
     }
 
     /**
      * 设置文件流的响应头
-     * @param filename 文件名称，带后缀名哦！
+     *
+     * @param fileName 文件名称，带后缀名哦！
      */
-    public static void setFileResponseHeader(String filename) {
+    public static void setFileResponseHeader(String fileName, int size) {
         HttpServletResponse response = getResponse();
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        // 响应，告诉前端，这是一个附件，需要进行下载 文件名:filename
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLUtil.encode(fileName));
+        if (size > 0) {
+            response.addHeader("Content-Length", NumberUtil.toStr(size));
+        }
     }
 }
