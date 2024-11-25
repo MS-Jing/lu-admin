@@ -29,13 +29,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseVO<String> handler(Exception e) {
-        reportLog(e);
         for (com.lj.common_web.exception.ExceptionHandler<? extends Exception> handler : exceptionHandlerList) {
             Class<?> exception = handler.getException();
             if (exception.equals(ClassUtil.getClass(e))) {
+                reportLog(e, handler.reportLog(e));
                 return handler.toHandler(e);
             }
         }
+        reportLog(e);
         return ResponseVO.of(ResponseCode.FAILED);
     }
 
