@@ -23,7 +23,7 @@ public class ExcelSheet<T> {
     private final List<T> dataList;
 
     /**
-     * 表头类型 优先级高于head
+     * 表头类型 优先级高于headList
      */
     private Class<T> headType;
 
