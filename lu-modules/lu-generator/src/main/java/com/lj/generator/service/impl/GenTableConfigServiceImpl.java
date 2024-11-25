@@ -247,7 +247,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
                 // 为什么还要再来一层？因为外面的temp防止有其他操作(比如其他表在生成)那一同删除了会有问题
                 genTemplateInfo.getTableComment() + "_temp",
                 genTemplateInfo.getTableComment());
-        // 这里的原理时生成到tempDir目录下，再压缩这个目录写入输出流
+        // 这里的原理是生成到tempDir目录下，再压缩这个目录写入输出流
         genTemplateInfo.generate(templateEngine, tempDir);
         String zipPath = tempDir + ".zip";
         ZipUtil.zip(tempDir, zipPath);
