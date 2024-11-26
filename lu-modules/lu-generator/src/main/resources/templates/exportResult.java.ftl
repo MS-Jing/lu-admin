@@ -1,46 +1,49 @@
-package ${saveParam.packagePath};
+package ${exportResult.packagePath};
 
 import ${entity.packagePath}.${entity.className};
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
-<#list saveParam.packages as pkg>
+<#list exportResult.packages as pkg>
 import ${pkg};
 </#list>
 
 /**
  * <p>
- * ${tableComment!} 保存参数
+ * ${tableComment!} excel导出参数
  * </p>
  *
  * @author ${author}
  * @since ${date}
  */
 @Data
-<#if tableComment??>@Schema(description = "${tableComment} 保存参数")</#if>
-public class ${saveParam.className} {
+public class ${exportResult.className} {
 <#list fieldInfoList as field>
-    <#if field.showInSave>
+    <#if field.showInExport>
 
     <#if field.comment!?length gt 0>
-    @Schema(description = "${field.comment} <#if field.enumDict??>参考字典: ${field.enumDict.name}</#if>")
-    <#elseif field.enumDict??>
-    @Schema(description = "参考字典: ${field.enumDict.name}")
+    /**
+     * ${field.comment}
+     */
     </#if>
-    <#if field.required>
-        <#if field.fieldType=="String">
-    @NotBlank<#else>@NotNull</#if>(message = "<#if field.comment!?length gt 0>${field.comment}<#else>${field.fieldName}</#if> 不能为空")
+    <#if field.enumDict??>
+    @ExcelProperty(value = "<#if field.comment!?length gt 0>${field.comment}</#if>", converter = CommentEnumConverter.class)
+    <#elseif field.comment!?length gt 0>
+    @ExcelProperty("${field.comment}")
     </#if>
-    private ${field.fieldType} ${field.fieldName};
+    private <#if field.enumDictFieldType??>${field.enumDictFieldType}<#else>${field.fieldType}</#if> ${field.fieldName};
     </#if>
 </#list>
 
-    public ${entity.className} toEntity() {
-        ${entity.className} entity = new ${entity.className}();
+    public static ${exportResult.className} of(${entity.className} entity) {
+        if (entity == null) {
+            return null;
+        }
+        ${exportResult.className} result = new ${exportResult.className}();
         <#list fieldInfoList as field>
-        <#if field.showInSave>
-        entity.set${field.fieldName?cap_first}(<#if field.enumDict??>${field.enumDictFieldType}.ofByValue(${field.fieldName})<#else>${field.fieldName}</#if>);
+        <#if field.showInExport>
+        result.set${field.fieldName?cap_first}(entity.get${field.fieldName?cap_first}());
         </#if>
         </#list>
-        return entity;
+        return result;
     }
 }

@@ -9,7 +9,7 @@ import ${pkg};
 
 /**
  * <p>
- * ${tableComment!} excel导出参数
+ * ${tableComment!} excel导入参数
  * </p>
  *
  * @author ${author}
