@@ -54,6 +54,9 @@ public interface GenConstant {
     String saveParamSuffix = "SaveParam";
     String updateParamSuffix = "UpdateParam";
 
+    String importParamSuffix = "ImportParam";
+    String exportResultSuffix = "ExportResult";
+
     String javaFileSuffix = ".java";
     String xmlFileSuffix = ".xml";
 
@@ -71,6 +74,8 @@ public interface GenConstant {
     String mapperTemplate = "/templates/mapper.java.ftl";
     String mapperXmlTemplate = "/templates/mapper.xml.ftl";
     String controllerTemplate = "/templates/controller.java.ftl";
+    String importParamTemplate = "/templates/importParam.java.ftl";
+    String exportResultTemplate = "/templates/exportResult.java.ftl";
 
 
 }

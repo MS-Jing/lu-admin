@@ -60,5 +60,9 @@ public class GenColumnConfig extends SysStandardEntity {
 
     private Integer formType;
 
+    private Boolean showInImport;
+
+    private Boolean showInExport;
+
 
 }

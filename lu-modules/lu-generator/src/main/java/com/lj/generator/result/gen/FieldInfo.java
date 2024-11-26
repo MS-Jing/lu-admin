@@ -84,6 +84,10 @@ public class FieldInfo {
 
     private Integer formType;
 
+    private Boolean showInImport;
+
+    private Boolean showInExport;
+
     public FieldInfo(Set<String> superClassColumn, GenColumnConfig columnConfig) {
         this.existSuperClass = superClassColumn.contains(columnConfig.getColumnName());
         this.fieldName = columnConfig.getFieldName();
@@ -104,5 +108,7 @@ public class FieldInfo {
             // 说明不是lang包下的类型，需要引入
             this.importType = columnConfig.getFieldType();
         }
+        this.showInImport = columnConfig.getShowInImport();
+        this.showInExport = columnConfig.getShowInExport();
     }
 }

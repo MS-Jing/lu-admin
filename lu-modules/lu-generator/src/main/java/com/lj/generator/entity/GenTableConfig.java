@@ -46,5 +46,9 @@ public class GenTableConfig extends SysStandardEntity {
 
     private Boolean genDeleted;
 
+    private Boolean genImport;
+
+    private Boolean genExport;
+
 
 }

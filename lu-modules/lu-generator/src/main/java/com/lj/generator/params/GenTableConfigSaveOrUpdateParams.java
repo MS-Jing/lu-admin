@@ -62,6 +62,12 @@ public class GenTableConfigSaveOrUpdateParams {
     @Schema(description = "是否生成删除接口")
     private Boolean genDeleted;
 
+    @Schema(description = "是否生成导入接口")
+    private Boolean genImport;
+
+    @Schema(description = "是否生成导出接口")
+    private Boolean genExport;
+
     @Schema(description = "列配置信息")
     @NotEmpty(message = "列不能为空")
     private List<GenColumnConfigSaveOrUpdateParams> columnConfigList;
@@ -82,6 +88,8 @@ public class GenTableConfigSaveOrUpdateParams {
         genTableConfig.setGenSave(genSave);
         genTableConfig.setGenUpdate(genUpdate);
         genTableConfig.setGenDeleted(genDeleted);
+        genTableConfig.setGenImport(genImport);
+        genTableConfig.setGenExport(genExport);
         return genTableConfig;
     }
 }

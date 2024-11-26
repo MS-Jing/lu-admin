@@ -66,6 +66,12 @@ public class GenColumnConfigSaveOrUpdateParams {
     @Schema(description = "表单的类型 showInSave和showInUpdate有一个为true生效")
     private Integer formType;
 
+    @Schema(description = "字段是否出现在导入接口中")
+    private Boolean showInImport;
+
+    @Schema(description = "字段是否出现在导出接口中")
+    private Boolean showInExport;
+
     public GenColumnConfig toEntity() {
         GenColumnConfig genColumnConfig = new GenColumnConfig();
         genColumnConfig.setId(id);
@@ -86,6 +92,8 @@ public class GenColumnConfigSaveOrUpdateParams {
         genColumnConfig.setShowInSave(showInSave);
         genColumnConfig.setShowInUpdate(showInUpdate);
         genColumnConfig.setFormType(formType);
+        genColumnConfig.setShowInImport(showInImport);
+        genColumnConfig.setShowInExport(showInExport);
         return genColumnConfig;
     }
 }

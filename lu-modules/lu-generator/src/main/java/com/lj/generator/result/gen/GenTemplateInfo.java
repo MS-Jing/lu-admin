@@ -86,6 +86,16 @@ public class GenTemplateInfo {
     private Boolean genDeleted;
 
     /**
+     * 是否生成导入接口
+     */
+    private Boolean genImport;
+
+    /**
+     * 是否生成导出接口
+     */
+    private Boolean genExport;
+
+    /**
      * 实体相关
      */
     private EntityInfo entity;
@@ -140,6 +150,16 @@ public class GenTemplateInfo {
      */
     private UpdateParamInfo updateParam;
 
+    /**
+     * 导入参数
+     */
+    private ImportParamInfo importParam;
+
+    /**
+     * 导出结果
+     */
+    private ExportResultInfo exportResult;
+
     public GenTemplateInfo(GenTableConfig tableConfig, List<FieldInfo> fieldInfos, SuperClassInfo superClassInfo) {
         this.tableName = tableConfig.getTableName();
         this.tableComment = tableConfig.getComment();
@@ -159,6 +179,8 @@ public class GenTemplateInfo {
         this.genSave = tableConfig.getGenSave();
         this.genUpdate = tableConfig.getGenUpdate();
         this.genDeleted = tableConfig.getGenDeleted();
+        this.genImport = tableConfig.getGenImport();
+        this.genExport = tableConfig.getGenExport();
         this.entity = new EntityInfo(this, superClassInfo);
         this.pageParam = new PageParamInfo(this);
         this.pageResult = new PageResultInfo(this);
@@ -170,6 +192,8 @@ public class GenTemplateInfo {
         this.mapper = new MapperInfo(this);
         this.mapperXml = new MapperXmlInfo(this);
         this.controller = new ControllerInfo(this);
+        this.importParam = new ImportParamInfo(this);
+        this.exportResult = new ExportResultInfo(this);
     }
 
     public List<GenPreviewResult> preview(TemplateEngine templateEngine) {
@@ -193,6 +217,12 @@ public class GenTemplateInfo {
         if (genUpdate) {
             previewResultList.add(updateParam.preview(this, templateEngine));
         }
+        if (genImport) {
+            previewResultList.add(importParam.preview(this, templateEngine));
+        }
+        if (genExport) {
+            previewResultList.add(exportResult.preview(this, templateEngine));
+        }
         return previewResultList;
     }
 
@@ -215,6 +245,12 @@ public class GenTemplateInfo {
         }
         if (genUpdate) {
             updateParam.generate(this, templateEngine, tempDir);
+        }
+        if (genImport) {
+            importParam.generate(this, templateEngine, tempDir);
+        }
+        if (genExport) {
+            exportResult.generate(this, templateEngine, tempDir);
         }
     }
 }
