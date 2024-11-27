@@ -42,6 +42,8 @@ public interface GenTableConfigService extends StandardService<GenTableConfig> {
 
     void saveOrUpdate(GenTableConfigSaveOrUpdateParams params);
 
+    void delete(List<Long> ids);
+
     /**
      * 预览指定表的生成结果
      * @param tableId 表id

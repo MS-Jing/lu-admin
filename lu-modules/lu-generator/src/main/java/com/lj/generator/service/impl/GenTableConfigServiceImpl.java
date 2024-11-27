@@ -162,6 +162,18 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         columnConfigService.saveBatch(saveList);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(List<Long> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return;
+        }
+        // 删除表字段配置
+        columnConfigService.deleteByTableId(ids);
+        // 删除表配置
+        removeByIds(ids);
+    }
+
     private void verifySaveOrUpdateParams(GenTableConfigSaveOrUpdateParams params) {
         // 父类字段
         String superClass = params.getSuperClass();

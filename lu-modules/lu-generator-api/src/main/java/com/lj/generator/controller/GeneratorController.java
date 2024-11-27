@@ -2,6 +2,7 @@ package com.lj.generator.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.common_web.utils.ServletUtil;
@@ -73,6 +74,13 @@ public class GeneratorController {
     @Operation(summary = "新增或者更新表配置")
     public void saveOrUpdate(@RequestBody @Validated GenTableConfigSaveOrUpdateParams params) {
         genTableConfigService.saveOrUpdate(params);
+    }
+
+    @PostMapping("/delete")
+    @SaCheckPermission("gen:table:delete")
+    @Operation(summary = "表配置 删除")
+    public void delete(@RequestBody List<Long> ids) {
+        genTableConfigService.delete(ids);
     }
 
     @GetMapping("/preview")

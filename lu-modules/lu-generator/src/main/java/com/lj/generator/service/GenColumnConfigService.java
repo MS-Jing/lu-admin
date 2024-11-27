@@ -1,5 +1,6 @@
 package com.lj.generator.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.lj.generator.entity.GenColumnConfig;
 import com.lj.mp.standard.StandardService;
 
@@ -19,5 +20,12 @@ public interface GenColumnConfigService extends StandardService<GenColumnConfig>
         return list(lambdaQueryWrapper()
                 .eq(GenColumnConfig::getTableId, tableId)
                 .orderByAsc(GenColumnConfig::getFieldSort));
+    }
+
+    default void deleteByTableId(List<Long> tableIds) {
+        if (CollUtil.isEmpty(tableIds)) {
+            return;
+        }
+        remove(lambdaQueryWrapper().in(GenColumnConfig::getTableId, tableIds));
     }
 }
