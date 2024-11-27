@@ -2,13 +2,17 @@ package com.lj.generator.result.gen;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lj.generator.constant.GenConstant;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author luojing
@@ -21,7 +25,17 @@ public class ServiceImplInfo extends AbstractTemplateInfo {
 
     public ServiceImplInfo(GenTemplateInfo genTemplateInfo) {
         super(genTemplateInfo);
-
+        Set<String> packages = new HashSet<>();
+        if (genTemplateInfo.getGenPage() || genTemplateInfo.getGenExport()) {
+            packages.add(ClassUtil.getClassName(LambdaQueryWrapper.class, false));
+        }
+        if (genTemplateInfo.getGenImport()) {
+            packages.add(genTemplateInfo.getImportParam().getClassPath());
+        }
+        if (genTemplateInfo.getGenExport()) {
+            packages.add(genTemplateInfo.getExportResult().getClassPath());
+        }
+        setPackages(packages);
         String packagePath = StrUtil.join(StrPool.DOT,
                 genTemplateInfo.getPackageName(),
                 genTemplateInfo.getModuleName(),

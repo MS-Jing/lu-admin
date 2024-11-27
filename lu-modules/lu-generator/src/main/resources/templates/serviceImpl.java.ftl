@@ -11,6 +11,16 @@ import com.lj.mp.utils.PageQueryUtils;
 <#list service.packages as pkg>
 import ${pkg};
 </#list>
+<#if genImport>
+import java.io.InputStream;
+import java.util.Collections;
+</#if>
+<#if genImport || genExport>
+import java.io.OutputStream;
+import java.util.List;
+import com.lj.common.utils.excel.ExcelSheet;
+import com.lj.common.utils.excel.ExcelUtil;
+</#if>
 <#list serviceImpl.packages as pkg>
 import ${pkg};
 </#list>
@@ -29,9 +39,14 @@ public class ${serviceImpl.className} extends StandardServiceImpl<${mapper.class
 
     @Override
     public IPage<${pageResult.className}> page(${pageParam.className} param) {
-        return this.page(PageQueryUtils.getPage(param), lambdaQueryWrapper()
-                // todo 查询条件
-                       ).convert(${pageResult.className}::of);
+        return this.page(PageQueryUtils.getPage(param), getQueryWrapper(param)).convert(${pageResult.className}::of);
+    }
+    </#if>
+    <#if genPage || genExport>
+
+    private LambdaQueryWrapper<${entity.className}> getQueryWrapper(${pageParam.className} param) {
+        // todo 查询条件
+        return lambdaQueryWrapper();
     }
     </#if>
     <#if genInfo>
@@ -55,6 +70,28 @@ public class ${serviceImpl.className} extends StandardServiceImpl<${mapper.class
     public void update(${updateParam.className} param) {
         ${entity.className} entity = param.toEntity();
         this.updateById(entity);
+    }
+    </#if>
+    <#if genImport>
+
+    @Override
+    public void importExcel(InputStream in) {
+        List<${importParam.className}> paramList = ExcelUtil.readExcel(in, ${importParam.className}.class);
+        List<${entity.className}> saveList = paramList.stream().map(${importParam.className}::toEntity).toList();
+        this.insertBatchSomeColumn(saveList);
+    }
+
+    @Override
+    public void importExcelTemplate(OutputStream out) {
+        ExcelUtil.exportExcel(out, new ExcelSheet<>(Collections.emptyList(), ${importParam.className}.class));
+    }
+    </#if>
+    <#if genExport>
+    @Override
+    public void exportExcel(${pageParam.className} param, OutputStream out) {
+        List<${entity.className}> dataList = this.list(getQueryWrapper(param));
+        List<${exportResult.className}> exportList = dataList.stream().map(${exportResult.className}::of).toList();
+        ExcelUtil.exportExcel(out, new ExcelSheet<>(exportList, ${exportResult.className}.class));
     }
     </#if>
 }

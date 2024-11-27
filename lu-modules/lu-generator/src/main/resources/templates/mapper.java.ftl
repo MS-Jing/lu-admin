@@ -3,6 +3,7 @@ package ${mapper.packagePath};
 import ${entity.packagePath}.${entity.className};
 import com.lj.mp.standard.StandardMapper;
 import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
  * @since ${date}
  */
 @Repository
+@Mapper
 public interface ${mapper.className} extends StandardMapper<${entity.className}> {
 
 }

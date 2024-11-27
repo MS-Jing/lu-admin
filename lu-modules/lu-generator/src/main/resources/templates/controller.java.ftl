@@ -13,11 +13,13 @@ import io.swagger.v3.oas.annotations.Operation;
 <#if genPage || genInfo>
 import org.springframework.web.bind.annotation.GetMapping;
 </#if>
-<#if genPage>
+<#if genPage || genExport>
 import org.springdoc.core.annotations.ParameterObject;
 </#if>
 <#if genInfo>
 import org.springframework.web.bind.annotation.PathVariable;
+</#if>
+<#if genInfo || genImport>
 import io.swagger.v3.oas.annotations.Parameter;
 </#if>
 <#if genSave || genUpdate>
@@ -37,6 +39,14 @@ import ${pkg};
 <#list controller.packages as pkg>
 import ${pkg};
 </#list>
+<#if genImport>
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
+</#if>
+<#if genImport || genExport>
+import java.io.IOException;
+import com.lj.common_web.utils.ServletUtil;
+</#if>
 
 /**
  * <p>
@@ -103,6 +113,33 @@ public class ${controller.className} {
             return;
         }
         ${service.className?uncap_first}.removeByIds(ids);
+    }
+    </#if>
+
+    <#if genImport>
+    @PostMapping("/import/excel")
+    @SaCheckPermission("${moduleName}:${controller.url}:save")
+    @Operation(summary = "${tableComment!} excel导入")
+    public void importExcel(@Parameter(description = "导入excel文件") @RequestParam("file") MultipartFile file) throws IOException {
+        userService.importExcel(file.getInputStream());
+    }
+
+    @GetMapping("/import/template")
+    @SaCheckPermission("${moduleName}:${controller.url}:save")
+    @Operation(summary = "${tableComment!} excel导入模板")
+    public void importTemplate() throws IOException {
+        userService.importExcelTemplate(ServletUtil.getResponse().getOutputStream());
+        ServletUtil.setFileResponseHeader("${tableComment!}-导入模板.xlsx");
+    }
+    </#if>
+
+    <#if genExport>
+    @GetMapping("/export/excel")
+    @SaCheckPermission("${moduleName}:${controller.url}:list")
+    @Operation(summary = "${tableComment!} excel导出")
+    public void exportExcel(@ParameterObject ${pageParam.className} param) throws IOException {
+        userService.exportExcel(param, ServletUtil.getResponse().getOutputStream());
+        ServletUtil.setFileResponseHeader("${tableComment!}-导出数据.xlsx");
     }
     </#if>
 

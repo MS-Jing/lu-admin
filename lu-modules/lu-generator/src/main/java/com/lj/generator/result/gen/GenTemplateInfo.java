@@ -187,13 +187,13 @@ public class GenTemplateInfo {
         this.infoResult = new InfoResultInfo(this);
         this.saveParam = new SaveParamInfo(this);
         this.updateParam = new UpdateParamInfo(this);
+        this.importParam = new ImportParamInfo(this);
+        this.exportResult = new ExportResultInfo(this);
         this.service = new ServiceInfo(this);
         this.serviceImpl = new ServiceImplInfo(this);
         this.mapper = new MapperInfo(this);
         this.mapperXml = new MapperXmlInfo(this);
         this.controller = new ControllerInfo(this);
-        this.importParam = new ImportParamInfo(this);
-        this.exportResult = new ExportResultInfo(this);
     }
 
     public List<GenPreviewResult> preview(TemplateEngine templateEngine) {

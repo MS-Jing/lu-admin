@@ -27,8 +27,7 @@ public class ${saveParam.className} {
     @Schema(description = "参考字典: ${field.enumDict.name}")
     </#if>
     <#if field.required>
-        <#if field.fieldType=="String">
-    @NotBlank<#else>@NotNull</#if>(message = "<#if field.comment!?length gt 0>${field.comment}<#else>${field.fieldName}</#if> 不能为空")
+    <#if field.fieldType=="String">@NotBlank<#else>@NotNull</#if>(message = "<#if field.comment!?length gt 0>${field.comment}<#else>${field.fieldName}</#if> 不能为空")
     </#if>
     private ${field.fieldType} ${field.fieldName};
     </#if>
