@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,8 +26,8 @@ public class JacksonConfig {
      */
     @Bean
     @ConditionalOnMissingBean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
+        ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         SimpleModule simpleModule = new SimpleModule();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter))
