@@ -3,6 +3,7 @@ package com.lj.generator.result.gen;
 import com.lj.common.utils.ClassUtils;
 import com.lj.dict.result.EnumDictVo;
 import com.lj.generator.entity.GenColumnConfig;
+import com.lj.generator.enums.QueryType;
 import com.lj.generator.utils.GenUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -74,7 +75,7 @@ public class FieldInfo {
 
     private Boolean showInQuery;
 
-    private Integer queryType;
+    private QueryType queryType;
 
     private Boolean showInInfo;
 

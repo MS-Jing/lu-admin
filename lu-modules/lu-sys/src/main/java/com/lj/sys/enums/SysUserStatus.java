@@ -1,6 +1,5 @@
 package com.lj.sys.enums;
 
-import com.lj.common.exception.CommonException;
 import com.lj.mp.standard.IStandardEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +27,7 @@ public enum SysUserStatus implements IStandardEnum<Integer> {
                 return val;
             }
         }
-        throw new CommonException("错误的枚举值: " + value);
+        return null;
     }
 
 }

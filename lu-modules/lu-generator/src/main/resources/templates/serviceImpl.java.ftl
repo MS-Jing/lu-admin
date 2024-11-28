@@ -7,6 +7,7 @@ import com.lj.mp.standard.StandardServiceImpl;
 import org.springframework.stereotype.Service;
 <#if genPage>
 import com.lj.mp.utils.PageQueryUtils;
+import cn.hutool.core.util.ObjectUtil;
 </#if>
 <#list service.packages as pkg>
 import ${pkg};
@@ -45,8 +46,13 @@ public class ${serviceImpl.className} extends StandardServiceImpl<${mapper.class
     <#if genPage || genExport>
 
     private LambdaQueryWrapper<${entity.className}> getQueryWrapper(${pageParam.className} param) {
-        // todo 查询条件
-        return lambdaQueryWrapper();
+        return lambdaQueryWrapper()
+        <#list fieldInfoList as field>
+            <#if field.showInQuery && field.queryType??>
+                .${field.queryType.mpType}(ObjectUtil.isNotEmpty(param.get${field.fieldName?cap_first}()), ${entity.className}::get${field.fieldName?cap_first}, param.get${field.fieldName?cap_first}())
+            </#if>
+        </#list>
+                ;
     }
     </#if>
     <#if genInfo>
