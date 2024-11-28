@@ -35,7 +35,7 @@ public class ${entity.className} extends ${entity.superEntityClass} {
     <#if field.convert>
     @TableField("${field.columnName}")
     </#if>
-    private <#if field.enumDictFieldType??>${field.enumDictFieldType}<#else>${field.fieldType}</#if> ${field.fieldName};
+    private <#if field.enumDict??>${field.enumDict.simpleClassName}<#else>${field.fieldType}</#if> ${field.fieldName};
     </#if>
 </#list>
 }

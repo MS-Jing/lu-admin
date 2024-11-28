@@ -282,7 +282,6 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
                 // 说明是字典
                 EnumDictVo enumDictVo = getEnumDictVo(columnConfig.getEnumDictType(), columnConfig.getFieldType());
                 fieldInfo.setEnumDict(enumDictVo);
-                fieldInfo.setEnumDictFieldType(ClassUtils.getClassSimpleName(enumDictVo.getClassName()));
             }
             fieldInfos.add(fieldInfo);
         }

@@ -22,6 +22,11 @@ public class EnumDictVo {
     private String className;
 
     /**
+     * 简单的类名，不带包名
+     */
+    private String simpleClassName;
+
+    /**
      * 字典描述
      */
     private String description;

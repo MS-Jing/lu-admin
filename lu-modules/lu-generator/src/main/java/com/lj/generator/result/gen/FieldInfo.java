@@ -45,11 +45,6 @@ public class FieldInfo {
     private EnumDictVo enumDict;
 
     /**
-     * 枚举字段字典类型 同enumDict
-     */
-    private String enumDictFieldType;
-
-    /**
      * 数据库列名
      */
     private String columnName;

@@ -30,7 +30,7 @@ public class ${importParam.className} {
     <#elseif field.comment!?length gt 0>
     @ExcelProperty("${field.comment}")
     </#if>
-    private <#if field.enumDictFieldType??>${field.enumDictFieldType}<#else>${field.fieldType}</#if> ${field.fieldName};
+    private <#if field.enumDict??>${field.enumDict.simpleClassName}<#else>${field.fieldType}</#if> ${field.fieldName};
     </#if>
 </#list>
 

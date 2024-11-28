@@ -89,6 +89,7 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
         EnumDictVo enumDictVo = new EnumDictVo();
         enumDictVo.setName(name);
         enumDictVo.setClassName(ClassUtil.getClassName(enumClass, false));
+        enumDictVo.setSimpleClassName(ClassUtil.getClassName(enumClass, true));
         enumDictVo.setDescription(description);
         // 值类型
         Class<?> valueType = getTypeArgument(enumClass);
