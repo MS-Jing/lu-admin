@@ -2,7 +2,7 @@ package com.lj.dict.service;
 
 import com.lj.dict.params.DictQueryParams;
 import com.lj.dict.result.EnumDictItem;
-import com.lj.dict.result.EnumDictVo;
+import com.lj.dict.result.EnumDict;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface EnumDictService {
      * @param params 字典查询条件
      * @return 字典列表
      */
-    List<EnumDictVo> getDict(DictQueryParams params);
+    List<EnumDict> getDict(DictQueryParams params);
 
     /**
      * 通过字典名称获取字典项

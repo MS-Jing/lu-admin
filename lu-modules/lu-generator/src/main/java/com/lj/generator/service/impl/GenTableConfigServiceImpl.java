@@ -16,7 +16,7 @@ import com.lj.common.exception.CommonException;
 import com.lj.common.utils.CheckUtils;
 import com.lj.common.utils.ClassUtils;
 import com.lj.dict.params.DictQueryParams;
-import com.lj.dict.result.EnumDictVo;
+import com.lj.dict.result.EnumDict;
 import com.lj.dict.service.EnumDictService;
 import com.lj.generator.engine.TemplateEngine;
 import com.lj.generator.entity.GenColumnConfig;
@@ -187,7 +187,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
             String fieldType = columnInfoResult.getFieldType();
             // 字典枚举类型去字段类型优先级高
             String enumDictType = columnParams.getEnumDictType();
-            EnumDictVo enumDict = null;
+            EnumDict enumDict = null;
             if (StrUtil.isNotBlank(enumDictType)) {
                 enumDict = getEnumDictVo(enumDictType, fieldType);
             } else if (!fieldType.equals(columnParams.getFieldType())) {
@@ -214,8 +214,8 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         }
     }
 
-    private EnumDictVo getEnumDictVo(String enumDictType, String fieldType) {
-        List<EnumDictVo> dict = enumDictService.getDict(DictQueryParams.builder()
+    private EnumDict getEnumDictVo(String enumDictType, String fieldType) {
+        List<EnumDict> dict = enumDictService.getDict(DictQueryParams.builder()
                 .name(enumDictType)
                 // 一定要是mp标准的枚举 （实现了IEnum接口）
                 .standard(true)
@@ -280,8 +280,8 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
             FieldInfo fieldInfo = new FieldInfo(superClassColumn, columnConfig);
             if (StrUtil.isNotBlank(columnConfig.getEnumDictType())) {
                 // 说明是字典
-                EnumDictVo enumDictVo = getEnumDictVo(columnConfig.getEnumDictType(), columnConfig.getFieldType());
-                fieldInfo.setEnumDict(enumDictVo);
+                EnumDict enumDict = getEnumDictVo(columnConfig.getEnumDictType(), columnConfig.getFieldType());
+                fieldInfo.setEnumDict(enumDict);
             }
             fieldInfos.add(fieldInfo);
         }

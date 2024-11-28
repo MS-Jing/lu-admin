@@ -1,7 +1,7 @@
 package com.lj.generator.result.gen;
 
 import com.lj.common.utils.ClassUtils;
-import com.lj.dict.result.EnumDictVo;
+import com.lj.dict.result.EnumDict;
 import com.lj.generator.entity.GenColumnConfig;
 import com.lj.generator.enums.QueryType;
 import com.lj.generator.utils.GenUtils;
@@ -42,7 +42,7 @@ public class FieldInfo {
     /**
      * 枚举字典,如果该字段不为空那么fieldType失效
      */
-    private EnumDictVo enumDict;
+    private EnumDict enumDict;
 
     /**
      * 数据库列名
