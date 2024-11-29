@@ -3,9 +3,9 @@ package com.lj.dict.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.dict.params.DictQueryParams;
-import com.lj.dict.service.EnumDictService;
 import com.lj.dict.result.EnumDictItem;
-import com.lj.dict.result.EnumDictVo;
+import com.lj.dict.result.EnumDictResult;
+import com.lj.dict.service.EnumDictService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,8 +34,8 @@ public class EnumDictController {
     @GetMapping("/list")
     @SaCheckPermission("dict:enum:list")
     @Operation(summary = "获取枚举字典")
-    public List<EnumDictVo> getDict(@ParameterObject DictQueryParams params) {
-        return enumDictService.getDict(params);
+    public List<EnumDictResult> getDict(@ParameterObject DictQueryParams params) {
+        return enumDictService.getDict(params).stream().map(EnumDictResult::of).toList();
     }
 
     @GetMapping("/item")

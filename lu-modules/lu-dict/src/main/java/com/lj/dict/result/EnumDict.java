@@ -9,7 +9,7 @@ import java.util.List;
  * @date 2024/11/16
  */
 @Data
-public class EnumDictVo {
+public class EnumDict {
 
     /**
      * 字典名称
@@ -22,12 +22,17 @@ public class EnumDictVo {
     private String className;
 
     /**
+     * 简单的类名，不带包名
+     */
+    private String simpleClassName;
+
+    /**
      * 字典描述
      */
     private String description;
 
     /**
-     * 是否是框架定义的标准枚举
+     * 是否是标准枚举
      */
     private Boolean standard;
 

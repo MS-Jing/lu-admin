@@ -4,12 +4,11 @@ import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
-import com.lj.common.enums.EnumDict;
 import com.lj.common.enums.ICommonEnum;
 import com.lj.common.utils.ClassUtils;
 import com.lj.dict.params.DictQueryParams;
 import com.lj.dict.result.EnumDictItem;
-import com.lj.dict.result.EnumDictVo;
+import com.lj.dict.result.EnumDict;
 import com.lj.dict.service.EnumDictService;
 import com.lj.mp.standard.IStandardEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +30,11 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
     /**
      * 字典名称与字典信息映射
      */
-    private final Map<String, EnumDictVo> enumDictMap = new HashMap<>();
+    private final Map<String, EnumDict> enumDictMap = new HashMap<>();
 
 
     @Override
-    public List<EnumDictVo> getDict(DictQueryParams params) {
+    public List<EnumDict> getDict(DictQueryParams params) {
         return enumDictMap.values().stream()
                 // 是空的条件就全部返回
                 .filter(dict -> StrUtil.isBlank(params.getName()) || dict.getName().equals(params.getName()))
@@ -46,11 +45,11 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
 
     @Override
     public List<EnumDictItem<Object>> getDictItemByName(String dictName) {
-        EnumDictVo enumDictVo = enumDictMap.get(dictName);
-        if (enumDictVo == null) {
+        EnumDict enumDict = enumDictMap.get(dictName);
+        if (enumDict == null) {
             return Collections.emptyList();
         }
-        return enumDictVo.getDictItemList();
+        return enumDict.getDictItemList();
     }
 
 
@@ -62,39 +61,40 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
             if (!ClassUtil.isEnum(enumClass)) {
                 continue;
             }
-            EnumDictVo enumDictVo = toEnumDictDto(enumClass);
-            if (enumDictVo != null) {
-                enumDictMap.put(enumDictVo.getName(), enumDictVo);
+            EnumDict enumDict = toEnumDictDto(enumClass);
+            if (enumDict != null) {
+                enumDictMap.put(enumDict.getName(), enumDict);
             }
         }
     }
 
-    private EnumDictVo toEnumDictDto(Class<?> enumClass) {
+    private EnumDict toEnumDictDto(Class<?> enumClass) {
         // 获取名称和描述
         String name;
         String description = "";
-        EnumDict annotation = AnnotationUtil.getAnnotation(enumClass, EnumDict.class);
+        com.lj.common.enums.EnumDict annotation = AnnotationUtil.getAnnotation(enumClass, com.lj.common.enums.EnumDict.class);
         if (annotation != null) {
             name = annotation.name();
             description = annotation.description();
         } else {
             name = ClassUtil.getClassName(enumClass, true);
         }
-        EnumDictVo temp = enumDictMap.get(name);
+        EnumDict temp = enumDictMap.get(name);
         if (temp != null) {
             log.warn("无法添加枚举({})作为字典,因为有与之同名的枚举({})",
                     ClassUtil.getClassName(enumClass, false), name);
             return null;
         }
-        EnumDictVo enumDictVo = new EnumDictVo();
-        enumDictVo.setName(name);
-        enumDictVo.setClassName(ClassUtil.getClassName(enumClass, false));
-        enumDictVo.setDescription(description);
+        EnumDict enumDict = new EnumDict();
+        enumDict.setName(name);
+        enumDict.setClassName(ClassUtil.getClassName(enumClass, false));
+        enumDict.setSimpleClassName(ClassUtil.getClassName(enumClass, true));
+        enumDict.setDescription(description);
         // 值类型
         Class<?> valueType = getTypeArgument(enumClass);
         // 在lang包下可直接使用,所以不需要全类名
-        enumDictVo.setValueType(ClassUtils.getClassName(valueType));
-        enumDictVo.setStandard(IStandardEnum.class.isAssignableFrom(enumClass));
+        enumDict.setValueType(ClassUtils.getClassName(valueType));
+        enumDict.setStandard(IStandardEnum.class.isAssignableFrom(enumClass));
         List<EnumDictItem<Object>> dictItemList = new ArrayList<>();
         for (Object enumConstant : enumClass.getEnumConstants()) {
             ICommonEnum<Object> commonEnum = (ICommonEnum<Object>) enumConstant;
@@ -103,8 +103,8 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
             dictItem.setDescription(commonEnum.getDesc());
             dictItemList.add(dictItem);
         }
-        enumDictVo.setDictItemList(dictItemList);
-        return enumDictVo;
+        enumDict.setDictItemList(dictItemList);
+        return enumDict;
     }
 
     private Class<?> getTypeArgument(Class<?> aClass) {

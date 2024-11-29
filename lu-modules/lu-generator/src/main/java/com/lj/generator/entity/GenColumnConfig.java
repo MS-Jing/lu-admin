@@ -1,6 +1,7 @@
 package com.lj.generator.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lj.generator.enums.QueryType;
 import com.lj.sys.standard.SysStandardEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,7 +51,7 @@ public class GenColumnConfig extends SysStandardEntity {
 
     private Boolean showInQuery;
 
-    private Integer queryType;
+    private QueryType queryType;
 
     private Boolean showInInfo;
 
