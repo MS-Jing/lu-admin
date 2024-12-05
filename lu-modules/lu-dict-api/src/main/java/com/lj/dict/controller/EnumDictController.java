@@ -3,7 +3,7 @@ package com.lj.dict.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.dict.params.DictQueryParams;
-import com.lj.dict.result.EnumDictItem;
+import com.lj.dict.result.DictItem;
 import com.lj.dict.result.EnumDictResult;
 import com.lj.dict.service.EnumDictService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +41,7 @@ public class EnumDictController {
     @GetMapping("/item")
     @SaCheckPermission("dict:enum:list")
     @Operation(summary = "根据枚举字典名称获取字典项")
-    public List<EnumDictItem<Object>> getItemByName(@Parameter(description = "枚举字典名称") String name) {
+    public List<DictItem<Object>> getItemByName(@Parameter(description = "枚举字典名称") String name) {
         return enumDictService.getDictItemByName(name);
     }
 

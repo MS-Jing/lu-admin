@@ -44,6 +44,6 @@ public class EnumDict {
     /**
      * 字典项
      */
-    private List<EnumDictItem<Object>> dictItemList;
+    private List<DictItem<Object>> dictItemList;
 
 }

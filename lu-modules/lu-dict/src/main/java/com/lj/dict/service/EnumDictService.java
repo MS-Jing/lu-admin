@@ -1,7 +1,7 @@
 package com.lj.dict.service;
 
 import com.lj.dict.params.DictQueryParams;
-import com.lj.dict.result.EnumDictItem;
+import com.lj.dict.result.DictItem;
 import com.lj.dict.result.EnumDict;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface EnumDictService {
      * @param dictName 字典名称
      * @return 字典项
      */
-    List<EnumDictItem<Object>> getDictItemByName(String dictName);
+    List<DictItem<Object>> getDictItemByName(String dictName);
 
 
 }

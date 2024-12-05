@@ -7,7 +7,7 @@ import cn.hutool.core.util.TypeUtil;
 import com.lj.common.enums.ICommonEnum;
 import com.lj.common.utils.ClassUtils;
 import com.lj.dict.params.DictQueryParams;
-import com.lj.dict.result.EnumDictItem;
+import com.lj.dict.result.DictItem;
 import com.lj.dict.result.EnumDict;
 import com.lj.dict.service.EnumDictService;
 import com.lj.mp.standard.IStandardEnum;
@@ -44,7 +44,7 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
     }
 
     @Override
-    public List<EnumDictItem<Object>> getDictItemByName(String dictName) {
+    public List<DictItem<Object>> getDictItemByName(String dictName) {
         EnumDict enumDict = enumDictMap.get(dictName);
         if (enumDict == null) {
             return Collections.emptyList();
@@ -95,12 +95,12 @@ public class EnumDictServiceImpl implements EnumDictService, InitializingBean {
         // 在lang包下可直接使用,所以不需要全类名
         enumDict.setValueType(ClassUtils.getClassName(valueType));
         enumDict.setStandard(IStandardEnum.class.isAssignableFrom(enumClass));
-        List<EnumDictItem<Object>> dictItemList = new ArrayList<>();
+        List<DictItem<Object>> dictItemList = new ArrayList<>();
         for (Object enumConstant : enumClass.getEnumConstants()) {
             ICommonEnum<Object> commonEnum = (ICommonEnum<Object>) enumConstant;
-            EnumDictItem<Object> dictItem = new EnumDictItem<>();
-            dictItem.setItemValue(commonEnum.getValue());
-            dictItem.setDescription(commonEnum.getDesc());
+            DictItem<Object> dictItem = new DictItem<>();
+            dictItem.setValue(commonEnum.getValue());
+            dictItem.setLabel(commonEnum.getDesc());
             dictItemList.add(dictItem);
         }
         enumDict.setDictItemList(dictItemList);

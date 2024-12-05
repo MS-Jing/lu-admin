@@ -7,14 +7,14 @@ import lombok.Data;
  * @date 2024/11/16
  */
 @Data
-public class EnumDictItem<T> {
+public class DictItem<T> {
     /**
      * 字典值
      */
-    private T itemValue;
+    private T value;
 
     /**
      * 字典描述
      */
-    private String description;
+    private String label;
 }
