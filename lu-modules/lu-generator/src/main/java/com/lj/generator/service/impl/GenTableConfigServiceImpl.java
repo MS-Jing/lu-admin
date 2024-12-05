@@ -136,6 +136,17 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
     }
 
     @Override
+    public TableConfigInfoResult info(Long id) {
+        TableConfigInfoResult result = TableConfigInfoResult.of(getById(id));
+        if (result == null) {
+            return null;
+        }
+        // 获取列信息
+        result.setColumnConfigList(columnConfigService.getByTableId(id).stream().map(ColumnConfigInfoResult::of).toList());
+        return result;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrUpdate(GenTableConfigSaveOrUpdateParams params) {
         verifySaveOrUpdateParams(params);
@@ -222,7 +233,7 @@ public class GenTableConfigServiceImpl extends StandardServiceImpl<GenTableConfi
         }
         List<String> dissatisfyFieldName = CollUtil.subtractToList(superClassColumnNameInfoMap.keySet(), temp);
         if (CollUtil.isNotEmpty(dissatisfyFieldName)) {
-            throw new CommonException("无法将分配父类,缺少字段:" + dissatisfyFieldName);
+            throw new CommonException("无法分配父类,缺少字段:" + dissatisfyFieldName);
         }
     }
 

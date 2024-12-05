@@ -2,7 +2,6 @@ package com.lj.generator.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
-import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.common_web.utils.ServletUtil;
@@ -10,6 +9,7 @@ import com.lj.generator.params.GenTableConfigPageParams;
 import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
 import com.lj.generator.result.GenPreviewResult;
 import com.lj.generator.result.GenTableConfigPageResult;
+import com.lj.generator.result.TableConfigInfoResult;
 import com.lj.generator.result.TableInfoResult;
 import com.lj.generator.service.GenTableConfigService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,6 +67,13 @@ public class GeneratorController {
     @Operation(summary = "配置表分页", description = "配置表分页查询")
     public IPage<GenTableConfigPageResult> pageQuery(@ParameterObject GenTableConfigPageParams pageParams) {
         return genTableConfigService.pageQuery(pageParams);
+    }
+
+    @GetMapping("/info/{id}")
+    @SaCheckPermission("gen:table:info")
+    @Operation(summary = "配置表信息", description = "配置表信息")
+    public TableConfigInfoResult info(@PathVariable("id") @Parameter(name = "id") Long id) {
+        return genTableConfigService.info(id);
     }
 
     @PostMapping("/saveOrUpdate")

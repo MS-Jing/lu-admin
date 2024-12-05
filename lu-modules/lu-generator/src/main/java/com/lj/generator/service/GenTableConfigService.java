@@ -6,6 +6,7 @@ import com.lj.generator.params.GenTableConfigPageParams;
 import com.lj.generator.params.GenTableConfigSaveOrUpdateParams;
 import com.lj.generator.result.GenPreviewResult;
 import com.lj.generator.result.GenTableConfigPageResult;
+import com.lj.generator.result.TableConfigInfoResult;
 import com.lj.generator.result.TableInfoResult;
 import com.lj.mp.standard.StandardService;
 
@@ -57,4 +58,6 @@ public interface GenTableConfigService extends StandardService<GenTableConfig> {
      * @return 压缩后的文件名
      */
     String generate(Long tableId, OutputStream out);
+
+    TableConfigInfoResult info(Long id);
 }
