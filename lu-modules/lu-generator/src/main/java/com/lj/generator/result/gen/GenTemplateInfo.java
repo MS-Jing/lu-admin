@@ -201,8 +201,8 @@ public class GenTemplateInfo {
         previewResultList.add(entity.preview(this, templateEngine));
         previewResultList.add(mapper.preview(this, templateEngine));
         previewResultList.add(mapperXml.preview(this, templateEngine));
-        previewResultList.add(service.preview(this, templateEngine));
         previewResultList.add(serviceImpl.preview(this, templateEngine));
+        previewResultList.add(service.preview(this, templateEngine));
         previewResultList.add(controller.preview(this, templateEngine));
         if (genPage) {
             previewResultList.add(pageParam.preview(this, templateEngine));
@@ -230,8 +230,8 @@ public class GenTemplateInfo {
         entity.generate(this, templateEngine, tempDir);
         mapper.generate(this, templateEngine, tempDir);
         mapperXml.generate(this, templateEngine, tempDir);
-        service.generate(this, templateEngine, tempDir);
         serviceImpl.generate(this, templateEngine, tempDir);
+        service.generate(this, templateEngine, tempDir);
         controller.generate(this, templateEngine, tempDir);
         if (genPage) {
             pageParam.generate(this, templateEngine, tempDir);

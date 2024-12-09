@@ -9,6 +9,7 @@ import com.lj.generator.result.GenPreviewResult;
 import lombok.Data;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +63,7 @@ public abstract class AbstractTemplateInfo {
     public GenPreviewResult preview(GenTemplateInfo genTemplateInfo, TemplateEngine templateEngine) {
         return new GenPreviewResult()
                 .setFileName(fileName)
-                .setPath(filePath)
+                .setPathList(filePath)
                 .setContent(templateEngine.preview(genTemplateInfo, getTemplate()));
     }
 

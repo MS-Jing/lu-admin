@@ -1,7 +1,6 @@
 package com.lj.generator.result;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -17,7 +16,7 @@ import java.util.List;
 public class GenPreviewResult {
 
     @Schema(description = "生成的文件路径")
-    private List<String> path;
+    private List<String> pathList;
 
     @Schema(description = "文件名")
     private String fileName;
