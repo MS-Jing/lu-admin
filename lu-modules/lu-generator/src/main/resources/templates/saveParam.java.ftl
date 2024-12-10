@@ -22,7 +22,7 @@ public class ${saveParam.className} {
     <#if field.showInSave>
 
     <#if field.comment!?length gt 0>
-    @Schema(description = "${field.comment} <#if field.enumDict??>参考字典: ${field.enumDict.name}</#if>")
+    @Schema(description = "${field.comment}<#if field.enumDict??> 参考字典: ${field.enumDict.name}</#if>")
     <#elseif field.enumDict??>
     @Schema(description = "参考字典: ${field.enumDict.name}")
     </#if>
