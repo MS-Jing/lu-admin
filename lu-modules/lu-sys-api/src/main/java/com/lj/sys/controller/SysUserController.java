@@ -7,16 +7,17 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common.exception.CommonException;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.sys.constant.SysConstant;
-import com.lj.sys.params.SysUserPageParams;
-import com.lj.sys.params.SysUserSaveParams;
-import com.lj.sys.params.SysUserUpdateParams;
-import com.lj.sys.result.SysUserResult;
+import com.lj.sys.param.SysUserPageParam;
+import com.lj.sys.param.SysUserSaveParam;
+import com.lj.sys.param.SysUserUpdateParam;
+import com.lj.sys.result.SysUserInfoResult;
+import com.lj.sys.result.SysUserPageResult;
 import com.lj.sys.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,50 +37,51 @@ import java.util.List;
 @Tag(name = "用户管理")
 public class SysUserController {
 
-    @Autowired
+    @Resource
     private SysUserService sysUserService;
 
-    @GetMapping("/pageQuery")
-    @SaCheckPermission("sys:user:list")
-    @Operation(summary = "用户分页查询")
-    public IPage<SysUserResult> pageQuery(@ParameterObject SysUserPageParams params) {
-        return sysUserService.pageQuery(params);
+    @GetMapping("/page")
+    @SaCheckPermission("sys:sys_user:list")
+    @Operation(summary = "系统用户 分页查询")
+    public IPage<SysUserPageResult> page(@ParameterObject SysUserPageParam param) {
+        return sysUserService.page(param);
     }
 
     @GetMapping("/info")
     @Operation(summary = "用户个人信息")
-    public SysUserResult info() {
+    public SysUserInfoResult info() {
         Long userId = StpUtil.getLoginIdAsLong();
         return sysUserService.info(userId);
     }
 
-    @GetMapping("/info/{userId}")
-    @SaCheckPermission("sys:user:info")
-    @Operation(summary = "用户信息")
-    public SysUserResult info(@PathVariable("userId") @Parameter(name = "userId", description = "用户id") Long userId) {
-        if (userId == null) {
+
+    @GetMapping("/info/{id}")
+    @SaCheckPermission("sys:sys_user:info")
+    @Operation(summary = "系统用户 信息")
+    public SysUserInfoResult info(@PathVariable("id") @Parameter(name = "id", description = "系统用户 id") Long id) {
+        if (id == null) {
             return null;
         }
-        return sysUserService.info(userId);
+        return sysUserService.info(id);
     }
 
     @PostMapping("/save")
-    @SaCheckPermission("sys:user:save")
-    @Operation(summary = "用户新增")
-    public void save(@RequestBody @Validated SysUserSaveParams params) {
-        sysUserService.save(params);
+    @SaCheckPermission("sys:sys_user:save")
+    @Operation(summary = "系统用户 新增")
+    public void save(@RequestBody @Validated SysUserSaveParam param) {
+        sysUserService.save(param);
     }
 
     @PostMapping("/update")
-    @SaCheckPermission("sys:user:update")
-    @Operation(summary = "用户更新")
-    public void update(@RequestBody @Validated SysUserUpdateParams params) {
-        sysUserService.update(params);
+    @SaCheckPermission("sys:sys_user:update")
+    @Operation(summary = "系统用户 更新")
+    public void update(@RequestBody @Validated SysUserUpdateParam param) {
+        sysUserService.update(param);
     }
 
     @PostMapping("/delete")
-    @SaCheckPermission("sys:user:delete")
-    @Operation(summary = "删除用户")
+    @SaCheckPermission("sys:sys_user:delete")
+    @Operation(summary = "系统用户 删除")
     public void delete(@RequestBody List<Long> ids) {
         if (CollUtil.isEmpty(ids)) {
             return;
@@ -90,5 +92,4 @@ public class SysUserController {
         }
         sysUserService.removeByIds(ids);
     }
-
 }
