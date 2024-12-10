@@ -1,9 +1,9 @@
 package com.lj.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lj.sys.standard.SysStandardEntity;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import com.lj.mp.standard.entity.IdLongStandardEntity;
 
 /**
  * <p>
@@ -11,18 +11,22 @@ import lombok.Setter;
  * </p>
  *
  * @author lj
- * @since 2024-08-13
+ * @since 2024-12-10 17:27:54
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("sys_role_menu")
-public class SysRoleMenu extends SysStandardEntity {
+public class SysRoleMenu extends IdLongStandardEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 角色id
+     */
     private Long roleId;
 
+    /**
+     * 菜单id
+     */
     private Long menuId;
-
-
 }

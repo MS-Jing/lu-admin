@@ -1,7 +1,7 @@
 package com.lj.sys.service;
 
-import com.lj.mp.standard.StandardService;
 import com.lj.sys.entity.SysRoleMenu;
+import com.lj.mp.standard.StandardService;
 
 /**
  * <p>
@@ -9,7 +9,7 @@ import com.lj.sys.entity.SysRoleMenu;
  * </p>
  *
  * @author lj
- * @since 2024-08-13
+ * @since 2024-12-10 17:27:54
  */
 public interface SysRoleMenuService extends StandardService<SysRoleMenu> {
 

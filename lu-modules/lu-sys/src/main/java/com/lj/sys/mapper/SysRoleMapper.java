@@ -1,7 +1,10 @@
 package com.lj.sys.mapper;
 
-import com.lj.mp.standard.StandardMapper;
 import com.lj.sys.entity.SysRole;
+import com.lj.mp.standard.StandardMapper;
+import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
+
 
 /**
  * <p>
@@ -9,8 +12,10 @@ import com.lj.sys.entity.SysRole;
  * </p>
  *
  * @author lj
- * @since 2024-08-12
+ * @since 2024-12-10 17:21:50
  */
+@Repository
+@Mapper
 public interface SysRoleMapper extends StandardMapper<SysRole> {
 
 }
