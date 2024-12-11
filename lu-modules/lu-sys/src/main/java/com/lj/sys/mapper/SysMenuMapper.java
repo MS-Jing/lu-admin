@@ -2,7 +2,12 @@ package com.lj.sys.mapper;
 
 import com.lj.mp.standard.StandardMapper;
 import com.lj.sys.entity.SysMenu;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Set;
+
 
 /**
  * <p>
@@ -10,9 +15,21 @@ import org.springframework.stereotype.Repository;
  * </p>
  *
  * @author lj
- * @since 2024-08-13
+ * @since 2024-12-11 14:36:37
  */
 @Repository
+@Mapper
 public interface SysMenuMapper extends StandardMapper<SysMenu> {
+
+    /**
+     * 获取关于这个用户的所有菜单
+     *
+     * @param userId     用户id
+     * @param moduleNameSet 模块名称
+     * @return 这个用户的所有菜单
+     */
+    List<SysMenu> listByUserId(Long userId, Set<String> moduleNameSet);
+
+    List<SysMenu> buttonByUserId(Long userId, Set<String> moduleNameSet);
 
 }
