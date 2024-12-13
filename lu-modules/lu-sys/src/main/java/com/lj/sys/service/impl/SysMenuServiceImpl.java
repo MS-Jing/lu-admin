@@ -55,6 +55,11 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
         } else {
             menuList = baseMapper.listByUserId(userId, allModuleName);
         }
+        // 组装成树
+        return assembleMenuTree(menuList);
+    }
+
+    private List<SysMenuInfoResult> assembleMenuTree(List<SysMenu> menuList) {
         if (CollUtil.isEmpty(menuList)) {
             return Collections.emptyList();
         }
@@ -98,6 +103,14 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
                 .filter(m -> StrUtil.isNotBlank(m.getPermission()) && StrUtil.isNotBlank(m.getName()))
                 // 分组 字典的name为页面的路由name value 为当前页面路由的所有按钮权限
                 .collect(Collectors.groupingBy(SysMenu::getName, Collectors.mapping(SysMenu::getPermission, Collectors.toList())));
+    }
+
+    @Override
+    public List<SysMenuInfoResult> tree() {
+        // 不分模块，直接展示，这里主要用于菜单的管理
+        List<SysMenu> menuList = list(lambdaQueryWrapper()
+                .orderByAsc(SysMenu::getSortCode));
+        return assembleMenuTree(menuList);
     }
 
     @Override

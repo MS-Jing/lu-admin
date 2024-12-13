@@ -3,19 +3,15 @@ package com.lj.sys.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
-import com.lj.sys.param.SysMenuPageParam;
 import com.lj.sys.param.SysMenuSaveParam;
 import com.lj.sys.param.SysMenuUpdateParam;
 import com.lj.sys.result.SysMenuInfoResult;
-import com.lj.sys.result.SysMenuPageResult;
 import com.lj.sys.service.SysMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,11 +49,11 @@ public class SysMenuController {
         return sysMenuService.buttonPermission(StpUtil.getLoginIdAsLong());
     }
 
-    @GetMapping("/page")
-    @SaCheckPermission("sys:sys_menu:list")
-    @Operation(summary = "菜单表 分页查询")
-    public IPage<SysMenuPageResult> page(@ParameterObject SysMenuPageParam param) {
-        return sysMenuService.page(param);
+    @GetMapping("/tree")
+    @SaCheckPermission("sys:sys_menu:tree")
+    @Operation(summary = "菜单树", description = "主要用于总览菜单管理")
+    public List<SysMenuInfoResult> tree() {
+        return sysMenuService.tree();
     }
 
     @GetMapping("/info/{id}")

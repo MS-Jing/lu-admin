@@ -45,4 +45,11 @@ public interface SysMenuService extends StandardService<SysMenu> {
      * @return 用户拥有的所有页面按钮权限 key为页面路由的name,value为这个页面所有按钮的权限
      */
     Map<String, List<String>> buttonPermission(Long userId);
+
+    /**
+     * 菜单管理，所有菜单树
+     *
+     * @return 返回所有菜单树
+     */
+    List<SysMenuInfoResult> tree();
 }
