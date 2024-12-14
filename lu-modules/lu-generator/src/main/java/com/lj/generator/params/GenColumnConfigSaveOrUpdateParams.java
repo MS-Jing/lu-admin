@@ -1,5 +1,6 @@
 package com.lj.generator.params;
 
+import com.lj.common.utils.EnumUtils;
 import com.lj.generator.entity.GenColumnConfig;
 import com.lj.generator.enums.QueryType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -88,7 +89,7 @@ public class GenColumnConfigSaveOrUpdateParams {
         genColumnConfig.setRequired(required);
         genColumnConfig.setShowInList(showInList);
         genColumnConfig.setShowInQuery(showInQuery);
-        genColumnConfig.setQueryType(QueryType.ofByValue(queryType));
+        genColumnConfig.setQueryType(EnumUtils.getByValue(QueryType.class, queryType));
         genColumnConfig.setShowInInfo(showInInfo);
         genColumnConfig.setShowInSave(showInSave);
         genColumnConfig.setShowInUpdate(showInUpdate);

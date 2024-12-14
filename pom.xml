@@ -34,7 +34,7 @@
         <!--打包跳过测试-->
         <maven.test.skip>true</maven.test.skip>
         <!--hutool-->
-        <hutool.version>5.8.26</hutool.version>
+        <hutool.version>5.8.34</hutool.version>
         <!--easyexcel-->
         <easyexcel.version>3.2.1</easyexcel.version>
         <!--mybatis-plus版本-->

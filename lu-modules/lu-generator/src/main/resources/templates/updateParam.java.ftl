@@ -34,7 +34,7 @@ public class ${updateParam.className} {
         ${entity.className} entity = new ${entity.className}();
         <#list fieldInfoList as field>
         <#if field.showInUpdate>
-        entity.set${field.fieldName?cap_first}(<#if field.enumDict??>${field.enumDict.simpleClassName}.ofByValue(${field.fieldName})<#else>${field.fieldName}</#if>);
+        entity.set${field.fieldName?cap_first}(<#if field.enumDict??>EnumUtils.getByValue(${field.enumDict.simpleClassName}.class, ${field.fieldName})<#else>${field.fieldName}</#if>);
         </#if>
         </#list>
         return entity;

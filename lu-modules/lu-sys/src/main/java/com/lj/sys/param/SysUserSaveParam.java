@@ -1,11 +1,12 @@
 package com.lj.sys.param;
 
+import com.lj.common.utils.EnumUtils;
 import com.lj.sys.entity.SysUser;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import com.lj.sys.enums.SysUserStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ public class SysUserSaveParam {
         entity.setPassword(password);
         entity.setEmail(email);
         entity.setMobile(mobile);
-        entity.setUserStatus(SysUserStatus.ofByValue(userStatus));
+        entity.setUserStatus(EnumUtils.getByValue(SysUserStatus.class, userStatus));
         return entity;
     }
 }

@@ -1,5 +1,6 @@
 package com.lj.sys.param;
 
+import com.lj.common.utils.EnumUtils;
 import com.lj.sys.entity.SysMenu;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -70,7 +71,7 @@ public class SysMenuSaveParam {
     public SysMenu toEntity() {
         SysMenu entity = new SysMenu();
         entity.setParentId(parentId);
-        entity.setMenuType(SysMenuType.ofByValue(menuType));
+        entity.setMenuType(EnumUtils.getByValue(SysMenuType.class, menuType));
         entity.setPath(path);
         entity.setName(name);
         entity.setComponent(component);

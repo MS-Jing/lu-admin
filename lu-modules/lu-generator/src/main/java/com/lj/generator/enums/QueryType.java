@@ -94,14 +94,4 @@ public enum QueryType implements IStandardEnum<Integer> {
      * mybatis-plus的QueryWrapper方法用于生成查询条件
      */
     private final String mpType;
-
-    public static QueryType ofByValue(Integer value) {
-        QueryType[] values = values();
-        for (QueryType queryType : values) {
-            if (queryType.value.equals(value)) {
-                return queryType;
-            }
-        }
-        return null;
-    }
 }

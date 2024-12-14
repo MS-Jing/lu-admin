@@ -21,13 +21,4 @@ public enum SysMenuType implements IStandardEnum<Integer> {
     private final Integer value;
     private final String desc;
 
-    public static SysMenuType ofByValue(Integer value) {
-        SysMenuType[] values = values();
-        for (SysMenuType sysMenuType : values) {
-            if (sysMenuType.value.equals(value)) {
-                return sysMenuType;
-            }
-        }
-        return null;
-    }
 }

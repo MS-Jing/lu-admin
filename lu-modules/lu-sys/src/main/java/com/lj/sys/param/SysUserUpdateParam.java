@@ -1,5 +1,6 @@
 package com.lj.sys.param;
 
+import com.lj.common.utils.EnumUtils;
 import com.lj.sys.entity.SysUser;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -44,7 +45,7 @@ public class SysUserUpdateParam {
         entity.setUserName(userName);
         entity.setEmail(email);
         entity.setMobile(mobile);
-        entity.setUserStatus(SysUserStatus.ofByValue(userStatus));
+        entity.setUserStatus(EnumUtils.getByValue(SysUserStatus.class, userStatus));
         return entity;
     }
 }

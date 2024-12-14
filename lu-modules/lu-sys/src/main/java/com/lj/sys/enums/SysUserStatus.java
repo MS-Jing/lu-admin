@@ -20,14 +20,4 @@ public enum SysUserStatus implements IStandardEnum<Integer> {
     private final Integer value;
     private final String desc;
 
-    public static SysUserStatus ofByValue(Integer value) {
-        SysUserStatus[] values = SysUserStatus.values();
-        for (SysUserStatus val : values) {
-            if (val.getValue().equals(value)) {
-                return val;
-            }
-        }
-        return null;
-    }
-
 }
