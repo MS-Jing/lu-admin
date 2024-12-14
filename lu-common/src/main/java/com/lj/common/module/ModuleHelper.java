@@ -1,6 +1,7 @@
 package com.lj.common.module;
 
 import cn.hutool.core.collection.CollUtil;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
  * @author luojing
  * @date 2024/10/26
  */
+@Getter
 @Component
 public class ModuleHelper {
 
