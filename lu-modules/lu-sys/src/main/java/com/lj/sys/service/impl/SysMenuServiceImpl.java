@@ -152,27 +152,35 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
      */
     private void verify(SysMenu entity) {
         CheckUtils.ifNull(entity.getMenuType(), "类型为必填项!");
-        // 判断父元素(如果没有父元素或者父元素是根节点)
+        // 判断父元素
+        SysMenu parentSysMenu;
         if (entity.getParentId() == null || SysConstant.ROOT_MENU_ID.equals(entity.getParentId())) {
-            // 根元素无法追加按钮
-            CheckUtils.ifCondition(SysMenuType.BUTTON.equals(entity.getMenuType()), "按钮无法出现在根目录上！");
+            // 如果没有父元素或者父元素是根节点
+            parentSysMenu = new SysMenu();
+            parentSysMenu.setId(0L);
+            parentSysMenu.setMenuType(SysMenuType.DIR);
         } else {
-            SysMenu parentSysMenu = this.getById(entity.getParentId());
+            parentSysMenu = this.getById(entity.getParentId());
             CheckUtils.ifNull(parentSysMenu, "没有找到 id:" + entity.getParentId() + " 父级!");
-            if (SysMenuType.DIR.equals(entity.getMenuType()) || SysMenuType.MENU.equals(entity.getMenuType())) {
-                // 如果当前是目录或者菜单，那么父元素只能是目录
-                CheckUtils.ifCondition(!SysMenuType.DIR.equals(parentSysMenu.getMenuType()), "错误的父级类型!");
-                CheckUtils.ifBlank(entity.getPath(), "请填写路由!");
-            }
-            if (SysMenuType.MENU.equals(entity.getMenuType())) {
-                CheckUtils.ifBlank(entity.getComponent(), "请填写菜单组件!");
-            }
-            if (SysMenuType.BUTTON.equals(entity.getMenuType())) {
-                // 如果是按钮将父菜单的name给到当前按钮，这里是做按钮权限的分组 请看{@code this.buttonPermission()} 方法
-                entity.setName(parentSysMenu.getName());
-                // 按钮只能出现在菜单上
-                CheckUtils.ifCondition(!SysMenuType.MENU.equals(parentSysMenu.getMenuType()), "错误的父级类型!");
-            }
+        }
+        if (SysMenuType.DIR.equals(entity.getMenuType())){
+            // 目录的父级只能是目录
+            CheckUtils.ifCondition(!SysMenuType.DIR.equals(parentSysMenu.getMenuType()), "错误的父级类型!");
+        }
+        if (SysMenuType.MENU.equals(entity.getMenuType())){
+            // 菜单的父级可以是目录，也可以是菜单(子菜单，隐藏起来的详情页) 但是不能是按钮
+            CheckUtils.ifCondition(SysMenuType.BUTTON.equals(parentSysMenu.getMenuType()), "错误的父级类型!");
+            CheckUtils.ifBlank(entity.getComponent(), "请填写菜单组件!");
+        }
+        if (SysMenuType.DIR.equals(entity.getMenuType()) || SysMenuType.MENU.equals(entity.getMenuType())) {
+            // 目录与菜单需要填写路由
+            CheckUtils.ifBlank(entity.getPath(), "请填写路由!");
+        }
+        if (SysMenuType.BUTTON.equals(entity.getMenuType())) {
+            // 按钮只能出现在菜单上
+            CheckUtils.ifCondition(!SysMenuType.MENU.equals(parentSysMenu.getMenuType()), "错误的父级类型!");
+            // 如果是按钮将父菜单的name给到当前按钮，这里是做按钮权限的分组 请看{@code this.buttonPermission()} 方法
+            entity.setName(parentSysMenu.getName());
         }
     }
 }
