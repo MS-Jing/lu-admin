@@ -163,6 +163,8 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
         } else {
             parentSysMenu = this.getById(entity.getParentId());
             CheckUtils.ifNull(parentSysMenu, "没有找到 id:" + entity.getParentId() + " 父级!");
+            // 检查模块名是否相同
+            CheckUtils.ifCondition(!parentSysMenu.getModuleName().equals(entity.getModuleName()), "模块名请与父级一致！");
         }
         CheckUtils.ifCondition(parentSysMenu.getId().equals(entity.getId()), "错误的父级类型! 自己是自己的父级?");
         if (SysMenuType.DIR.equals(entity.getMenuType())) {
