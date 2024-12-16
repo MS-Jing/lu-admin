@@ -163,11 +163,12 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
             parentSysMenu = this.getById(entity.getParentId());
             CheckUtils.ifNull(parentSysMenu, "没有找到 id:" + entity.getParentId() + " 父级!");
         }
-        if (SysMenuType.DIR.equals(entity.getMenuType())){
+        CheckUtils.ifCondition(parentSysMenu.getId().equals(entity.getId()), "错误的父级类型! 自己是自己的父级?");
+        if (SysMenuType.DIR.equals(entity.getMenuType())) {
             // 目录的父级只能是目录
             CheckUtils.ifCondition(!SysMenuType.DIR.equals(parentSysMenu.getMenuType()), "错误的父级类型!");
         }
-        if (SysMenuType.MENU.equals(entity.getMenuType())){
+        if (SysMenuType.MENU.equals(entity.getMenuType())) {
             // 菜单的父级可以是目录，也可以是菜单(子菜单，隐藏起来的详情页) 但是不能是按钮
             CheckUtils.ifCondition(SysMenuType.BUTTON.equals(parentSysMenu.getMenuType()), "错误的父级类型!");
             CheckUtils.ifBlank(entity.getComponent(), "请填写菜单组件!");
