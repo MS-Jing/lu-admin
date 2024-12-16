@@ -21,6 +21,7 @@ import com.lj.sys.result.SysMenuPageResult;
 import com.lj.sys.service.SysMenuService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.function.Function;
@@ -184,4 +185,45 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
             entity.setName(parentSysMenu.getName());
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long id) {
+        if (id == null) {
+            return;
+        }
+        // 这里的逻辑时查出所有菜单，再批量删除，避免递归查询
+        // 菜单表的数据不会很大，至少不会百万级
+        List<SysMenu> menuList = list(lambdaQueryWrapper()
+                .orderByAsc(SysMenu::getSortCode));
+        List<SysMenuInfoResult> infoResultList = assembleMenuTree(menuList);
+        SysMenuInfoResult infoResult = infoResultList.stream().filter(ir -> ir.getId().equals(id)).findFirst().orElse(null);
+        CheckUtils.ifNull(infoResult, "删除的菜单不存在！");
+        List<Long> deleteIds = flatInfoResultByParent(infoResult).stream().map(SysMenuInfoResult::getId).toList();
+        this.removeBatchByIds(deleteIds);
+    }
+
+    /**
+     * 扁平化菜单信息树
+     *
+     * @param parent 扁平化目标节点
+     * @return 扁平化后菜单信息树 包括目标节点
+     */
+    private List<SysMenuInfoResult> flatInfoResultByParent(SysMenuInfoResult parent) {
+        if (parent == null) {
+            return Collections.emptyList();
+        }
+        List<SysMenuInfoResult> result = new ArrayList<>();
+        result.add(parent);
+        List<SysMenuInfoResult> children = parent.getChildren();
+        if (CollUtil.isEmpty(children)) {
+            return result;
+        }
+        for (SysMenuInfoResult child : children) {
+            result.addAll(flatInfoResultByParent(child));
+        }
+        return result;
+    }
+
+
 }

@@ -52,4 +52,11 @@ public interface SysMenuService extends StandardService<SysMenu> {
      * @return 返回所有菜单树
      */
     List<SysMenuInfoResult> tree(List<Integer> menuTypeList);
+
+    /**
+     * 删除菜单及其子集
+     *
+     * @param id 菜单id
+     */
+    void delete(Long id);
 }

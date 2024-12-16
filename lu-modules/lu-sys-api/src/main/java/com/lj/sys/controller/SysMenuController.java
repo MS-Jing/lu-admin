@@ -2,7 +2,6 @@ package com.lj.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.collection.CollUtil;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.sys.param.SysMenuSaveParam;
 import com.lj.sys.param.SysMenuUpdateParam;
@@ -80,14 +79,11 @@ public class SysMenuController {
         sysMenuService.update(param);
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/delete/{id}")
     @SaCheckPermission("sys:sys_menu:delete")
     @Operation(summary = "菜单表 删除")
-    public void delete(@RequestBody List<Long> ids) {
-        if (CollUtil.isEmpty(ids)) {
-            return;
-        }
-        sysMenuService.removeByIds(ids);
+    public void delete(@PathVariable("id") @Parameter(name = "id", description = "菜单表 id") Long id) {
+        sysMenuService.delete(id);
     }
 
 }
