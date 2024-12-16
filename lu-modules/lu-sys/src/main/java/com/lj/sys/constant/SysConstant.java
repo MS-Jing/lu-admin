@@ -16,4 +16,9 @@ public interface SysConstant {
      * 超级管理员角色
      */
     String SUPER_ADMIN_ROLE = "super-admin";
+
+    /**
+     * 根菜单id
+     */
+    Long ROOT_MENU_ID = 0L;
 }

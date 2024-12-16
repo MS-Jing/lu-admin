@@ -4,6 +4,8 @@ import com.lj.common.utils.EnumUtils;
 import com.lj.sys.entity.SysMenu;
 import com.lj.sys.enums.SysMenuType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -20,10 +22,15 @@ public class SysMenuUpdateParam {
 
     private Long id;
 
+    @Schema(description = "模块名(只加载当前有的模块菜单)")
+    @NotBlank(message = "所属模块不能为空")
+    private String moduleName;
+
     @Schema(description = "父菜单id 顶级菜单为0")
     private Long parentId;
 
     @Schema(description = "菜单类型 参考字典: SysMenuType")
+    @NotNull(message = "类型 不能为空")
     private Integer menuType;
 
     @Schema(description = "菜单路由")
@@ -42,6 +49,7 @@ public class SysMenuUpdateParam {
     private String icon;
 
     @Schema(description = "菜单标题")
+    @NotBlank(message = "标题 不能为空")
     private String title;
 
     @Schema(description = "当前菜单隐藏时才需要设置")
@@ -64,9 +72,6 @@ public class SysMenuUpdateParam {
 
     @Schema(description = "菜单排序")
     private Integer sortCode;
-
-    @Schema(description = "模块名(只加载当前有的模块菜单)")
-    private String moduleName;
 
     public SysMenu toEntity() {
         SysMenu entity = new SysMenu();
