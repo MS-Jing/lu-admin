@@ -51,5 +51,5 @@ public interface SysMenuService extends StandardService<SysMenu> {
      *
      * @return 返回所有菜单树
      */
-    List<SysMenuInfoResult> tree();
+    List<SysMenuInfoResult> tree(List<Integer> menuTypeList);
 }

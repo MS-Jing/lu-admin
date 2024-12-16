@@ -49,11 +49,11 @@ public class SysMenuController {
         return sysMenuService.buttonPermission(StpUtil.getLoginIdAsLong());
     }
 
-    @GetMapping("/tree")
+    @GetMapping("/tree/{menuType}")
     @SaCheckPermission("sys:sys_menu:tree")
     @Operation(summary = "菜单树", description = "主要用于总览菜单管理")
-    public List<SysMenuInfoResult> tree() {
-        return sysMenuService.tree();
+    public List<SysMenuInfoResult> tree(@PathVariable(value = "menuType", required = false) List<Integer> menuTypeList) {
+        return sysMenuService.tree(menuTypeList);
     }
 
     @GetMapping("/info/{id}")
