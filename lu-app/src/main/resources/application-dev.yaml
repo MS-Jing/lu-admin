@@ -8,7 +8,7 @@ spring:
   data:
     redis:
       # Redis数据库索引（默认为0）
-      database: 1
+      database: 2
       # Redis服务器地址
       host: 127.0.0.1
       # Redis服务器连接端口
@@ -47,6 +47,18 @@ sa-token:
   token-style: random-32
   # 是否输出操作日志
   is-log: true
+  # 配置 Sa-Token 单独使用的 Redis 连接
+  alone-redis:
+    # Redis数据库索引（默认为0）
+    database: 1
+    # Redis服务器地址
+    host: ${spring.data.redis.host}
+    # Redis服务器连接端口
+    port: ${spring.data.redis.port}
+    # Redis服务器连接密码（默认为空）
+    password: ${spring.data.redis.password}
+    # 连接超时时间
+    timeout: ${spring.data.redis.timeout}
 
 # Knife4j配置
 knife4j:
