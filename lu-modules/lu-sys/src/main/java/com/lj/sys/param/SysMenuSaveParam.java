@@ -71,6 +71,9 @@ public class SysMenuSaveParam {
     @Schema(description = "菜单排序")
     private Integer sortCode;
 
+    @Schema(description = "权限")
+    private String permission;
+
     public SysMenu toEntity() {
         SysMenu entity = new SysMenu();
         entity.setParentId(parentId);
@@ -89,6 +92,7 @@ public class SysMenuSaveParam {
         entity.setKeepAlive(keepAlive);
         entity.setSortCode(sortCode);
         entity.setModuleName(moduleName);
+        entity.setPermission(permission);
         return entity;
     }
 }

@@ -48,6 +48,12 @@ public class SysMenuInfoResult {
     @Schema(description = "模块名(只加载当前有的模块菜单) ")
     private String moduleName;
 
+    /**
+     * 权限(例如: sys:menu:list)
+     */
+    @Schema(description = "权限")
+    private String permission;
+
     @Schema(description = "子菜单")
     private List<SysMenuInfoResult> children = new ArrayList<>(0);
 
@@ -104,6 +110,7 @@ public class SysMenuInfoResult {
 
         result.setSortCode(entity.getSortCode());
         result.setModuleName(entity.getModuleName());
+        result.setPermission(entity.getPermission());
         return result;
     }
 }

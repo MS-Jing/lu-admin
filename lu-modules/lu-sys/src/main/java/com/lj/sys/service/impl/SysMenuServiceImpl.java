@@ -183,6 +183,7 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
         if (SysMenuType.BUTTON.equals(entity.getMenuType())) {
             // 按钮只能出现在菜单上
             CheckUtils.ifCondition(!SysMenuType.MENU.equals(parentSysMenu.getMenuType()), "错误的父级类型!");
+            CheckUtils.ifBlank(entity.getPermission(), "请填写按钮权限！");
             // 如果是按钮将父菜单的name给到当前按钮，这里是做按钮权限的分组 请看{@code this.buttonPermission()} 方法
             entity.setName(parentSysMenu.getName());
         }
