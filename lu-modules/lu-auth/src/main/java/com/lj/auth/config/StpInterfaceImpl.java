@@ -6,7 +6,9 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.lj.sys.constant.SysConstant;
+import com.lj.sys.entity.SysRole;
 import com.lj.sys.service.SysMenuService;
+import com.lj.sys.service.SysRoleService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,8 @@ public class StpInterfaceImpl implements StpInterface {
 
     @Resource
     private SysMenuService sysMenuService;
+    @Resource
+    private SysRoleService sysRoleService;
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
@@ -53,7 +57,14 @@ public class StpInterfaceImpl implements StpInterface {
             // 超管拥有所有权限
             return Collections.singletonList("*");
         }
-        return Collections.emptyList();
+        List<String> roleList = (List<String>) StpUtil.getTokenSession().get(SaSession.ROLE_LIST);
+        if (roleList == null) {
+            // 将用户拥有的角色加入
+            List<SysRole> sysRoleList = sysRoleService.getSysRoleByUserId(userId);
+            roleList = sysRoleList.stream().map(SysRole::getRoleCode).toList();
+            StpUtil.getTokenSession().set(SaSession.ROLE_LIST, roleList);
+        }
+        return roleList;
     }
 
     private Long getUserId(Object loginId) {

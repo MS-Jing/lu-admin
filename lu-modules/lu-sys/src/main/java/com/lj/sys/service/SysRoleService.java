@@ -1,13 +1,15 @@
 package com.lj.sys.service;
 
-import com.lj.sys.entity.SysRole;
-import com.lj.mp.standard.StandardService;
-import com.lj.sys.result.SysRolePageResult;
-import com.lj.sys.param.SysRoleSaveParam;
-import com.lj.sys.result.SysRoleInfoResult;
-import com.lj.sys.param.SysRolePageParam;
-import com.lj.sys.param.SysRoleUpdateParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lj.mp.standard.StandardService;
+import com.lj.sys.entity.SysRole;
+import com.lj.sys.param.SysRolePageParam;
+import com.lj.sys.param.SysRoleSaveParam;
+import com.lj.sys.param.SysRoleUpdateParam;
+import com.lj.sys.result.SysRoleInfoResult;
+import com.lj.sys.result.SysRolePageResult;
+
+import java.util.List;
 
 /**
  * <p>
@@ -26,6 +28,14 @@ public interface SysRoleService extends StandardService<SysRole> {
     void save(SysRoleSaveParam param);
 
     void update(SysRoleUpdateParam param);
+
+    /**
+     * 获取用户拥有的角色
+     *
+     * @param userId 用户id
+     * @return 用户拥有的角色列表
+     */
+    List<SysRole> getSysRoleByUserId(Long userId);
 
 
 }

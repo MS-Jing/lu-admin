@@ -1,9 +1,11 @@
 package com.lj.sys.mapper;
 
-import com.lj.sys.entity.SysRole;
 import com.lj.mp.standard.StandardMapper;
-import org.springframework.stereotype.Repository;
+import com.lj.sys.entity.SysRole;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
 /**
@@ -18,4 +20,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SysRoleMapper extends StandardMapper<SysRole> {
 
+    /**
+     * 获取用户拥有的角色
+     *
+     * @param userId 用户id
+     * @return 用户拥有的角色列表
+     */
+    List<SysRole> getSysRoleByUserId(Long userId);
 }
