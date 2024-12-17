@@ -200,7 +200,8 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
         List<SysMenu> menuList = list(lambdaQueryWrapper()
                 .orderByAsc(SysMenu::getSortCode));
         List<SysMenuInfoResult> infoResultList = assembleMenuTree(menuList);
-        SysMenuInfoResult infoResult = infoResultList.stream().filter(ir -> ir.getId().equals(id)).findFirst().orElse(null);
+        // 这里需要递归查找
+        SysMenuInfoResult infoResult = this.findInfoResultById(infoResultList, id);
         CheckUtils.ifNull(infoResult, "删除的菜单不存在！");
         List<Long> deleteIds = flatInfoResultByParent(infoResult).stream().map(SysMenuInfoResult::getId).toList();
         this.removeBatchByIds(deleteIds);
@@ -228,5 +229,29 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
         return result;
     }
 
+    /**
+     * 遍历菜单信息树 获取id对应的菜单信息
+     *
+     * @param infoResultList 菜单信息树
+     * @param id 菜单id
+     * @return id对应的菜单信息
+     */
+    private SysMenuInfoResult findInfoResultById(List<SysMenuInfoResult> infoResultList, Long id) {
+        if (CollUtil.isEmpty(infoResultList)) {
+            return null;
+        }
+        for (SysMenuInfoResult menuInfoResult : infoResultList) {
+            // 当前就是直接返回
+            if (menuInfoResult.getId().equals(id)) {
+                return menuInfoResult;
+            }
+            // 递归查询子集
+            SysMenuInfoResult infoResult = findInfoResultById(menuInfoResult.getChildren(), id);
+            if (infoResult != null) {
+                return infoResult;
+            }
+        }
+        return null;
+    }
 
 }
