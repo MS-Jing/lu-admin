@@ -35,14 +35,12 @@ public class SysMenuController {
     private SysMenuService sysMenuService;
 
     @GetMapping("/list")
-    @SaCheckPermission("sys:sys_menu:list")
     @Operation(summary = "用户菜单列表", description = "获取用户拥有的菜单列表,渲染页面")
     public List<SysMenuInfoResult> listByUser() {
         return sysMenuService.listByUserId(StpUtil.getLoginIdAsLong());
     }
 
     @GetMapping("/button/permission")
-    @SaCheckPermission("sys:sys_menu:list")
     @Operation(summary = "按钮权限", description = "当前用户页面拥有的按钮权限,key为页面路由的name,value为这个页面所有按钮的权限")
     public Map<String, List<String>> buttonPermission() {
         return sysMenuService.buttonPermission(StpUtil.getLoginIdAsLong());
