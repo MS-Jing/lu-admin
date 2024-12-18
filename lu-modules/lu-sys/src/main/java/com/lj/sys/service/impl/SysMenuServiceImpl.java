@@ -109,6 +109,7 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
     @Override
     public List<SysMenuInfoResult> tree(List<Integer> menuTypeList) {
         // 不分模块，直接展示，这里主要用于菜单的管理
+        // todo 不是超级管理员只能管理自己所拥有的菜单
         List<SysMenu> menuList = list(lambdaQueryWrapper()
                 .in(CollUtil.isNotEmpty(menuTypeList), SysMenu::getMenuType, menuTypeList)
                 .orderByAsc(SysMenu::getSortCode));

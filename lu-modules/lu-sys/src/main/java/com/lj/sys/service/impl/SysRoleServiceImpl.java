@@ -1,8 +1,11 @@
 package com.lj.sys.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lj.mp.standard.StandardServiceImpl;
 import com.lj.mp.utils.PageQueryUtils;
 import com.lj.sys.constant.SysConstant;
@@ -31,7 +34,16 @@ public class SysRoleServiceImpl extends StandardServiceImpl<SysRoleMapper, SysRo
 
     @Override
     public IPage<SysRolePageResult> page(SysRolePageParam param) {
-        return this.page(PageQueryUtils.getPage(param), getQueryWrapper(param)).convert(SysRolePageResult::of);
+        // 超级管理员有上帝视角，拥有所有角色
+        Long userId = StpUtil.getLoginIdAsLong();
+        Page<SysRole> page = PageQueryUtils.getPage(param);
+        if (SysConstant.SUPER_ADMIN_ID.equals(userId)) {
+            return this.page(page, getQueryWrapper(param))
+                    .convert(SysRolePageResult::of);
+        }
+        // 非超级管理员只能看到自己拥有的权限
+        return baseMapper.getSysRoleByUserIdPage(page, userId, getQueryWrapper(param))
+                .convert(SysRolePageResult::of);
     }
 
     private LambdaQueryWrapper<SysRole> getQueryWrapper(SysRolePageParam param) {

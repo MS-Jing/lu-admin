@@ -3,10 +3,34 @@
 <mapper namespace="com.lj.sys.mapper.SysRoleMapper">
 
     <select id="getSysRoleByUserId" resultType="com.lj.sys.entity.SysRole">
-        select sys_role.*
-        from sys_role
-                 left join sys_user_role on sys_role.id = sys_user_role.role_id
-        where sys_user_role.user_id = #{userId}
-          and sys_role.deleted = false
+        <include refid="getSysRoleByUserIdSql"/>
     </select>
+
+    <select id="getSysRoleByUserIdPage" resultType="com.lj.sys.entity.SysRole">
+        <include refid="getSysRoleByUserIdSql"/>
+    </select>
+
+    <sql id="getSysRoleByUserIdSql">
+        select
+        <choose>
+            <when test="ew != null and ew.sqlSelect != null">
+                ${ew.sqlSelect}
+            </when>
+            <otherwise>
+                sys_role.*
+            </otherwise>
+        </choose>
+        from sys_role
+        left join sys_user_role on sys_role.id = sys_user_role.role_id
+        <where>
+            sys_user_role.user_id = #{userId}
+            and sys_role.deleted = false
+            <if test="ew.sqlSegment != null and ew.sqlSegment != '' and ew.nonEmptyOfNormal">
+                and ${ew.sqlSegment}
+            </if>
+            <if test="ew.sqlSegment != null and ew.sqlSegment != '' and ew.emptyOfNormal">
+                ${ew.sqlSegment}
+            </if>
+        </where>
+    </sql>
 </mapper>
