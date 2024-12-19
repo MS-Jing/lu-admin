@@ -16,6 +16,11 @@ import lombok.Data;
 @Schema(description = "系统角色表 信息结果")
 public class SysRoleInfoResult {
 
+    private Long id;
+
+    @Schema(description = "角色编码")
+    private String roleCode;
+
     @Schema(description = "角色名称 ")
     private String roleName;
 
@@ -27,6 +32,8 @@ public class SysRoleInfoResult {
             return null;
         }
         SysRoleInfoResult result = new SysRoleInfoResult();
+        result.setId(entity.getId());
+        result.setRoleCode(entity.getRoleCode());
         result.setRoleName(entity.getRoleName());
         result.setRemark(entity.getRemark());
         return result;

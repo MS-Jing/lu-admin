@@ -1,7 +1,6 @@
 package com.lj.sys.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,8 +15,11 @@ import com.lj.sys.param.SysRoleSaveParam;
 import com.lj.sys.param.SysRoleUpdateParam;
 import com.lj.sys.result.SysRoleInfoResult;
 import com.lj.sys.result.SysRolePageResult;
+import com.lj.sys.service.SysRoleMenuService;
 import com.lj.sys.service.SysRoleService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +33,9 @@ import java.util.List;
  */
 @Service
 public class SysRoleServiceImpl extends StandardServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
+
+    @Resource
+    private SysRoleMenuService sysRoleMenuService;
 
     @Override
     public IPage<SysRolePageResult> page(SysRolePageParam param) {
@@ -48,7 +53,7 @@ public class SysRoleServiceImpl extends StandardServiceImpl<SysRoleMapper, SysRo
 
     private LambdaQueryWrapper<SysRole> getQueryWrapper(SysRolePageParam param) {
         return lambdaQueryWrapper()
-                .eq(ObjectUtil.isNotEmpty(param.getRoleName()), SysRole::getRoleName, param.getRoleName())
+                .like(ObjectUtil.isNotEmpty(param.getRoleName()), SysRole::getRoleName, param.getRoleName())
                 ;
     }
 
@@ -58,15 +63,19 @@ public class SysRoleServiceImpl extends StandardServiceImpl<SysRoleMapper, SysRo
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void save(SysRoleSaveParam param) {
         SysRole entity = param.toEntity();
         this.save(entity);
+        sysRoleMenuService.refresh(entity.getId(), param.getMenuIdList());
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void update(SysRoleUpdateParam param) {
         SysRole entity = param.toEntity();
         this.updateById(entity);
+        sysRoleMenuService.refresh(entity.getId(), param.getMenuIdList());
     }
 
     @Override

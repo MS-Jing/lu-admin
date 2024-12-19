@@ -4,6 +4,8 @@ import com.lj.sys.entity.SysRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * <p>
  * 系统角色表 保存参数
@@ -16,14 +18,21 @@ import lombok.Data;
 @Schema(description = "系统角色表 保存参数")
 public class SysRoleSaveParam {
 
+    @Schema(description = "角色编码")
+    private String roleCode;
+
     @Schema(description = "角色名称 ")
     private String roleName;
+
+    @Schema(description = "角色拥有的菜单权限")
+    private List<Long> menuIdList;
 
     @Schema(description = "备注 ")
     private String remark;
 
     public SysRole toEntity() {
         SysRole entity = new SysRole();
+        entity.setRoleCode(roleCode);
         entity.setRoleName(roleName);
         entity.setRemark(remark);
         return entity;
