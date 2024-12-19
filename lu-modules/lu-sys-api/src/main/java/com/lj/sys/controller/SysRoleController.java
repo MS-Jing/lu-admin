@@ -1,7 +1,6 @@
 package com.lj.sys.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lj.common_web.annotation.ResponseResultVo;
 import com.lj.sys.param.SysRolePageParam;
@@ -17,8 +16,6 @@ import jakarta.annotation.Resource;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>
@@ -68,14 +65,11 @@ public class SysRoleController {
         sysRoleService.update(param);
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/delete/{id}")
     @SaCheckPermission("sys:sys_role:delete")
     @Operation(summary = "系统角色表 删除")
-    public void delete(@RequestBody List<Long> ids) {
-        if (CollUtil.isEmpty(ids)) {
-            return;
-        }
-        sysRoleService.removeByIds(ids);
+    public void delete(@PathVariable("id") @Parameter(name = "id", description = "系统角色表 id") Long id) {
+        sysRoleService.delete(id);
     }
 
 }

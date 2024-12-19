@@ -38,4 +38,10 @@ public interface SysRoleService extends StandardService<SysRole> {
     List<SysRole> getSysRoleByUserId(Long userId);
 
 
+    /**
+     * 根据id删除角色
+     *
+     * @param id 角色id
+     */
+    void delete(Long id);
 }

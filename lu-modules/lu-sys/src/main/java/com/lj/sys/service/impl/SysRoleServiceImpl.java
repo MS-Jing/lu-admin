@@ -19,11 +19,13 @@ import com.lj.sys.result.SysRoleInfoResult;
 import com.lj.sys.result.SysRolePageResult;
 import com.lj.sys.service.SysRoleMenuService;
 import com.lj.sys.service.SysRoleService;
+import com.lj.sys.service.SysUserRoleService;
 import jakarta.annotation.Resource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,6 +41,8 @@ public class SysRoleServiceImpl extends StandardServiceImpl<SysRoleMapper, SysRo
 
     @Resource
     private SysRoleMenuService sysRoleMenuService;
+    @Resource
+    private SysUserRoleService sysUserRoleService;
 
     @Override
     public IPage<SysRolePageResult> page(SysRolePageParam param) {
@@ -99,5 +103,17 @@ public class SysRoleServiceImpl extends StandardServiceImpl<SysRoleMapper, SysRo
             return list();
         }
         return baseMapper.getSysRoleByUserId(userId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long id) {
+        // 删除角色
+        if (this.removeById(id)) {
+            // 删除用户与该角色关联的信息
+            sysUserRoleService.deleteByRoleId(id);
+            // 刷新该角色菜单权限
+            sysRoleMenuService.refresh(id, Collections.emptySet());
+        }
     }
 }

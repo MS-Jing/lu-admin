@@ -3,7 +3,7 @@
 <mapper namespace="com.lj.sys.mapper.SysMenuMapper">
 
     <select id="listByUserId" resultType="com.lj.sys.entity.SysMenu">
-        select sys_menu.*
+        select distinct sys_menu.*
         from sys_user_role
         left join sys_role_menu on sys_user_role.role_id = sys_role_menu.role_id
         left join sys_menu on sys_role_menu.menu_id = sys_menu.id and sys_menu.deleted = false
