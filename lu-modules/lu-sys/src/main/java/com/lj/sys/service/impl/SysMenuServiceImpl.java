@@ -1,5 +1,6 @@
 package com.lj.sys.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -54,7 +55,9 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
                     .in(SysMenu::getModuleName, allModuleName)
                     .orderByAsc(SysMenu::getSortCode));
         } else {
-            menuList = baseMapper.listByUserId(userId, allModuleName);
+            menuList = baseMapper.listByUserId(userId,
+                    Arrays.asList(SysMenuType.MENU.getValue(), SysMenuType.DIR.getValue()),
+                    allModuleName);
         }
         // 组装成树
         return assembleMenuTree(menuList);
@@ -95,7 +98,7 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
                     .in(SysMenu::getModuleName, allModuleName)
                     .orderByAsc(SysMenu::getSortCode));
         } else {
-            menuList = baseMapper.buttonByUserId(userId, allModuleName);
+            menuList = baseMapper.listByUserId(userId, Collections.singletonList(SysMenuType.BUTTON.getValue()), allModuleName);
         }
         if (CollUtil.isEmpty(menuList)) {
             return Collections.emptyMap();
@@ -109,10 +112,16 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
     @Override
     public List<SysMenuInfoResult> tree(List<Integer> menuTypeList) {
         // 不分模块，直接展示，这里主要用于菜单的管理
-        // todo 不是超级管理员只能管理自己所拥有的菜单
-        List<SysMenu> menuList = list(lambdaQueryWrapper()
-                .in(CollUtil.isNotEmpty(menuTypeList), SysMenu::getMenuType, menuTypeList)
-                .orderByAsc(SysMenu::getSortCode));
+        Long userId = StpUtil.getLoginIdAsLong();
+        List<SysMenu> menuList;
+        // 超级管理员拥有所有菜单权限
+        if (SysConstant.SUPER_ADMIN_ID.equals(userId)) {
+            menuList = list(lambdaQueryWrapper()
+                    .in(CollUtil.isNotEmpty(menuTypeList), SysMenu::getMenuType, menuTypeList)
+                    .orderByAsc(SysMenu::getSortCode));
+        } else {
+            menuList = baseMapper.listByUserId(userId, menuTypeList, Collections.emptySet());
+        }
         return assembleMenuTree(menuList);
     }
 
@@ -198,9 +207,7 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
         }
         // 这里的逻辑时查出所有菜单，再批量删除，避免递归查询
         // 菜单表的数据不会很大，至少不会百万级
-        List<SysMenu> menuList = list(lambdaQueryWrapper()
-                .orderByAsc(SysMenu::getSortCode));
-        List<SysMenuInfoResult> infoResultList = assembleMenuTree(menuList);
+        List<SysMenuInfoResult> infoResultList = tree(Collections.emptyList());
         // 这里需要递归查找
         SysMenuInfoResult infoResult = this.findInfoResultById(infoResultList, id);
         CheckUtils.ifNull(infoResult, "删除的菜单不存在！");
@@ -234,7 +241,7 @@ public class SysMenuServiceImpl extends StandardServiceImpl<SysMenuMapper, SysMe
      * 遍历菜单信息树 获取id对应的菜单信息
      *
      * @param infoResultList 菜单信息树
-     * @param id 菜单id
+     * @param id             菜单id
      * @return id对应的菜单信息
      */
     private SysMenuInfoResult findInfoResultById(List<SysMenuInfoResult> infoResultList, Long id) {

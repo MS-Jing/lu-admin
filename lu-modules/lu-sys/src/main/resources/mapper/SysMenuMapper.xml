@@ -9,26 +9,18 @@
         left join sys_menu on sys_role_menu.menu_id = sys_menu.id and sys_menu.deleted = false
         where sys_role_menu.id is not null
         and sys_user_role.user_id = #{userId}
-        and sys_menu.menu_type in (1,2)
-        and sys_menu.module_name in
-        <foreach collection="moduleNameSet" separator="," open="(" close=")" item="item">
-            #{item}
-        </foreach>
-        order by sort_code
-    </select>
-
-    <select id="buttonByUserId" resultType="com.lj.sys.entity.SysMenu">
-        select sys_menu.*
-        from sys_user_role
-        left join sys_role_menu on sys_user_role.role_id = sys_role_menu.role_id
-        left join sys_menu on sys_role_menu.menu_id = sys_menu.id and sys_menu.deleted = false
-        where sys_role_menu.id is not null
-        and sys_user_role.user_id = #{userId}
-        and sys_menu.menu_type = 3
-        and sys_menu.module_name in
-        <foreach collection="moduleNameSet" separator="," open="(" close=")" item="item">
-            #{item}
-        </foreach>
+        <if test="menuTypeList != null and menuTypeList.size() > 0">
+            and sys_menu.menu_type in
+            <foreach collection="menuTypeList" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="moduleNameSet != null and moduleNameSet.size() > 0">
+            and sys_menu.module_name in
+            <foreach collection="moduleNameSet" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
         order by sort_code
     </select>
 </mapper>

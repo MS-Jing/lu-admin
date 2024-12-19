@@ -24,12 +24,10 @@ public interface SysMenuMapper extends StandardMapper<SysMenu> {
     /**
      * 获取关于这个用户的所有菜单
      *
-     * @param userId     用户id
+     * @param userId        用户id
      * @param moduleNameSet 模块名称
      * @return 这个用户的所有菜单
      */
-    List<SysMenu> listByUserId(Long userId, Set<String> moduleNameSet);
-
-    List<SysMenu> buttonByUserId(Long userId, Set<String> moduleNameSet);
+    List<SysMenu> listByUserId(Long userId, List<Integer> menuTypeList, Set<String> moduleNameSet);
 
 }
