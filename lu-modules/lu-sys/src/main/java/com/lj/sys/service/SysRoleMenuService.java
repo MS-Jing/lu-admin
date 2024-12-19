@@ -4,6 +4,7 @@ import com.lj.mp.standard.StandardService;
 import com.lj.sys.entity.SysRoleMenu;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -21,5 +22,15 @@ public interface SysRoleMenuService extends StandardService<SysRoleMenu> {
      * @param roleId     角色id
      * @param menuIdList 菜单id列表 如果是空得会删除该角色所有菜单权限
      */
-    void refresh(Long roleId, List<Long> menuIdList);
+    void refresh(Long roleId, Set<Long> menuIdList);
+
+    /**
+     * 根据角色id 获取所有的角色菜单关联
+     *
+     * @param roleId 角色id
+     * @return 该角色的所有角色菜单关联
+     */
+    default List<SysRoleMenu> getByRoleId(Long roleId) {
+        return list(lambdaQueryWrapper().eq(SysRoleMenu::getRoleId, roleId));
+    }
 }

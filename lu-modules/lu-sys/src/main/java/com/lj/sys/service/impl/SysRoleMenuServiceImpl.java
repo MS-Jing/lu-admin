@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -24,15 +25,16 @@ import java.util.stream.Collectors;
 public class SysRoleMenuServiceImpl extends StandardServiceImpl<SysRoleMenuMapper, SysRoleMenu> implements SysRoleMenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void refresh(Long roleId, List<Long> menuIdList) {
+    public void refresh(Long roleId, Set<Long> menuIdList) {
         // 该角色拥有得菜单与主键id映射
-        Map<Long, Long> menuIdOfIdMap = list(lambdaQueryWrapper()
-                .eq(SysRoleMenu::getRoleId, roleId))
+        Map<Long, Long> menuIdOfIdMap = this.getByRoleId(roleId)
                 .stream().collect(Collectors.toMap(SysRoleMenu::getMenuId, SysRoleMenu::getId));
         // 需要删除得菜单id
         List<Long> deleteMenuIdList = CollUtil.subtractToList(menuIdOfIdMap.keySet(), menuIdList);
         // 转换成主键id 批量删除
-        this.removeBatchByIds(deleteMenuIdList.stream().map(menuIdOfIdMap::get).toList());
+        if (CollUtil.isNotEmpty(deleteMenuIdList)) {
+            this.removeBatchByIds(deleteMenuIdList.stream().map(menuIdOfIdMap::get).toList());
+        }
         // 需要添加的菜单id
         List<Long> saveMenuIdList = CollUtil.subtractToList(menuIdList, menuIdOfIdMap.keySet());
         // 批量添加

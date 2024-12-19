@@ -4,7 +4,7 @@ import com.lj.sys.entity.SysRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ public class SysRoleSaveParam {
     private String roleName;
 
     @Schema(description = "角色拥有的菜单权限")
-    private List<Long> menuIdList;
+    private Set<Long> menuIdList;
 
     @Schema(description = "备注 ")
     private String remark;

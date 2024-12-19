@@ -3,6 +3,7 @@ package com.lj.sys.result;
 import com.lj.sys.entity.SysRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 /**
@@ -18,6 +19,9 @@ import java.time.LocalDateTime;
 public class SysRolePageResult {
 
     private Long id;
+
+    @Schema(description = "角色编码")
+    private String roleCode;
 
     @Schema(description = "角色名称 ")
     private String roleName;
@@ -35,6 +39,7 @@ public class SysRolePageResult {
         }
         SysRolePageResult result = new SysRolePageResult();
         result.setId(entity.getId());
+        result.setRoleCode(entity.getRoleCode());
         result.setRoleName(entity.getRoleName());
         result.setRemark(entity.getRemark());
         result.setCreateTime(entity.getCreateTime());

@@ -4,6 +4,8 @@ import com.lj.sys.entity.SysRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * <p>
  * 系统角色表 信息结果
@@ -23,6 +25,9 @@ public class SysRoleInfoResult {
 
     @Schema(description = "角色名称 ")
     private String roleName;
+
+    @Schema(description = "角色拥有的菜单权限")
+    private List<Long> menuIdList;
 
     @Schema(description = "备注 ")
     private String remark;

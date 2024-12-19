@@ -5,10 +5,12 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lj.common.exception.CommonException;
 import com.lj.mp.standard.StandardServiceImpl;
 import com.lj.mp.utils.PageQueryUtils;
 import com.lj.sys.constant.SysConstant;
 import com.lj.sys.entity.SysRole;
+import com.lj.sys.entity.SysRoleMenu;
 import com.lj.sys.mapper.SysRoleMapper;
 import com.lj.sys.param.SysRolePageParam;
 import com.lj.sys.param.SysRoleSaveParam;
@@ -18,6 +20,7 @@ import com.lj.sys.result.SysRolePageResult;
 import com.lj.sys.service.SysRoleMenuService;
 import com.lj.sys.service.SysRoleService;
 import jakarta.annotation.Resource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,14 +62,21 @@ public class SysRoleServiceImpl extends StandardServiceImpl<SysRoleMapper, SysRo
 
     @Override
     public SysRoleInfoResult info(Long id) {
-        return SysRoleInfoResult.of(this.getById(id));
+        SysRoleInfoResult sysRoleInfoResult = SysRoleInfoResult.of(this.getById(id));
+        List<SysRoleMenu> sysRoleMenuList = sysRoleMenuService.getByRoleId(id);
+        sysRoleInfoResult.setMenuIdList(sysRoleMenuList.stream().map(SysRoleMenu::getMenuId).toList());
+        return sysRoleInfoResult;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(SysRoleSaveParam param) {
         SysRole entity = param.toEntity();
-        this.save(entity);
+        try {
+            this.save(entity);
+        } catch (DuplicateKeyException e) {
+            throw new CommonException("角色编码:" + param.getRoleCode() + " 被占用! 请联系管理员!");
+        }
         sysRoleMenuService.refresh(entity.getId(), param.getMenuIdList());
     }
 
@@ -74,7 +84,11 @@ public class SysRoleServiceImpl extends StandardServiceImpl<SysRoleMapper, SysRo
     @Transactional(rollbackFor = Exception.class)
     public void update(SysRoleUpdateParam param) {
         SysRole entity = param.toEntity();
-        this.updateById(entity);
+        try {
+            this.updateById(entity);
+        } catch (DuplicateKeyException e) {
+            throw new CommonException("角色编码:" + param.getRoleCode() + " 被占用! 请联系管理员!");
+        }
         sysRoleMenuService.refresh(entity.getId(), param.getMenuIdList());
     }
 
