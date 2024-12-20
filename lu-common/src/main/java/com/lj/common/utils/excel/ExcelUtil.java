@@ -2,12 +2,12 @@ package com.lj.common.utils.excel;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.read.listener.ReadListener;
-import com.alibaba.excel.write.builder.ExcelWriterSheetBuilder;
-import com.alibaba.excel.write.metadata.WriteSheet;
-import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import cn.idev.excel.FastExcel;
+import cn.idev.excel.ExcelWriter;
+import cn.idev.excel.read.listener.ReadListener;
+import cn.idev.excel.write.builder.ExcelWriterSheetBuilder;
+import cn.idev.excel.write.metadata.WriteSheet;
+import cn.idev.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.lj.common.utils.CheckUtils;
 
 import java.io.InputStream;
@@ -29,12 +29,12 @@ public class ExcelUtil {
      */
     public static void exportExcel(OutputStream out, ExcelSheet<?>... excelSheets) {
         CheckUtils.ifEmpty(excelSheets, "导出excel sheet不能为空！");
-        try (ExcelWriter excelWriter = EasyExcel.write(out)
+        try (ExcelWriter excelWriter = FastExcel.write(out)
                 .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                 .build()) {
             int i = 1;
             for (ExcelSheet<?> excelSheet : excelSheets) {
-                ExcelWriterSheetBuilder sheetBuilder = EasyExcel
+                ExcelWriterSheetBuilder sheetBuilder = FastExcel
                         .writerSheet(StrUtil.isBlank(excelSheet.getSheetName()) ? "Sheet" + (i++) : excelSheet.getSheetName());
                 if (excelSheet.getHeadType() != null) {
                     sheetBuilder.head(excelSheet.getHeadType());
@@ -70,7 +70,7 @@ public class ExcelUtil {
      * @param <T>      数据类型
      */
     public static <T> void readExcel(InputStream in, Class<T> headType, Integer sheetNo, ReadListener<T> listener) {
-        EasyExcel.read(in, headType, listener).sheet(sheetNo).doRead();
+        FastExcel.read(in, headType, listener).sheet(sheetNo).doRead();
     }
 
     /**
@@ -83,7 +83,7 @@ public class ExcelUtil {
      * @param <T>       数据类型
      */
     public static <T> void readExcel(InputStream in, Class<T> headType, String sheetName, ReadListener<T> listener) {
-        EasyExcel.read(in, headType, listener).sheet(sheetName).doRead();
+        FastExcel.read(in, headType, listener).sheet(sheetName).doRead();
     }
 
     /**
@@ -108,7 +108,7 @@ public class ExcelUtil {
      * @return excel数据
      */
     public static <T> List<T> readExcel(InputStream in, Class<T> headType, Integer sheetNo) {
-        return EasyExcel.read(in).head(headType).sheet(sheetNo).doReadSync();
+        return FastExcel.read(in).head(headType).sheet(sheetNo).doReadSync();
     }
 
     /**
@@ -121,6 +121,6 @@ public class ExcelUtil {
      * @return excel数据
      */
     public static <T> List<T> readExcel(InputStream in, Class<T> headType, String sheetName) {
-        return EasyExcel.read(in).head(headType).sheet(sheetName).doReadSync();
+        return FastExcel.read(in).head(headType).sheet(sheetName).doReadSync();
     }
 }

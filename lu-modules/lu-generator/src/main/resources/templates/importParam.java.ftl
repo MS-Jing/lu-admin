@@ -1,7 +1,7 @@
 package ${importParam.packagePath};
 
 import ${entity.packagePath}.${entity.className};
-import com.alibaba.excel.annotation.ExcelProperty;
+import cn.idev.excel.annotation.ExcelProperty;
 import lombok.Data;
 <#list importParam.packages as pkg>
 import ${pkg};
